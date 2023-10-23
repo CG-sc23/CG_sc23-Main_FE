@@ -3,22 +3,52 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
     "build": "next build",
+    "dev": "next dev --turbo",
     "start": "next start",
-    "lint": "next lint"
+    "clean": "rimraf ./.next ./.swc ./coverage ./.reports ./.results ./node_modules/.cache",
+    "lint": "next lint",
+    "lint:fix": "next lint --fix",
+    "test": "jest --coverage",
+    "test:watch": "jest --watch",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "axios": "^1.5.1",
+    "eslint-config-next": "^13.5.6",
+    "eslint-plugin-next": "^0.0.0",
+    "framer-motion": "^10.16.4",
+    "next": "13.5.6",
     "react": "^18",
     "react-dom": "^18",
-    "next": "13.5.6"
+    "react-query": "^3.39.3",
+    "recoil": "^0.7.7",
+    "sass": "^1.69.4",
+    "valibot": "^0.19.0"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@playwright/test": "^1.39.0",
+    "@testing-library/jest-dom": "^6.1.4",
+    "@testing-library/react": "^14.0.0",
+    "@types/jest": "^29.5.6",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@typescript-eslint/eslint-plugin": "^6.8.0",
+    "@typescript-eslint/parser": "^6.8.0",
     "eslint": "^8",
-    "eslint-config-next": "13.5.6"
-  }
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-airbnb-typescript": "^17.1.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.1",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "prettier": "^3.0.3",
+    "typescript": "^5"
+  },
+  "main": "index.js",
+  "author": "LUH <unghee66@gmail.com>",
+  "license": "MIT"
 }

@@ -7,10 +7,16 @@
 
 # testing
 /coverage
+/.reports
+/.results
+
+# playwright
+/playwright-report
 
 # next.js
 /.next/
 /out/
+/.swc
 
 # production
 /build
