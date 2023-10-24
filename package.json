@@ -16,6 +16,7 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@toss/use-funnel": "^1.2.6",
     "axios": "^1.5.1",
     "eslint-config-next": "^13.5.6",
     "eslint-plugin-next": "^0.0.0",
