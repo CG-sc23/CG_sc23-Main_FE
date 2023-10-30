@@ -1,14 +1,14 @@
-import type { NextApiResponse, NextApiRequest } from 'next';
 import server from '@/api/server';
+import type { NextApiResponse, NextApiRequest } from 'next';
 
-export default async function handleSignUp(
+export default async function handleGoogleAuth(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
   let ret = null;
   try {
-    if (req.body.preAccessToken) ret = await server.postSocialSingUp(req.body);
-    else ret = await server.postSingUp(req.body);
+    if (req.body.provider === 'GOOGLE') ret = await server.postGoogle(req.body);
+    else ret = await server.postKakao(req.body);
 
     return res.status(ret.status).json(ret.data);
   } catch (error) {

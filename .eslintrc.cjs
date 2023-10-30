@@ -28,5 +28,10 @@ module.exports = {
     'import/prefer-default-export': 'off',
     'import/no-extraneous-dependencies': 'off',
     'consistent-return': 'off',
+    'react/no-unknown-property': [
+      'error',
+      { ignore: ['css', 'jsx', 'global'] },
+    ],
+    'jsx-a11y/label-has-associated-control': 'off',
   },
 };
