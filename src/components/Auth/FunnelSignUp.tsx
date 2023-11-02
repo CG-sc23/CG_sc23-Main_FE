@@ -1,96 +1,69 @@
-/* eslint-disable react/jsx-no-bind */
-import { useState } from 'react';
-import { useFunnel } from '@toss/use-funnel';
-import { QS } from '@toss/utils';
+import { FormEvent, useState } from 'react';
+import useSignUpFunnel from '@/hooks/useSignUpFunnel';
+import StepSignUp from './StepSignUp';
 
-import client from '@/api/client';
-import InputWithLabel from '../InputWithLabel';
-
-const Steps = [
+const list = [
   'email',
   'password',
   'name',
-  'description',
+  'profile_image',
+  'github_link',
   'short_description',
-  'done',
 ] as const;
-type TState = {
-  [key in (typeof Steps)[number]]?: string;
-};
+
+const optionalList = ['profile_image', 'github_link', 'short_description'];
 
 export default function FunnelSignUp() {
-  const [current, setCurrent] = useState('');
-  const [Funnel, state, setStep] = useFunnel(Steps, {
-    initialStep: 'email',
-    stepQueryKey: 'step',
-    onStepChange: (name) => {
-      setCurrent(state[name] ?? '');
-      // eslint-disable-next-line no-console, @typescript-eslint/no-explicit-any
-      if (name === 'done') client.signUp(state as any);
+  const [current, setCurrent] = useState<string | File>('');
+  const [error, setError] = useState('');
+  const { Funnel, steps, onNextStep, onPrevStep, status } = useSignUpFunnel(
+    list,
+    {
+      afterStepChange: setCurrent,
     },
-  }).withState<TState>({});
+  );
+  const isDisabled =
+    (current === '' || error !== '') && !optionalList.includes(status);
 
-  function prevStep() {
-    const target = QS.get('step') as (typeof Steps)[number] | undefined;
-    if (target === undefined) return;
+  function onSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
 
-    const index = Steps.findIndex((v) => v === target);
-    if (index === 0 || state[Steps[index - 1]] === '') return;
+    const target = e.target as HTMLInputElement;
+    if (target.files && target.files.length > 0) {
+      const file = target.files[0];
+      return onNextStep(file);
+    }
 
-    setStep((prev) => ({
-      ...prev,
-      step: Steps[index - 1],
-    }));
-  }
-
-  function nextStep(update: string) {
-    const target = QS.get('step') as (typeof Steps)[number] | undefined;
-    if (target === undefined) return;
-    const index = Steps.findIndex((v) => v === target);
-
-    if (index === Steps.length - 1) return;
-
-    setStep((prev) => ({
-      ...prev,
-      step: Steps[index + 1],
-      [target]: update,
-    }));
+    onNextStep(current);
   }
 
   return (
     <>
       <Funnel>
-        {Steps.map((val) => (
-          <Funnel.Step name={val} key={val}>
-            {val === 'done' ? (
-              <div key={val}>done</div>
-            ) : (
-              <form
-                key={val}
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  nextStep(current);
-                }}
-              >
-                <InputWithLabel
-                  label={val.charAt(0).toUpperCase() + val.slice(1)}
-                  type={val}
-                  value={current}
-                  setter={setCurrent}
-                />
-              </form>
-            )}
-          </Funnel.Step>
-        ))}
+        {steps.map((val) => {
+          return (
+            <Funnel.Step name={val} key={val}>
+              <StepSignUp
+                step={val}
+                status={status}
+                onSubmit={onSubmit}
+                current={current}
+                setCurrent={setCurrent}
+                error={error}
+                setError={setError}
+              />
+            </Funnel.Step>
+          );
+        })}
       </Funnel>
       <div>
-        <button type="button" onClick={prevStep}>
+        <button type="button" onClick={onPrevStep}>
           prev
         </button>
         <button
           type="button"
-          onClick={() => nextStep(current)}
-          disabled={!current}
+          onClick={() => onNextStep(current)}
+          disabled={isDisabled}
         >
           next
         </button>

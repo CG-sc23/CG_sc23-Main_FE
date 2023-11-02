@@ -1,15 +1,23 @@
+import type FormData from 'form-data';
+
 import { server as http } from '@/api/instance';
-import type {
-  ResPostSignUp,
-  ReqPostSignUp,
-  ReqPostGoogle,
-  ResPostGoogle,
-} from '@/api/type';
+import type { BaseApiResponse, SignUpApiResponse } from '@/libs/type/server';
+import { handleApiError } from '../handleError';
 
 const server = {
-  async postSingUp(payload: ReqPostSignUp) {
+  async getHealthCheck() {
     try {
-      const { data, status } = await http.post<ResPostSignUp>(
+      const { data, status } = await http.get<BaseApiResponse>('/');
+
+      return { data, status };
+    } catch (e) {
+      handleApiError(e);
+    }
+  },
+
+  async postSingUp(payload: FormData) {
+    try {
+      const { data, status } = await http.post<SignUpApiResponse>(
         '/auth/v1/sign-up',
         payload,
       );
@@ -18,53 +26,8 @@ const server = {
         data,
         status,
       };
-    } catch (error) {
-      throw new Error('Unknown Error From WAS');
-    }
-  },
-  async postSocialSingUp(payload: ReqPostSignUp) {
-    try {
-      const { data, status } = await http.post<ResPostSignUp>(
-        '/auth/v1/sign-up',
-        payload,
-      );
-
-      return {
-        data,
-        status,
-      };
-    } catch (error) {
-      throw new Error('Unknown Error From WAS');
-    }
-  },
-  async postGoogle(payload: ReqPostGoogle) {
-    try {
-      const { data, status } = await http.post<ResPostGoogle>(
-        '/auth/v1/social/google',
-        payload,
-      );
-
-      return {
-        data,
-        status,
-      };
-    } catch (error) {
-      throw new Error('Unknown Error From WAS');
-    }
-  },
-  async postKakao(payload: ReqPostSignUp) {
-    try {
-      const { data, status } = await http.post<ResPostSignUp>(
-        '/auth/v1/social/kakao',
-        payload,
-      );
-
-      return {
-        data,
-        status,
-      };
-    } catch (error) {
-      throw new Error('Unknown Error From WAS');
+    } catch (e) {
+      handleApiError(e);
     }
   },
 };
