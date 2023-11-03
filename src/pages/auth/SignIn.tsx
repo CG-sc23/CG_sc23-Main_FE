@@ -1,6 +1,7 @@
 import Card from '@/components/Card';
 import InputWithLabel from '@/components/InputWithLabel';
 import { colors } from '@/components/constant/color';
+import { Schema, validatedOnChange } from '@/libs/utils/validate';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import Link from 'next/link';
@@ -20,7 +21,7 @@ const Button = styled.button<{ bgColor?: string }>`
   padding: 1rem 0;
 
   background-color: ${(props) =>
-    props.bgColor ? props.bgColor : colors.blue300};
+    props.bgColor ? props.bgColor : colors.yellow300};
   color: ${(props) => (props.color ? props.color : colors.white)};
 
   border-radius: 5px;
@@ -31,7 +32,21 @@ const Button = styled.button<{ bgColor?: string }>`
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+
+  const naver = () => {
+    const CLIENT_ID = '6fRIFafpI7oj_rMCEl1w';
+    const NAVER_AUTH_URL = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${CLIENT_ID}&state=domomainweb!@&redirect_uri=http://localhost:3000/auth/Loading`;
+    window.location.href = NAVER_AUTH_URL;
+  };
+
+  const kakao = () => {
+    const CLIENT_ID = '692654ded92217544ec272739b534375';
+    const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${CLIENT_ID}&redirect_uri=http://localhost:3000/auth/Loading`;
+    window.location.href = KAKAO_AUTH_URL;
+  };
 
   return (
     <div
@@ -71,13 +86,24 @@ export default function SignIn() {
             type="email"
             label="Email"
             value={email}
-            setter={setEmail}
+            error={emailError}
+            onChange={validatedOnChange({
+              schema: Schema.email,
+              setValue: setEmail,
+              setError: setEmailError,
+            })}
           />
           <InputWithLabel
             type="password"
             label="Password"
             value={password}
-            setter={setPassword}
+            error={passwordError}
+            autoFocus={false}
+            onChange={validatedOnChange({
+              schema: Schema.password,
+              setValue: setPassword,
+              setError: setPasswordError,
+            })}
           />
           <Button type="submit" bgColor={colors.black}>
             Login
@@ -120,8 +146,10 @@ export default function SignIn() {
             gap: 10px;
           `}
         >
-          <Button>Login with Google</Button>
-          <Button bgColor={colors.green300}>Login with Naver</Button>
+          <Button onClick={kakao}>Login with KAKAO</Button>
+          <Button onClick={naver} bgColor={colors.green300}>
+            Login with Naver
+          </Button>
         </div>
         <Link href="/auth/SignUp?step=email">Sign Up</Link>
       </Card>

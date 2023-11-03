@@ -1,14 +1,12 @@
-import {
-  FormEvent,
-  type Dispatch,
-  type SetStateAction,
-  ChangeEvent,
-} from 'react';
-import type { StringSchema } from 'valibot';
+import { FormEvent, type Dispatch, type SetStateAction } from 'react';
 
 import type { Status } from '@/hooks/useSignUpFunnel';
 import { toUpperCaseFirstLetter } from '@/libs/utils';
-import validate, { Schema } from '@/libs/utils/validate';
+import {
+  Schema,
+  type SchemaKey,
+  validatedOnChange,
+} from '@/libs/utils/validate';
 import InputWithLabel from '../InputWithLabel';
 
 type Props = {
@@ -49,27 +47,19 @@ export default function StepSignUp({
     );
   }
 
-  const validatedOnChange =
-    (schema: StringSchema | null = null) =>
-    (e: ChangeEvent<HTMLInputElement>) => {
-      const target = e.target as HTMLInputElement;
-      const input = target.value;
-      setCurrent(input);
-
-      if (!schema) return;
-      const result = validate(schema, input);
-      if (result.success) return setError('');
-      setError(result.issues[0].message);
-    };
-
-  if (Schema[step]) {
+  const stepWithText = step as SchemaKey;
+  if (Schema[stepWithText]) {
     return (
       <form key={step} onSubmit={onSubmit}>
         <InputWithLabel
           label={toUpperCaseFirstLetter(step)}
           type={step}
           value={current as string}
-          onChange={validatedOnChange(Schema[step])}
+          onChange={validatedOnChange({
+            schema: Schema[stepWithText],
+            setValue: setCurrent as Dispatch<SetStateAction<string>>,
+            setError,
+          })}
           error={error}
         />
       </form>
@@ -82,7 +72,7 @@ export default function StepSignUp({
         label={toUpperCaseFirstLetter(step)}
         type={step}
         value={current as string}
-        onChange={validatedOnChange()}
+        onChange={(e) => setCurrent(e.target.value)}
         error={error}
       />
     </form>

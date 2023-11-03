@@ -16,6 +16,7 @@ type Props = {
   value: string;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   error: string;
+  autoFocus?: boolean;
 };
 
 const initialVariant = {
@@ -43,7 +44,7 @@ const errorVariants = {
 };
 
 export default function InputWithLabel(props: Props) {
-  const { type, value, label, onChange, error } = props;
+  const { type, value, label, onChange, error, autoFocus = true } = props;
   const isPassword = type === 'password';
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -56,11 +57,13 @@ export default function InputWithLabel(props: Props) {
   useEffect(() => {
     setIsLoaded(true);
 
-    controls.start(afterVariant);
-    input.current?.focus();
+    if (autoFocus) {
+      input.current?.focus();
+      controls.start(afterVariant);
+    }
 
     return () => controls.stop();
-  }, [controls]);
+  }, [controls, autoFocus]);
 
   const handleFocus = () => {
     if (!isLoaded) return;
@@ -78,7 +81,7 @@ export default function InputWithLabel(props: Props) {
   };
 
   return (
-    <>
+    <div>
       <label
         css={css`
           position: relative;
@@ -107,16 +110,13 @@ export default function InputWithLabel(props: Props) {
           id={label}
           value={value}
           ref={input}
-          autoFocus
           onChange={onChange}
           onFocus={handleFocus}
           onBlur={handleBlur}
           css={css`
             color: ${colors.grey800};
-            /* height: 44px; */
             width: 100%;
             background-color: transparent;
-
             padding: 0 0 4px;
             font-weight: 500;
             font-size: 28px;
@@ -160,6 +160,6 @@ export default function InputWithLabel(props: Props) {
       >
         {error}
       </motion.div>
-    </>
+    </div>
   );
 }

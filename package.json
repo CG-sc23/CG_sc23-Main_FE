@@ -16,7 +16,6 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@react-oauth/google": "^0.11.1",
     "@toss/use-funnel": "^1.2.6",
     "@toss/utils": "^1.4.4",
     "axios": "^1.5.1",

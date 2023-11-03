@@ -29,6 +29,7 @@ module.exports = {
     'import/no-extraneous-dependencies': 'off',
     'consistent-return': 'off',
     'react/jsx-no-bind': 'off',
+    'react/require-default-props': 'off',
     'react/no-unknown-property': [
       'error',
       { ignore: ['css', 'jsx', 'global'] },

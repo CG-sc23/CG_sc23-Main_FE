@@ -3,7 +3,7 @@ import '@/styles/global.scss';
 import type { AppProps } from 'next/app';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { Roboto } from 'next/font/google';
-import { GoogleOAuthProvider } from '@react-oauth/google';
+import { RecoilRoot } from 'recoil';
 
 const roboto = Roboto({
   weight: ['100', '300', '400', '500', '700', '900'],
@@ -23,11 +23,11 @@ export default function App({ Component, pageProps }: AppProps) {
           font-family: ${roboto.style.fontFamily};
         }
       `}</style>
-      <GoogleOAuthProvider clientId="260147743633-av231aqnhqrc3pncehvvcplcsqrikvgi.apps.googleusercontent.com">
-        <QueryClientProvider client={queryClient}>
+      <QueryClientProvider client={queryClient}>
+        <RecoilRoot>
           <Component {...pageProps} />
-        </QueryClientProvider>
-      </GoogleOAuthProvider>
+        </RecoilRoot>
+      </QueryClientProvider>
     </>
   );
 }

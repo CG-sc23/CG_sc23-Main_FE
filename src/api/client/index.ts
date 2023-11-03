@@ -1,5 +1,9 @@
 import { client as http } from '@/api/instance';
-import type { SignUpResponse } from '@/libs/type/client';
+import type {
+  SignUpResponse,
+  SocialAuthResponse,
+  SocialAuthPayload,
+} from '@/libs/type/client';
 import { handleClientError } from '../handleError';
 
 const client = {
@@ -28,7 +32,23 @@ const client = {
         status,
       };
     } catch (e) {
-      handleClientError(e);
+      return handleClientError<SignUpResponse>(e);
+    }
+  },
+
+  async socialAuth(payload: SocialAuthPayload) {
+    try {
+      const { data, status } = await http.post<SocialAuthResponse>(
+        '/api/auth/social-auth',
+        payload,
+      );
+
+      return {
+        data,
+        status,
+      };
+    } catch (e) {
+      return handleClientError<SocialAuthResponse>(e);
     }
   },
 };
