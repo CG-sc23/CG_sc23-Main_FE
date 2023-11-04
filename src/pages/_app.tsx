@@ -1,12 +1,13 @@
 /* eslint-disable react/jsx-no-useless-fragment */
-import '@/styles/global.scss';
-import type { AppProps } from 'next/app';
-import { QueryClient, QueryClientProvider } from 'react-query';
-import { Roboto } from 'next/font/google';
-import { GoogleOAuthProvider } from '@react-oauth/google';
+import "@/styles/global.scss";
+import type { AppProps } from "next/app";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { Roboto } from "next/font/google";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import MenuBar from "@/components/MenuBar";
 
 const roboto = Roboto({
-  weight: ['100', '300', '400', '500', '700', '900'],
+  weight: ["100", "300", "400", "500", "700", "900"],
 });
 
 // if (process.env.NEXT_PUBLIC_API_MOCKING === 'enabled') {
@@ -25,7 +26,9 @@ export default function App({ Component, pageProps }: AppProps) {
       `}</style>
       <GoogleOAuthProvider clientId="260147743633-av231aqnhqrc3pncehvvcplcsqrikvgi.apps.googleusercontent.com">
         <QueryClientProvider client={queryClient}>
-          <Component {...pageProps} />
+          <MenuBar>
+            <Component {...pageProps} />
+          </MenuBar>
         </QueryClientProvider>
       </GoogleOAuthProvider>
     </>
