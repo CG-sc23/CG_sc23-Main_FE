@@ -6,6 +6,12 @@ const nextConfig = {
   sassOptions: {
     includePaths: [path.join(__dirname, 'styles')],
   },
+  compiler: {
+    emotion: {
+      sourceMap: true,
+      autoLabel: 'dev-only',
+    },
+  },
   swcMinify: true,
 };
 
