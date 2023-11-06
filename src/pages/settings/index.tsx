@@ -1,12 +1,15 @@
-import { css } from "@emotion/react";
-import styled from "@emotion/styled";
-import { useState } from "react";
-import Link from "next/link";
-import { AiOutlineRight } from "react-icons/ai";
-import Switch from "react-switch";
+import { css } from '@emotion/react';
+import styled from '@emotion/styled';
+import { useState } from 'react';
+import Link from 'next/link';
+import { AiOutlineRight } from 'react-icons/ai';
+import Switch from 'react-switch';
 
-import { bp } from "@/libs/styles/constants";
-import { mySingupStrategy } from "@/libs/utils/profile";
+import { bp } from '@/libs/styles/constants';
+import { mySingupStrategy } from '@/libs/utils/profile';
+import { colors } from '@/components/constant/color';
+import client from '@/api/client';
+import useDeactivate from '@/hooks/user/useDeactivate';
 
 const Block = styled.div`
   display: flex;
@@ -35,19 +38,44 @@ const Linker = styled(Link)`
   color: black;
 `;
 
+const Button = styled.button`
+  border: none;
+  outline: none;
+  background: none;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  text-decoration: none;
+  color: black;
+
+  font-size: 1rem;
+
+  cursor: pointer;
+
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: ${colors.grey100};
+  }
+`;
+
 export default function Settings() {
   const [profile, setProfile] = useState({
     id: null,
-    email: "jun@google.com",
-    name: "임준혁",
-    github_link: "hello@github.com",
-    image_link: "/profile.jpg",
-    short_description: "안녕하세요 올리버쌤입니다.".repeat(5),
+    email: 'jun@google.com',
+    name: '임준혁',
+    github_link: 'hello@github.com',
+    image_link: '/profile.jpg',
+    short_description: '안녕하세요 올리버쌤입니다.'.repeat(5),
     grade: 1,
     like: 12,
     rating: 4.3,
-    provider: "our",
+    provider: 'our',
   });
+
+  const { deactivate } = useDeactivate();
 
   const [checked, setChecked] = useState(false);
   const handleToggleChange = (nextChecked: boolean) => setChecked(nextChecked);
@@ -132,7 +160,7 @@ export default function Settings() {
                 gap: 1rem;
               `}
             >
-              <span>{checked ? "공개" : "비공개"}</span>
+              <span>{checked ? '공개' : '비공개'}</span>
               <Switch
                 onChange={handleToggleChange}
                 checked={checked}
@@ -141,6 +169,16 @@ export default function Settings() {
               />
             </div>
           </Linker>
+          <Button type="button" onClick={() => deactivate()}>
+            <span
+              css={css`
+                font-weight: 500;
+              `}
+            >
+              회원탈퇴
+            </span>
+            <AiOutlineRight />
+          </Button>
         </Block>
       </div>
     </div>

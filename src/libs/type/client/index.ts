@@ -41,3 +41,7 @@ export type PasswordResetConfirmResponse = OkAndOptionalReason;
 export type PasswordResetConfirmPayload = PasswordResetCheckQueries & {
   new_password: string;
 };
+
+/** USER */
+export type DeactivateAuthToken = { token: string };
+export type DeactivateResponse = OkAndOptionalReason;

@@ -1,5 +1,6 @@
 import { client as http } from '@/api/instance';
 import { SignUp, SignIn, SignOut, Password } from '@/api/client/auth';
+import { Deactivate } from '@/api/client/user';
 import { handleClientError } from '@/api/handleError';
 
 const client = {
@@ -20,6 +21,7 @@ const client = {
   ...SignIn,
   ...SignOut,
   ...Password,
+  ...Deactivate,
 };
 
 export default client;

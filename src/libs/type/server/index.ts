@@ -28,3 +28,7 @@ export type SocialAuthApiResponse = BaseApiResponse & {
 export type SignInApiPayload = { email: string; password: string };
 export type SignOutApiAuthToken = { token: string };
 export type SocialAuthApiPayload = { code: string };
+
+/** USER */
+export type DeactivateApiAuthToken = { token: string };
+export type DeactivateApiResponse = { success?: boolean; detail?: string };
