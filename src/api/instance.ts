@@ -17,7 +17,7 @@ client.interceptors.request.use((req) => {
     const key = `${req.url}$${JSON.stringify(req.data)}`;
 
     if (sourceRequest[key]) {
-      throw new Error('Automatic cancellation'); // If the request exists cancel
+      throw new Error(`Automatic cancellation: ${req.url}`); // If the request exists cancel
     } else {
       sourceRequest[key] = new Date(); // Store request key
     }

@@ -3,10 +3,13 @@ export type HealthCheckResponse = {
   api_ok: boolean;
 };
 
-export type SignUpResponse = {
+type OkAndOptionalReason = {
   ok: boolean;
   reason?: string;
 };
+export type SignUpResponse = OkAndOptionalReason;
+export type SignUpEmailVerifyResponse = OkAndOptionalReason;
+export type SignUpEmailVerifyConfirmResponse = OkAndOptionalReason;
 
 export type Provider = 'KAKAO' | 'NAVER';
 export type SocialAuthPayload = {
@@ -19,3 +22,6 @@ export type SocialAuthResponse = {
   preAccessToken?: string;
   reason?: string;
 };
+
+export type SignUpEmailVerifyPayload = { email: string };
+export type SignUpEmailVerifyConfirmQuery = { email: string; token: string };

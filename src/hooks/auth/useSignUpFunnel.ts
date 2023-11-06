@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
-import client from '@/api/client';
-import { socialPreAccessToken } from '@/store';
-import { useFunnel } from '@toss/use-funnel';
-import { type NonEmptyArray, QS } from '@toss/utils';
 import { useRouter } from 'next/router';
+import { type NonEmptyArray, QS } from '@toss/utils';
+
+import client from '@/api/client';
+import { queryKey } from '@/libs/constant';
+import { queryClient } from '@/pages/_app';
+import { useFunnel } from '../useFunnel';
 
 type List = NonEmptyArray<string> | readonly string[];
 type Options = {
@@ -19,7 +20,9 @@ export default function useSignUpFunnel(
 ) {
   const router = useRouter();
   const [status, setStatus] = useState<Status>('pending');
-  const preAccessToken = useRecoilValue(socialPreAccessToken);
+  const preAccessToken = queryClient.getQueryData<string>([
+    queryKey.PRE_ACCESS_TOKEN,
+  ]);
   const steps = [...list, DONE] as NonEmptyArray<string>;
   type State = {
     [key in (typeof steps)[number]]?: string | File;
@@ -57,12 +60,13 @@ export default function useSignUpFunnel(
       setStatus('loading');
       // eslint-disable-next-line no-console
       const result = await client.signUp(formData).catch(console.error);
-      if (result?.data?.ok) return setStatus('fulfilled');
+
+      if (result?.ok) return setStatus('fulfilled');
       return setStatus('rejected');
     },
   }).withState<State>({});
 
-  function onPrevStep() {
+  function prevStep() {
     const target = QS.get('step') as (typeof steps)[number] | undefined;
     if (target === undefined) return;
 
@@ -75,7 +79,7 @@ export default function useSignUpFunnel(
     }));
   }
 
-  function onNextStep(update: string | File) {
+  function nextStep(update: string | File) {
     const target = QS.get('step') as (typeof steps)[number] | undefined;
     if (target === undefined) return;
 
@@ -100,7 +104,7 @@ export default function useSignUpFunnel(
     Funnel,
     steps,
     status,
-    onPrevStep,
-    onNextStep,
+    prevStep,
+    nextStep,
   };
 }

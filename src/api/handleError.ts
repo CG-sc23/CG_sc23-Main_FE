@@ -5,10 +5,7 @@ export function handleClientError<T>(e: unknown) {
   const error = e as AxiosError<T>;
 
   console.error('클라이언트 서버 에러\n', error);
-  return {
-    data: error.response?.data,
-    status: error.status,
-  };
+  return error.response?.data;
 }
 
 export function handleApiError<T>(e: unknown) {

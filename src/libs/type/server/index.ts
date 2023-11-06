@@ -2,7 +2,10 @@ export type BaseApiResponse = {
   success: boolean;
 };
 
-export type SignUpApiResponse = BaseApiResponse & { reason?: string };
+type SuccessAndOptionalReason = BaseApiResponse & { reason?: string };
+export type SignUpApiResponse = SuccessAndOptionalReason;
+export type SignUpEmailVerifyApiResponse = SuccessAndOptionalReason;
+export type SignUpEmailVerifyConfirmApiResponse = SuccessAndOptionalReason;
 
 export type SocialAuthApiPayload = { code: string };
 export type SocialAuthApiResponse = BaseApiResponse & {

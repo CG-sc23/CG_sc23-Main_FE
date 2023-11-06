@@ -61,9 +61,9 @@ export default async function handleSignUp(
   if (result === undefined)
     return res.status(500).json({ ok: false, reason: '서버 연결 없음' });
 
-  const { data, status } = result;
+  const { data } = result;
 
-  if (status === 400) {
+  if (!data?.success) {
     return res.status(400).json({ ok: false, reason: data?.reason });
   }
 

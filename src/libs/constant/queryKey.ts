@@ -1,0 +1,7 @@
+const STEP_QUERY_KEY = 'STEP_QUERY_KEY';
+const PRE_ACCESS_TOKEN = 'PRE_ACCESS_TOKEN';
+
+export const queryKey = {
+  STEP_QUERY_KEY,
+  PRE_ACCESS_TOKEN,
+};

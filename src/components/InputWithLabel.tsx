@@ -14,9 +14,11 @@ type Props = {
   type: HTMLInputTypeAttribute;
   label: string;
   value: string;
+  name?: string;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   error: string;
   autoFocus?: boolean;
+  readonly?: boolean;
 };
 
 const initialVariant = {
@@ -44,7 +46,16 @@ const errorVariants = {
 };
 
 export default function InputWithLabel(props: Props) {
-  const { type, value, label, onChange, error, autoFocus = true } = props;
+  const {
+    type,
+    value,
+    label,
+    onChange,
+    error,
+    name,
+    autoFocus = true,
+    readonly = false,
+  } = props;
   const isPassword = type === 'password';
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -81,7 +92,12 @@ export default function InputWithLabel(props: Props) {
   };
 
   return (
-    <div>
+    <div
+      css={css`
+        flex: 1;
+        padding: 40px 0 0 0;
+      `}
+    >
       <label
         css={css`
           position: relative;
@@ -94,7 +110,7 @@ export default function InputWithLabel(props: Props) {
             left: 0;
             bottom: 0;
             transform-origin: 0 0;
-            font-weight: 500;
+            font-weight: 600;
             text-align: left;
             z-index: -10;
             color: ${colors.grey400};
@@ -109,12 +125,14 @@ export default function InputWithLabel(props: Props) {
           type={isPassword && isVisible ? 'text' : type}
           id={label}
           value={value}
+          name={name}
           ref={input}
           onChange={onChange}
           onFocus={handleFocus}
           onBlur={handleBlur}
+          readOnly={readonly}
           css={css`
-            color: ${colors.grey800};
+            color: ${readonly ? colors.grey400 : colors.grey800};
             width: 100%;
             background-color: transparent;
             padding: 0 0 4px;
@@ -125,6 +143,7 @@ export default function InputWithLabel(props: Props) {
             outline: none;
             border: 0 none;
             border-bottom: 2px solid ${error ? colors.red300 : colors.grey300};
+            z-index: 10;
             :focus {
               border-bottom-color: ${error ? colors.red300 : colors.blue400};
             }
@@ -152,7 +171,7 @@ export default function InputWithLabel(props: Props) {
         animate={error !== '' ? 'animate' : 'initial'}
         exit="initial"
         css={css`
-          padding: 0.5rem 0;
+          padding: 0.2rem 0;
           height: 1.5rem;
           font-size: 1rem;
           color: ${colors.red400};

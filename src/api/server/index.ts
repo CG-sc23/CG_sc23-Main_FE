@@ -1,13 +1,8 @@
-import type FormData from 'form-data';
+import type { BaseApiResponse } from '@/libs/type/server';
 
 import { server as http } from '@/api/instance';
-import type {
-  BaseApiResponse,
-  SignUpApiResponse,
-  SocialAuthApiPayload,
-  SocialAuthApiResponse,
-} from '@/libs/type/server';
-import { handleApiError } from '../handleError';
+import { SignUp, SocialAuth } from '@/api/server/auth';
+import { handleApiError } from '@/api/handleError';
 
 const server = {
   async getHealthCheck() {
@@ -20,69 +15,8 @@ const server = {
     }
   },
 
-  async postSignUp(payload: FormData) {
-    try {
-      const { data, status } = await http.post<SignUpApiResponse>(
-        '/auth/v1/sign-up',
-        payload,
-      );
-
-      return {
-        data,
-        status,
-      };
-    } catch (e) {
-      return handleApiError<SignUpApiResponse>(e);
-    }
-  },
-
-  async postSocialSignUp(payload: FormData) {
-    try {
-      const { data, status } = await http.post<SignUpApiResponse>(
-        '/auth/v1/social/sign-up',
-        payload,
-      );
-
-      return {
-        data,
-        status,
-      };
-    } catch (e) {
-      return handleApiError<SignUpApiResponse>(e);
-    }
-  },
-
-  async postKakao(payload: SocialAuthApiPayload) {
-    try {
-      const { data, status } = await http.post<SocialAuthApiResponse>(
-        '/auth/v1/social/kakao',
-        payload,
-      );
-
-      return {
-        data,
-        status,
-      };
-    } catch (e) {
-      return handleApiError<SocialAuthApiResponse>(e);
-    }
-  },
-
-  async postNaver(payload: SocialAuthApiPayload) {
-    try {
-      const { data, status } = await http.post<SocialAuthApiResponse>(
-        '/auth/v1/social/naver',
-        payload,
-      );
-
-      return {
-        data,
-        status,
-      };
-    } catch (e) {
-      return handleApiError<SocialAuthApiResponse>(e);
-    }
-  },
+  ...SignUp,
+  ...SocialAuth,
 };
 
 export default server;
