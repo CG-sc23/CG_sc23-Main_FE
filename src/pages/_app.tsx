@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Roboto } from 'next/font/google';
 import { RecoilRoot } from 'recoil';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import User from '@/components/User';
 
 const roboto = Roboto({
   weight: ['100', '300', '400', '500', '700', '900'],
@@ -26,7 +27,9 @@ export default function App({ Component, pageProps }: AppProps) {
       `}</style>
       <QueryClientProvider client={queryClient}>
         <RecoilRoot>
-          <Component {...pageProps} />
+          <User>
+            <Component {...pageProps} />
+          </User>
           <ReactQueryDevtools />
         </RecoilRoot>
       </QueryClientProvider>

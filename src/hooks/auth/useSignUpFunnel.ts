@@ -4,7 +4,7 @@ import { type NonEmptyArray, QS } from '@toss/utils';
 
 import client from '@/api/client';
 import { queryKey } from '@/libs/constant';
-import { queryClient } from '@/pages/_app';
+import { useQueryClient } from '@tanstack/react-query';
 import { useFunnel } from '../useFunnel';
 
 type List = NonEmptyArray<string> | readonly string[];
@@ -20,6 +20,7 @@ export default function useSignUpFunnel(
 ) {
   const router = useRouter();
   const [status, setStatus] = useState<Status>('pending');
+  const queryClient = useQueryClient();
   const preAccessToken = queryClient.getQueryData<string>([
     queryKey.PRE_ACCESS_TOKEN,
   ]);

@@ -5,10 +5,11 @@ import { useRouter } from 'next/router';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { Provider, SocialAuthResponse } from '@/libs/type/client';
-import { queryKey } from '@/libs/constant';
+import { mutationKey, queryKey } from '@/libs/constant';
 import client from '@/api/client';
 
 import { useQueryParam } from '../useQueryParam';
+import useSignIn from './useSignIn';
 
 type AuthParams = {
   authCode: string;
@@ -21,12 +22,14 @@ export default function useSocialAuth() {
   const code = useQueryParam('code');
   const state = useQueryParam('state');
   const queryClient = useQueryClient();
+  const { socialLogin } = useSignIn();
 
   const { mutate: socialAuth } = useMutation<
     SocialAuthResponse | undefined,
     unknown,
     AuthParams
   >({
+    mutationKey: [mutationKey.AUTH_SOCIAL],
     mutationFn: ({ authCode, provider }) =>
       client.socialAuth({ provider, code: authCode }),
 
@@ -43,7 +46,7 @@ export default function useSocialAuth() {
       }
 
       if (data.isUser && data.token) {
-        console.log('TODO: login');
+        socialLogin(data.token);
       }
     },
 

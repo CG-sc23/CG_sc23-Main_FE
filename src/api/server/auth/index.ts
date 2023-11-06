@@ -7,6 +7,10 @@ import type {
   SocialAuthApiResponse,
   SignUpEmailVerifyApiResponse,
   SignUpEmailVerifyConfirmApiResponse,
+  SignInApiPayload,
+  SignInApiResponse,
+  SignOutApiResponse,
+  SignOutApiPayload,
 } from '@/libs/type/server';
 import { handleApiError } from '@/api/handleError';
 
@@ -72,6 +76,42 @@ export const SignUp = {
       };
     } catch (e) {
       return handleApiError<SignUpEmailVerifyConfirmApiResponse>(e);
+    }
+  },
+};
+
+export const SignIn = {
+  async postSignIn(payload: SignInApiPayload) {
+    try {
+      const { data, status } = await http.post<SignInApiResponse>(
+        '/auth/v1/sign-in',
+        payload,
+      );
+
+      return {
+        data,
+        status,
+      };
+    } catch (e) {
+      return handleApiError<SignInApiResponse>(e);
+    }
+  },
+};
+
+export const SignOut = {
+  async postSignOut(payload: SignOutApiPayload) {
+    try {
+      return await http.post<SignOutApiResponse>(
+        '/auth/v1/sign-out',
+        {},
+        {
+          headers: {
+            Authorization: `Token ${payload.token}`,
+          },
+        },
+      );
+    } catch (e) {
+      return handleApiError<SignOutApiResponse>(e);
     }
   },
 };

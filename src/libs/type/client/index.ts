@@ -8,6 +8,10 @@ type OkAndOptionalReason = {
   reason?: string;
 };
 export type SignUpResponse = OkAndOptionalReason;
+export type SignInResponse = OkAndOptionalReason & { token?: string };
+export type SignInPayload = { email: string; password: string };
+export type SignOutResponse = OkAndOptionalReason;
+export type SignOutPayload = { token: string };
 export type SignUpEmailVerifyResponse = OkAndOptionalReason;
 export type SignUpEmailVerifyConfirmResponse = OkAndOptionalReason;
 

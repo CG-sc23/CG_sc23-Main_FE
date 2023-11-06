@@ -1,8 +1,10 @@
 import Link from 'next/link';
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+import { motion } from 'framer-motion';
 
+import useSignIn from '@/hooks/auth/useSignIn';
 import { Schema, validatedOnChange } from '@/libs/utils/validate';
 
 import Card from '@/components/Card';
@@ -32,22 +34,28 @@ const Button = styled.button<{ bgColor?: string }>`
   cursor: pointer;
 `;
 
+const errorVariants = {
+  initial: {
+    opacity: 0.2,
+    y: '-10px',
+  },
+  animate: {
+    opacity: 1,
+    y: 0,
+  },
+};
+
 export default function SignIn() {
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState('');
   const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
 
-  const naver = () => {
-    const CLIENT_ID = '6fRIFafpI7oj_rMCEl1w';
-    const NAVER_AUTH_URL = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${CLIENT_ID}&state=domomainweb!@&redirect_uri=http://localhost:3000/auth/Loading`;
-    window.location.href = NAVER_AUTH_URL;
-  };
+  const { signIn, kakao, naver, error } = useSignIn();
 
-  const kakao = () => {
-    const CLIENT_ID = '692654ded92217544ec272739b534375';
-    const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${CLIENT_ID}&redirect_uri=http://localhost:3000/auth/Loading`;
-    window.location.href = KAKAO_AUTH_URL;
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    signIn({ email, password });
   };
 
   return (
@@ -70,7 +78,7 @@ export default function SignIn() {
             border-radius: 50%;
           `}
         />
-        <Form>
+        <Form onSubmit={onSubmit}>
           <span
             css={css`
               padding: 0 2rem;
@@ -110,6 +118,20 @@ export default function SignIn() {
           <Button type="submit" bgColor={colors.black}>
             Login
           </Button>
+          <motion.div
+            variants={errorVariants}
+            initial="initial"
+            animate={error !== '' ? 'animate' : 'initial'}
+            exit="initial"
+            css={css`
+              padding: 0.2rem 0;
+              height: 1.5rem;
+              font-size: 1rem;
+              color: ${colors.red400};
+            `}
+          >
+            {error}
+          </motion.div>
         </Form>
         <div
           css={css`
