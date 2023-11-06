@@ -55,14 +55,16 @@ export default async function handleSignUp(
   appendFormData(form, fields);
   appendFormData(form, files);
 
-  // const result = fields.preAccessToken ? await server.postSocialSingUp(form) : await server.postSignUp(form);
-  const result = await server.postSingUp(form);
-  if (result === undefined) return res.status(500).end();
+  const result = fields.pre_access_token
+    ? await server.postSocialSignUp(form)
+    : await server.postSignUp(form);
+  if (result === undefined)
+    return res.status(500).json({ ok: false, reason: '서버 연결 없음' });
 
-  const { data, status } = result;
+  const { data } = result;
 
-  if (status === 400) {
-    return res.status(400).json({ ok: false, reason: data.reason });
+  if (!data?.success) {
+    return res.status(400).json({ ok: false, reason: data?.reason });
   }
 
   return res.status(201).json({ ok: true });

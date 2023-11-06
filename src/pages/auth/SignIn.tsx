@@ -1,10 +1,15 @@
-import Card from '@/components/Card';
-import InputWithLabel from '@/components/InputWithLabel';
-import { colors } from '@/components/constant/color';
+import Link from 'next/link';
+import { FormEvent, useState } from 'react';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import Link from 'next/link';
-import { useState } from 'react';
+import { motion } from 'framer-motion';
+
+import useSignIn from '@/hooks/auth/useSignIn';
+import { Schema, validatedOnChange } from '@/libs/utils/validate';
+
+import Card from '@/components/Card';
+import { colors } from '@/components/constant/color';
+import InputWithLabel from '@/components/InputWithLabel';
 
 const Form = styled.form`
   display: flex;
@@ -20,7 +25,7 @@ const Button = styled.button<{ bgColor?: string }>`
   padding: 1rem 0;
 
   background-color: ${(props) =>
-    props.bgColor ? props.bgColor : colors.blue300};
+    props.bgColor ? props.bgColor : colors.yellow300};
   color: ${(props) => (props.color ? props.color : colors.white)};
 
   border-radius: 5px;
@@ -29,9 +34,29 @@ const Button = styled.button<{ bgColor?: string }>`
   cursor: pointer;
 `;
 
+const errorVariants = {
+  initial: {
+    opacity: 0.2,
+    y: '-10px',
+  },
+  animate: {
+    opacity: 1,
+    y: 0,
+  },
+};
+
 export default function SignIn() {
   const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+
+  const { signIn, kakao, naver, error } = useSignIn();
+
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    signIn({ email, password });
+  };
 
   return (
     <div
@@ -53,7 +78,7 @@ export default function SignIn() {
             border-radius: 50%;
           `}
         />
-        <Form>
+        <Form onSubmit={onSubmit}>
           <span
             css={css`
               padding: 0 2rem;
@@ -71,17 +96,42 @@ export default function SignIn() {
             type="email"
             label="Email"
             value={email}
-            setter={setEmail}
+            error={emailError}
+            onChange={validatedOnChange({
+              schema: Schema.email,
+              setValue: setEmail,
+              setError: setEmailError,
+            })}
           />
           <InputWithLabel
             type="password"
             label="Password"
             value={password}
-            setter={setPassword}
+            error={passwordError}
+            autoFocus={false}
+            onChange={validatedOnChange({
+              schema: Schema.password,
+              setValue: setPassword,
+              setError: setPasswordError,
+            })}
           />
           <Button type="submit" bgColor={colors.black}>
             Login
           </Button>
+          <motion.div
+            variants={errorVariants}
+            initial="initial"
+            animate={error !== '' ? 'animate' : 'initial'}
+            exit="initial"
+            css={css`
+              padding: 0.2rem 0;
+              height: 1.5rem;
+              font-size: 1rem;
+              color: ${colors.red400};
+            `}
+          >
+            {error}
+          </motion.div>
         </Form>
         <div
           css={css`
@@ -120,8 +170,10 @@ export default function SignIn() {
             gap: 10px;
           `}
         >
-          <Button>Login with Google</Button>
-          <Button bgColor={colors.green300}>Login with Naver</Button>
+          <Button onClick={kakao}>Login with KAKAO</Button>
+          <Button onClick={naver} bgColor={colors.green300}>
+            Login with Naver
+          </Button>
         </div>
         <Link href="/auth/SignUp?step=email">Sign Up</Link>
       </Card>

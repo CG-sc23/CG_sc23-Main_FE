@@ -1,7 +1,11 @@
-import client from '@/api/client';
-import { useFunnel } from '@toss/use-funnel';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import { type NonEmptyArray, QS } from '@toss/utils';
-import { useState } from 'react';
+
+import client from '@/api/client';
+import { queryKey } from '@/libs/constant';
+import { useQueryClient } from '@tanstack/react-query';
+import { useFunnel } from '../useFunnel';
 
 type List = NonEmptyArray<string> | readonly string[];
 type Options = {
@@ -14,13 +18,31 @@ export default function useSignUpFunnel(
   list: List,
   { afterStepChange }: Options,
 ) {
+  const router = useRouter();
   const [status, setStatus] = useState<Status>('pending');
+  const queryClient = useQueryClient();
+  const preAccessToken = queryClient.getQueryData<string>([
+    queryKey.PRE_ACCESS_TOKEN,
+  ]);
   const steps = [...list, DONE] as NonEmptyArray<string>;
   type State = {
     [key in (typeof steps)[number]]?: string | File;
   };
+  if (!steps.includes('email') || !steps.includes('password')) {
+    throw new Error('Steps에 이메일과 비밀번호가 필요합니다.');
+  }
+  if (
+    steps.findIndex((step) => step === 'email') !== 0 ||
+    steps.findIndex((step) => step === 'password') !== 1
+  ) {
+    throw new Error('이메일과 비밀번호는 각각 첫번째 두번째 단계여야 합니다.');
+  }
+
+  const initialStep = preAccessToken
+    ? steps.at(steps.findIndex((step) => step === 'password') + 1)
+    : steps.at(0);
   const [Funnel, state, setStep] = useFunnel(steps, {
-    initialStep: steps.at(0),
+    initialStep,
     stepQueryKey: 'step',
     onStepChange: async (name) => {
       afterStepChange(state[name] ?? '');
@@ -34,16 +56,18 @@ export default function useSignUpFunnel(
 
         formData.append(key, val);
       });
+      if (preAccessToken) formData.append('pre_access_token', preAccessToken);
 
       setStatus('loading');
       // eslint-disable-next-line no-console
       const result = await client.signUp(formData).catch(console.error);
-      if (result?.data.ok) return setStatus('fulfilled');
+
+      if (result?.ok) return setStatus('fulfilled');
       return setStatus('rejected');
     },
   }).withState<State>({});
 
-  function onPrevStep() {
+  function prevStep() {
     const target = QS.get('step') as (typeof steps)[number] | undefined;
     if (target === undefined) return;
 
@@ -56,7 +80,7 @@ export default function useSignUpFunnel(
     }));
   }
 
-  function onNextStep(update: string | File) {
+  function nextStep(update: string | File) {
     const target = QS.get('step') as (typeof steps)[number] | undefined;
     if (target === undefined) return;
 
@@ -70,11 +94,18 @@ export default function useSignUpFunnel(
     }));
   }
 
+  useEffect(() => {
+    if (router.query?.step) return;
+    router.replace({
+      query: { ...router.query, step: initialStep },
+    });
+  }, [router, initialStep]);
+
   return {
     Funnel,
     steps,
-    onPrevStep,
-    onNextStep,
     status,
+    prevStep,
+    nextStep,
   };
 }

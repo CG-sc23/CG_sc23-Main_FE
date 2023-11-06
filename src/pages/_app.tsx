@@ -1,10 +1,12 @@
-/* eslint-disable react/jsx-no-useless-fragment */
-import "@/styles/global.scss";
-import type { AppProps } from "next/app";
-import { QueryClient, QueryClientProvider } from "react-query";
-import { Roboto } from "next/font/google";
-import { GoogleOAuthProvider } from "@react-oauth/google";
+import '@/styles/global.scss';
+import type { AppProps } from 'next/app';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+import { Roboto } from 'next/font/google';
+import { RecoilRoot } from 'recoil';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import MenuBar from "@/components/MenuBar";
+import User from '@/components/User';
 
 const roboto = Roboto({
   weight: ["100", "300", "400", "500", "700", "900"],
@@ -14,7 +16,7 @@ const roboto = Roboto({
 //   import('@/api/server/mock');
 // }
 
-const queryClient = new QueryClient();
+export const queryClient = new QueryClient();
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -24,13 +26,16 @@ export default function App({ Component, pageProps }: AppProps) {
           font-family: ${roboto.style.fontFamily};
         }
       `}</style>
-      <GoogleOAuthProvider clientId="260147743633-av231aqnhqrc3pncehvvcplcsqrikvgi.apps.googleusercontent.com">
-        <QueryClientProvider client={queryClient}>
-          <MenuBar>
-            <Component {...pageProps} />
-          </MenuBar>
-        </QueryClientProvider>
-      </GoogleOAuthProvider>
+      <QueryClientProvider client={queryClient}>
+        <RecoilRoot>
+          <User>
+            <MenuBar>
+              <Component {...pageProps} />
+            </MenuBar>
+          </User>
+          <ReactQueryDevtools />
+        </RecoilRoot>
+      </QueryClientProvider>
     </>
   );
 }

@@ -1,8 +1,8 @@
-import type FormData from 'form-data';
+import type { BaseApiResponse } from '@/libs/type/server';
 
 import { server as http } from '@/api/instance';
-import type { BaseApiResponse, SignUpApiResponse } from '@/libs/type/server';
-import { handleApiError } from '../handleError';
+import { SignUp, SocialAuth, SignIn, SignOut } from '@/api/server/auth';
+import { handleApiError } from '@/api/handleError';
 
 const server = {
   async getHealthCheck() {
@@ -15,21 +15,10 @@ const server = {
     }
   },
 
-  async postSingUp(payload: FormData) {
-    try {
-      const { data, status } = await http.post<SignUpApiResponse>(
-        '/auth/v1/sign-up',
-        payload,
-      );
-
-      return {
-        data,
-        status,
-      };
-    } catch (e) {
-      handleApiError(e);
-    }
-  },
+  ...SignUp,
+  ...SignIn,
+  ...SignOut,
+  ...SocialAuth,
 };
 
 export default server;
