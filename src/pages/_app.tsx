@@ -5,10 +5,11 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Roboto } from 'next/font/google';
 import { RecoilRoot } from 'recoil';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import MenuBar from "@/components/MenuBar";
 import User from '@/components/User';
 
 const roboto = Roboto({
-  weight: ['100', '300', '400', '500', '700', '900'],
+  weight: ["100", "300", "400", "500", "700", "900"],
 });
 
 // if (process.env.NEXT_PUBLIC_API_MOCKING === 'enabled') {
@@ -28,7 +29,9 @@ export default function App({ Component, pageProps }: AppProps) {
       <QueryClientProvider client={queryClient}>
         <RecoilRoot>
           <User>
-            <Component {...pageProps} />
+            <MenuBar>
+              <Component {...pageProps} />
+            </MenuBar>
           </User>
           <ReactQueryDevtools />
         </RecoilRoot>
