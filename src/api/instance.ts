@@ -8,20 +8,20 @@ export const server = axios.create({
 
 export const client = axios.create();
 
-type SourceRequest = {
-  [key: string]: Date;
-};
-const sourceRequest: SourceRequest = {};
-client.interceptors.request.use((req) => {
-  if (req.method === 'post') {
-    const key = `${req.url}$${JSON.stringify(req.data)}`;
+// type SourceRequest = {
+//   [key: string]: Date;
+// };
+// const sourceRequest: SourceRequest = {};
+// client.interceptors.request.use((req) => {
+//   if (req.method === 'post') {
+//     const key = `${req.url}$${JSON.stringify(req.data)}`;
 
-    if (sourceRequest[key]) {
-      throw new Error(`Automatic cancellation: ${req.url}`); // If the request exists cancel
-    } else {
-      sourceRequest[key] = new Date(); // Store request key
-    }
-  }
+//     if (sourceRequest[key]) {
+//       throw new Error(`Automatic cancellation: ${req.url}`); // If the request exists cancel
+//     } else {
+//       sourceRequest[key] = new Date(); // Store request key
+//     }
+//   }
 
-  return req;
-});
+//   return req;
+// });

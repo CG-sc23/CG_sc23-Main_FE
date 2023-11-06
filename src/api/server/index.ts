@@ -1,7 +1,13 @@
 import type { BaseApiResponse } from '@/libs/type/server';
 
 import { server as http } from '@/api/instance';
-import { SignUp, SocialAuth, SignIn, SignOut } from '@/api/server/auth';
+import {
+  SignUp,
+  SocialAuth,
+  SignIn,
+  SignOut,
+  Password,
+} from '@/api/server/auth';
 import { handleApiError } from '@/api/handleError';
 
 const server = {
@@ -19,6 +25,7 @@ const server = {
   ...SignIn,
   ...SignOut,
   ...SocialAuth,
+  ...Password,
 };
 
 export default server;

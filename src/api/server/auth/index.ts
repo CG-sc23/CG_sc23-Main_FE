@@ -10,7 +10,13 @@ import type {
   SignInApiPayload,
   SignInApiResponse,
   SignOutApiResponse,
-  SignOutApiPayload,
+  SignOutApiAuthToken,
+  PasswordResetApiPayload,
+  PasswordResetApiResponse,
+  PasswordResetCheckApiQueries,
+  PasswordResetCheckApiResponse,
+  PasswordResetConfirmApiPayload,
+  PasswordResetConfirmApiResponse,
 } from '@/libs/type/server';
 import { handleApiError } from '@/api/handleError';
 
@@ -99,17 +105,13 @@ export const SignIn = {
 };
 
 export const SignOut = {
-  async postSignOut(payload: SignOutApiPayload) {
+  async getSignOut(authHeader: SignOutApiAuthToken) {
     try {
-      return await http.post<SignOutApiResponse>(
-        '/auth/v1/sign-out',
-        {},
-        {
-          headers: {
-            Authorization: `Token ${payload.token}`,
-          },
+      return await http.get<SignOutApiResponse>('/auth/v1/sign-out', {
+        headers: {
+          Authorization: `Token ${authHeader.token}`,
         },
-      );
+      });
     } catch (e) {
       return handleApiError<SignOutApiResponse>(e);
     }
@@ -146,6 +148,38 @@ export const SocialAuth = {
       };
     } catch (e) {
       return handleApiError<SocialAuthApiResponse>(e);
+    }
+  },
+};
+
+export const Password = {
+  async postPasswordReset(payload: PasswordResetApiPayload) {
+    try {
+      return await http.post<PasswordResetApiResponse>(
+        '/auth/v1/password-reset',
+        payload,
+      );
+    } catch (e) {
+      return handleApiError<PasswordResetApiResponse>(e);
+    }
+  },
+  async getPasswordResetCheck(queries: PasswordResetCheckApiQueries) {
+    try {
+      return await http.get<PasswordResetCheckApiResponse>(
+        `/auth/v1/password-reset-check?email=${queries.email}&token=${queries.token}`,
+      );
+    } catch (e) {
+      return handleApiError<PasswordResetCheckApiResponse>(e);
+    }
+  },
+  async putPasswordResetConfirm(payload: PasswordResetConfirmApiPayload) {
+    try {
+      return await http.put<PasswordResetConfirmApiResponse>(
+        `/auth/v1/password-reset-confirm`,
+        payload,
+      );
+    } catch (e) {
+      return handleApiError<PasswordResetConfirmApiResponse>(e);
     }
   },
 };

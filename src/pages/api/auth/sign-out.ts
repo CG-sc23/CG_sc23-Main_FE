@@ -1,14 +1,27 @@
 import server from '@/api/server';
-import type { SignOutResponse } from '@/libs/type/client';
+import type { SignOutAuthToken, SignOutResponse } from '@/libs/type/client';
+import { assert } from '@/libs/utils/assert';
 import type { NextApiResponse, NextApiRequest } from 'next';
 
-export default async function handleSocialAuth(
+type AuthHeader = `Token ${string}`;
+function getTokenFromAuthHeader(authHeader: AuthHeader) {
+  const token = authHeader.split(' ').at(1);
+  assert(token, "Can't find token.");
+
+  return token;
+}
+
+export default async function handleSignOut(
   req: NextApiRequest,
   res: NextApiResponse<SignOutResponse>,
 ) {
-  if (req.method !== 'POST') return res.status(405).end();
+  if (req.method !== 'GET') return res.status(405).end();
 
-  const result = await server.postSignOut(req.body);
+  if (!req.headers.authorization) return res.status(401).end();
+  const authHeader = req.headers.authorization as AuthHeader;
+  const result = await server.getSignOut({
+    token: getTokenFromAuthHeader(authHeader),
+  });
 
   if (result === undefined)
     return res.status(500).json({ ok: false, reason: '서버 통신 없음' });

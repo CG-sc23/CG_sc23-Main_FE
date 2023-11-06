@@ -40,6 +40,8 @@ export default function StepSignUp({
   const [sentCode, setSentCode] = useState(false);
   const [codeVerified, setCodeVerified] = useState(false);
 
+  const [isLoading, setIsLoading] = useState(false);
+
   function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
@@ -63,10 +65,13 @@ export default function StepSignUp({
       if (!emailInput) return;
 
       const emailValue = emailInput.value;
+
+      setIsLoading(true);
       const result = await client
         .signUpEmailVerify({ email: emailValue })
         // eslint-disable-next-line no-console
-        .catch(console.error);
+        .catch(console.error)
+        .finally(() => setIsLoading(false));
 
       if (!result) return;
       if (!result?.ok) return setError(result?.reason as string);
@@ -87,13 +92,16 @@ export default function StepSignUp({
       if (!codeInput) return;
 
       const codeValue = codeInput.value;
+
+      setIsLoading(true);
       const result = await client
         .signUpEmailVerifyConfirm({
           email: emailValue,
           token: codeValue,
         })
         // eslint-disable-next-line no-console
-        .catch(console.error);
+        .catch(console.error)
+        .finally(() => setIsLoading(false));
       if (!result) return;
       if (!result?.ok) return setError(result?.reason as string);
       setCodeVerified(true);
@@ -104,6 +112,9 @@ export default function StepSignUp({
   }
 
   function getButtonText() {
+    if (isLoading) {
+      return '작업 중';
+    }
     if (!sentCode) {
       return '인증번호 전송';
     }

@@ -1,14 +1,14 @@
 import server from '@/api/server';
-import type { SignInResponse } from '@/libs/type/client';
+import type { PasswordResetResponse } from '@/libs/type/client';
 import type { NextApiResponse, NextApiRequest } from 'next';
 
-export default async function handleSignIn(
+export default async function handlePasswordReset(
   req: NextApiRequest,
-  res: NextApiResponse<SignInResponse>,
+  res: NextApiResponse<PasswordResetResponse>,
 ) {
   if (req.method !== 'POST') return res.status(405).end();
 
-  const result = await server.postSignIn(req.body);
+  const result = await server.postPasswordReset(req.body);
 
   if (result === undefined)
     return res.status(500).json({ ok: false, reason: '서버 통신 없음' });
@@ -22,5 +22,5 @@ export default async function handleSignIn(
     return res.status(400).json({ ok: false, reason: data.reason });
   }
 
-  return res.status(200).json({ ok: true, token: data.token });
+  return res.status(200).json({ ok: true });
 }

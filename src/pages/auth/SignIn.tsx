@@ -51,10 +51,11 @@ export default function SignIn() {
   const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
 
-  const { signIn, kakao, naver, error } = useSignIn();
+  const { signIn, kakao, naver, error, isPending } = useSignIn();
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log('로그인');
     signIn({ email, password });
   };
 
@@ -116,7 +117,7 @@ export default function SignIn() {
             })}
           />
           <Button type="submit" bgColor={colors.black}>
-            Login
+            {isPending ? '작업 중' : '로그인'}
           </Button>
           <motion.div
             variants={errorVariants}
@@ -175,7 +176,15 @@ export default function SignIn() {
             Login with Naver
           </Button>
         </div>
-        <Link href="/auth/SignUp?step=email">Sign Up</Link>
+        <div
+          css={css`
+            display: flex;
+            justify-content: space-between;
+          `}
+        >
+          <Link href="/auth/SignUp?step=email">Sign Up</Link>
+          <Link href="/auth/PasswordReset">Find Password</Link>
+        </div>
       </Card>
     </div>
   );

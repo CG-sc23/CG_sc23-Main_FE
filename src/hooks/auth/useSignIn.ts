@@ -11,7 +11,7 @@ export default function useSignIn() {
   const queryClient = useQueryClient();
   const [error, setError] = useState('');
 
-  const { mutate: signIn } = useMutation<
+  const { mutate: signIn, isPending } = useMutation<
     SignInResponse | undefined,
     unknown,
     SignInPayload
@@ -21,6 +21,7 @@ export default function useSignIn() {
       return client.signIn({ email: params.email, password: params.password });
     },
     onSuccess: (res) => {
+      console.log(res);
       if (!res) return;
       if (res?.ok && res.token) {
         queryClient.setQueryData([queryKey.USER_ACCESS_TOKEN], res.token);
@@ -54,6 +55,7 @@ export default function useSignIn() {
     naver,
     kakao,
     signIn,
+    isPending,
     socialLogin,
   };
 }

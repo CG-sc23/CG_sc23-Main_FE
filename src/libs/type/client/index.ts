@@ -11,7 +11,7 @@ export type SignUpResponse = OkAndOptionalReason;
 export type SignInResponse = OkAndOptionalReason & { token?: string };
 export type SignInPayload = { email: string; password: string };
 export type SignOutResponse = OkAndOptionalReason;
-export type SignOutPayload = { token: string };
+export type SignOutAuthToken = { token: string };
 export type SignUpEmailVerifyResponse = OkAndOptionalReason;
 export type SignUpEmailVerifyConfirmResponse = OkAndOptionalReason;
 
@@ -29,3 +29,15 @@ export type SocialAuthResponse = {
 
 export type SignUpEmailVerifyPayload = { email: string };
 export type SignUpEmailVerifyConfirmQuery = { email: string; token: string };
+
+/** PASSWORD */
+export type PasswordResetResponse = OkAndOptionalReason;
+export type PasswordResetPayload = { email: string };
+export type PasswordResetCheckResponse = OkAndOptionalReason;
+export type PasswordResetCheckQueries = PasswordResetPayload & {
+  token: string;
+};
+export type PasswordResetConfirmResponse = OkAndOptionalReason;
+export type PasswordResetConfirmPayload = PasswordResetCheckQueries & {
+  new_password: string;
+};

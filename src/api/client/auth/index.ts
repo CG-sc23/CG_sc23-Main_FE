@@ -9,8 +9,14 @@ import type {
   SignUpEmailVerifyConfirmResponse,
   SignInPayload,
   SignInResponse,
-  SignOutPayload,
+  SignOutAuthToken,
   SignOutResponse,
+  PasswordResetResponse,
+  PasswordResetPayload,
+  PasswordResetCheckQueries,
+  PasswordResetCheckResponse,
+  PasswordResetConfirmPayload,
+  PasswordResetConfirmResponse,
 } from '@/libs/type/client';
 import { handleClientError } from '@/api/handleError';
 
@@ -83,16 +89,57 @@ export const SignIn = {
 };
 
 export const SignOut = {
-  async signOut(payload: SignOutPayload) {
+  async signOut(param: SignOutAuthToken) {
     try {
-      const { data } = await http.post<SignOutResponse>(
-        '/api/auth/sign-out',
+      const { data } = await http.get<SignOutResponse>('/api/auth/sign-out', {
+        headers: {
+          Authorization: `Token ${param.token}`,
+        },
+      });
+
+      return data;
+    } catch (e) {
+      return handleClientError<SignOutResponse>(e);
+    }
+  },
+};
+
+export const Password = {
+  async passwordReset(payload: PasswordResetPayload) {
+    try {
+      const { data } = await http.post<PasswordResetResponse>(
+        '/api/auth/password/reset',
         payload,
       );
 
       return data;
     } catch (e) {
-      return handleClientError<SignOutResponse>(e);
+      return handleClientError<PasswordResetResponse>(e);
+    }
+  },
+
+  async passwordResetCheck(queries: PasswordResetCheckQueries) {
+    try {
+      const { data } = await http.get<PasswordResetCheckResponse>(
+        `/api/auth/password/check?email=${queries.email}&token=${queries.token}`,
+      );
+
+      return data;
+    } catch (e) {
+      return handleClientError<PasswordResetCheckResponse>(e);
+    }
+  },
+
+  async passwordResetConfirm(payload: PasswordResetConfirmPayload) {
+    try {
+      const { data } = await http.put<PasswordResetConfirmResponse>(
+        '/api/auth/password/confirm',
+        payload,
+      );
+
+      return data;
+    } catch (e) {
+      return handleClientError<PasswordResetConfirmResponse>(e);
     }
   },
 };
