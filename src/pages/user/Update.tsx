@@ -3,8 +3,6 @@ import styled from "@emotion/styled";
 import { css } from "@emotion/react";
 import { bp } from "@/libs/styles/constants";
 import { LuPencil } from "react-icons/lu";
-import Link from "next/link";
-import AppBar from "@/components/Mobile/AppBar";
 
 const Form = styled.form`
   width: 672px;
@@ -16,9 +14,6 @@ const Form = styled.form`
   gap: 2rem;
   ${bp[0]} {
     width: 100%;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
   }
 `;
 
@@ -64,6 +59,9 @@ const TextArea = styled.textarea`
   border-radius: 0.5rem;
   resize: none;
   outline: none;
+  &:focus {
+    border: 1px solid black;
+  }
 `;
 
 const Submit = styled.button`
@@ -98,115 +96,105 @@ export default function Update() {
   });
 
   return (
-    <div
-      css={css`
-        width: 100vw;
-        height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      `}
-    >
-      <Form>
-        {/* image */}
-        <div
+    <Form>
+      {/* image */}
+      <div
+        css={css`
+          position: relative;
+          width: fit-content;
+          height: fit-content;
+        `}
+      >
+        <img
+          src={profile.image_link}
           css={css`
-            position: relative;
-            width: fit-content;
-            height: fit-content;
+            width: 256px;
+            height: 256px;
+            object-fit: cover;
+            ${bp[0]} {
+              width: 240px;
+              height: 240px;
+            }
+          `}
+        />
+        <label
+          htmlFor="profile_image"
+          css={css`
+            position: absolute;
+            right: 2.5rem;
+            bottom: 2.5rem;
           `}
         >
-          <img
-            src={profile.image_link}
+          <div
             css={css`
-              width: 256px;
-              height: 256px;
-              object-fit: cover;
-              ${bp[0]} {
-                width: 240px;
-                height: 240px;
-              }
-            `}
-          />
-          <label
-            htmlFor="profile_image"
-            css={css`
-              position: absolute;
-              right: 2.5rem;
-              bottom: 2.5rem;
+              padding: 0.25rem;
+              border: 1.5px solid black;
+              border-radius: 9999%;
+              background-color: white;
             `}
           >
-            <div
+            <LuPencil
               css={css`
-                padding: 0.25rem;
-                border: 1.5px solid black;
-                border-radius: 9999%;
-                background-color: white;
-              `}
-            >
-              <LuPencil
-                css={css`
-                  cursor: pointer;
-                  width: 2rem;
-                  height: 2rem;
-                `}
-              />
-            </div>
-            <input
-              id="profile_image"
-              type="file"
-              accept="image/*"
-              css={css`
-                display: none;
+                cursor: pointer;
+                width: 2rem;
+                height: 2rem;
               `}
             />
-          </label>
-        </div>
-        {/* email */}
-        <h1
+          </div>
+          <input
+            id="profile_image"
+            type="file"
+            accept="image/*"
+            css={css`
+              display: none;
+            `}
+          />
+        </label>
+      </div>
+      {/* email */}
+      <h1
+        css={css`
+          font-size: 2rem;
+          font-weight: 400;
+          text-decoration: none;
+        `}
+      >
+        {profile.email}
+      </h1>
+      {/* name */}
+      <List>
+        <Label htmlFor="name">
+          <Stressed>* </Stressed>닉네임
+        </Label>
+        <Input id="name" type="text" value={profile.name} />
+      </List>
+      <List>
+        <Label htmlFor="github_link">
+          <Stressed>* </Stressed>깃허브 주소
+        </Label>
+        <Input id="github_link" type="text" value={profile.github_link} />
+      </List>
+      <List>
+        <Label htmlFor="short_description">
+          <Stressed>* </Stressed>자기소개
+        </Label>
+        <TextArea
+          id="short_description"
+          rows={6}
+          value={profile.short_description}
+          maxLength={50}
+        />
+        <span
           css={css`
-            font-size: 2rem;
-            font-weight: 400;
-            text-decoration: none;
+            position: absolute;
+            right: 0.5rem;
+            bottom: 0.5rem;
           `}
         >
-          {profile.email}
-        </h1>
-        {/* name */}
-        <List>
-          <Label htmlFor="name">
-            <Stressed>* </Stressed>닉네임
-          </Label>
-          <Input id="name" type="text" value={profile.name} />
-        </List>
-        <List>
-          <Label htmlFor="github_link">
-            <Stressed>* </Stressed>깃허브 주소
-          </Label>
-          <Input id="github_link" type="text" value={profile.github_link} />
-        </List>
-        <List>
-          <Label htmlFor="short_description">
-            <Stressed>* </Stressed>자기소개
-          </Label>
-          <TextArea
-            id="short_description"
-            rows={6}
-            value={profile.short_description}
-            maxLength={50}
-          />
-          <span
-            css={css`
-              position: absolute;
-              right: 0.5rem;
-              bottom: 0.5rem;
-            `}
-          >
-            {profile.short_description.length} / 50
-          </span>
-        </List>
-        <Submit type="submit">수정 완료</Submit>
-      </Form>
-    </div>
+          {profile.short_description.length} / 50
+        </span>
+      </List>
+      <Submit type="submit">수정 완료</Submit>
+    </Form>
   );
 }
