@@ -1,15 +1,14 @@
-import { css } from '@emotion/react';
-import styled from '@emotion/styled';
-import { useState } from 'react';
-import Link from 'next/link';
-import { AiOutlineRight } from 'react-icons/ai';
-import Switch from 'react-switch';
+import { css } from "@emotion/react";
+import styled from "@emotion/styled";
+import { useState } from "react";
+import Link from "next/link";
+import { AiOutlineRight } from "react-icons/ai";
+import Switch from "react-switch";
 
-import { bp } from '@/libs/styles/constants';
-import { mySingupStrategy } from '@/libs/utils/profile';
-import { colors } from '@/components/constant/color';
-import client from '@/api/client';
-import useDeactivate from '@/hooks/user/useDeactivate';
+import { bp } from "@/libs/styles/constants";
+import { mySingupStrategy } from "@/libs/utils/profile";
+import { colors } from "@/components/constant/color";
+import useDeactivate from "@/hooks/user/useDeactivate";
 
 const Block = styled.div`
   display: flex;
@@ -64,15 +63,15 @@ const Button = styled.button`
 export default function Settings() {
   const [profile, setProfile] = useState({
     id: null,
-    email: 'jun@google.com',
-    name: '임준혁',
-    github_link: 'hello@github.com',
-    image_link: '/profile.jpg',
-    short_description: '안녕하세요 올리버쌤입니다.'.repeat(5),
+    email: "jun@google.com",
+    name: "임준혁",
+    github_link: "hello@github.com",
+    image_link: "/profile.jpg",
+    short_description: "안녕하세요 올리버쌤입니다.".repeat(5),
     grade: 1,
     like: 12,
     rating: 4.3,
-    provider: 'our',
+    provider: "our",
   });
 
   const { deactivate } = useDeactivate();
@@ -135,7 +134,7 @@ export default function Settings() {
         {/* 계정 설정 : 비밀번호 변경 */}
         <Block>
           <H2>계정</H2>
-          <Linker href="/user/PasswordReset">
+          <Linker href="/auth/PasswordReset">
             <span
               css={css`
                 font-weight: 500;
@@ -145,7 +144,16 @@ export default function Settings() {
             </span>
             <AiOutlineRight />
           </Linker>
-          <Linker href="/user/PasswordReset">
+          <div
+            css={css`
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              padding: 1rem 0;
+              text-decoration: none;
+              color: black;
+            `}
+          >
             <span
               css={css`
                 font-weight: 500;
@@ -160,7 +168,7 @@ export default function Settings() {
                 gap: 1rem;
               `}
             >
-              <span>{checked ? '공개' : '비공개'}</span>
+              <span>{checked ? "공개" : "비공개"}</span>
               <Switch
                 onChange={handleToggleChange}
                 checked={checked}
@@ -168,7 +176,7 @@ export default function Settings() {
                 uncheckedIcon={false}
               />
             </div>
-          </Linker>
+          </div>
           <Button type="button" onClick={() => deactivate()}>
             <span
               css={css`
