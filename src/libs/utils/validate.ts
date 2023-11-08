@@ -1,30 +1,30 @@
-import type { ChangeEvent, Dispatch, SetStateAction } from 'react';
+import type { ChangeEvent, Dispatch, SetStateAction } from "react";
 import {
   type StringSchema,
   email,
   minLength,
   safeParse,
   string,
-} from 'valibot';
+} from "valibot";
 
-const EmailSchema = string('Your email must be a string.', [
-  minLength(1, 'Please enter your email.'),
-  email('The email address is badly formatted.'),
+const EmailSchema = string("Your email must be a string.", [
+  minLength(1, "이메일을 입력해주세요."),
+  email("이메일이 형식에 맞지 않습니다."),
 ]);
 
-const PasswordSchema = string('패스워드 틀림요', [
-  minLength(1, 'Please enter your password.'),
+const PasswordSchema = string("패스워드 틀림요", [
+  minLength(1, "비밀번호를 입력해주세요."),
 ]);
 
-const NameSchema = string('이름을 입력하세요.', [
-  minLength(1, 'Please enter your name.'),
+const NameSchema = string("이름을 입력하세요.", [
+  minLength(1, "이름을 입력해주세요."),
 ]);
 
-const LinkSchema = string('링크 틀림요', [
-  minLength(1, 'Please enter your link.'),
+const LinkSchema = string("링크 틀림요", [
+  minLength(1, "링크를 입력해주세요."),
 ]);
 
-export type SchemaKey = 'email' | 'name' | 'password' | 'github_link';
+export type SchemaKey = "email" | "name" | "password" | "github_link";
 type TypeSchema = Record<SchemaKey, StringSchema>;
 export const Schema: TypeSchema = {
   email: EmailSchema,
@@ -50,6 +50,6 @@ export const validatedOnChange =
     setValue(input);
 
     const result = validate(schema, input);
-    if (result.success) return setError('');
+    if (result.success) return setError("");
     setError(result.issues[0].message);
   };
