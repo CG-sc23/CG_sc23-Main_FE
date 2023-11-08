@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
-import { motion } from "framer-motion";
+import { AiOutlineRight } from "react-icons/ai";
+import Popup from "@/components/Popup";
 
 import useSignIn from "@/hooks/auth/useSignIn";
 import { Schema, validatedOnChange } from "@/libs/utils/validate";
@@ -12,32 +13,28 @@ import { colors } from "@/components/constant/color";
 import InputWithLabel from "@/components/InputWithLabel";
 
 const Form = styled.form`
+  position: relative;
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 2rem;
 `;
 
 const Button = styled.button<{ bgColor?: string; color?: string }>`
   padding: 1rem 0;
   background-color: ${(props) => props.bgColor};
   color: ${(props) => props.color ?? "white"};
-  border-radius: 1rem;
+  border-radius: 0.5rem;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
 `;
 
-const errorVariants = {
-  initial: {
-    opacity: 0.2,
-    y: "-10px",
-  },
-  animate: {
-    opacity: 1,
-    y: 0,
-  },
-};
+const HR = styled.hr`
+  width: 100%;
+  color: gray;
+  border: 0.5px solid ${colors.grey700};
+`;
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
@@ -45,20 +42,25 @@ export default function SignIn() {
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
-  const { signIn, kakao, naver, error, isPending } = useSignIn();
+  const { signIn, kakao, naver, errorMessage, setErrorMessage, isPending } =
+    useSignIn();
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("로그인");
+    console.log("Logged In");
     signIn({ email, password });
+    setErrorMessage("");
   };
 
   return (
     <LayoutContainer>
+      {/* invalid try */}
+      <Popup innerText={errorMessage} showModal={isPending} />
+      {/* login with email & password find */}
       <Form onSubmit={onSubmit}>
         <InputWithLabel
           type="email"
-          label="Email"
+          label="이메일"
           value={email}
           error={emailError}
           onChange={validatedOnChange({
@@ -69,7 +71,7 @@ export default function SignIn() {
         />
         <InputWithLabel
           type="password"
-          label="Password"
+          label="비밀번호"
           value={password}
           error={passwordError}
           autoFocus={false}
@@ -79,49 +81,83 @@ export default function SignIn() {
             setError: setPasswordError,
           })}
         />
-        <Button type="submit" bgColor={colors.black}>
-          {isPending ? "작업 중" : "로그인"}
-        </Button>
-        <motion.div
-          variants={errorVariants}
-          initial="initial"
-          animate={error !== "" ? "animate" : "initial"}
-          exit="initial"
+        <Link
+          href="/auth/PasswordReset"
           css={css`
-            padding: 0.2rem 0;
-            height: 1.5rem;
-            font-size: 1rem;
-            color: ${colors.red400};
+            position: absolute;
+            right: 0;
+            bottom: 5.5rem;
+            font-size: 0.8rem;
           `}
         >
-          {error}
-        </motion.div>
+          비밀번호 찾기
+        </Link>
+        <Button type="submit" bgColor={colors.black}>
+          로그인
+        </Button>
       </Form>
+      {/* break */}
+      <div
+        css={css`
+          display: flex;
+          justify-content: space-between;
+          gap: 0.5rem;
+          width: 100%;
+          margin-top: 1rem;
+        `}
+      >
+        <HR />
+        OR
+        <HR />
+      </div>
+      {/* social login */}
       <div
         css={css`
           width: 100%;
           position: relative;
+          margin-top: 1rem;
           display: flex;
           flex-direction: column;
           gap: 1rem;
         `}
       >
         <Button onClick={kakao} bgColor={colors.kakao} color={"black"}>
-          Login with KAKAO
+          카카오 소셜 로그인
         </Button>
         <Button onClick={naver} bgColor={colors.naver} color={"white"}>
-          Login with Naver
+          네이버 소셜 로그인
         </Button>
       </div>
+      {/* sign up */}
       <div
         css={css`
           width: 100%;
+          margin-top: 3rem;
           display: flex;
-          justify-content: space-between;
+          justify-content: center;
+          align-items: center;
+          gap: 1rem;
         `}
       >
-        <Link href="/auth/SignUp?step=email">Sign Up</Link>
-        <Link href="/auth/PasswordReset">Find Password</Link>
+        <span
+          css={css`
+            font-size: 0.8rem;
+            color: ${colors.grey500};
+          `}
+        >
+          아직 회원가입을 안하셨나요? 3초 만에
+        </span>
+        <Link
+          href="/auth/SignUp?step=email"
+          css={css`
+            display: flex;
+            gap: 0.5rem;
+            color: ${colors.grey800};
+          `}
+        >
+          {" "}
+          가입하기 <AiOutlineRight />
+        </Link>
       </div>
     </LayoutContainer>
   );
