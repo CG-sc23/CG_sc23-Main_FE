@@ -8,7 +8,7 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   position: relative;
-  width: 576px;
+  width: 448px;
   height: 100%;
 
   ${bp[0]} {
