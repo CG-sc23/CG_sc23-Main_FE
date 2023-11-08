@@ -10,7 +10,8 @@ const LayoutContainer = styled.div`
   align-items: center;
 
   ${bp[0]} {
-    width: 100%;
+    width: 100vw;
+    height: 90vh;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
