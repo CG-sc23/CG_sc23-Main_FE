@@ -7,6 +7,7 @@ import {
 } from "react";
 import { css } from "@emotion/react";
 import { useAnimation, motion } from "framer-motion";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 import { colors } from "./constant/color";
 
@@ -96,7 +97,7 @@ export default function InputWithLabel(props: Props) {
       css={css`
         width: 100%;
         flex: 1;
-        padding: 40px 0 0 0;
+        padding: 1rem 0 0 0;
       `}
     >
       <label
@@ -118,7 +119,7 @@ export default function InputWithLabel(props: Props) {
           `}
           initial={value ? afterVariant : initialVariant}
           animate={controls}
-          transition={{ type: "spring", damping: 15, stiffness: 100 }}
+          transition={{ type: "spring", damping: 20, stiffness: 200 }}
         >
           {label}
         </motion.span>
@@ -136,9 +137,9 @@ export default function InputWithLabel(props: Props) {
             color: ${readonly ? colors.grey400 : colors.grey800};
             width: 100%;
             background-color: transparent;
-            padding: 0 0 4px;
+            padding: 0 0 0.5rem;
             font-weight: 500;
-            font-size: 28px;
+            font-size: 1rem;
             border-radius: 1px;
             caret-color: ${error ? colors.red400 : colors.blue400};
             outline: none;
@@ -146,7 +147,7 @@ export default function InputWithLabel(props: Props) {
             border-bottom: 2px solid ${error ? colors.red300 : colors.grey300};
             z-index: 10;
             :focus {
-              border-bottom-color: ${error ? colors.red300 : colors.blue400};
+              border-bottom-color: ${error ? colors.red300 : colors.black};
             }
             transition:
               background-color 0.2s ease,
@@ -156,13 +157,33 @@ export default function InputWithLabel(props: Props) {
         {isPassword && (
           <button
             type="button"
-            onClick={() => setIsVisible((prev) => !prev)}
+            onClick={(e) => {
+              e.preventDefault();
+              setIsVisible((prev) => !prev);
+            }}
             css={css`
               position: absolute;
+              right: 0;
               cursor: pointer;
             `}
           >
-            {isVisible ? "X" : "O"}
+            {isVisible ? (
+              <AiOutlineEyeInvisible
+                css={css`
+                  width: 1.25rem;
+                  height: 1.25rem;
+                  color: black;
+                `}
+              />
+            ) : (
+              <AiOutlineEye
+                css={css`
+                  width: 1.25rem;
+                  height: 1.25rem;
+                  color: black;
+                `}
+              />
+            )}
           </button>
         )}
       </label>
@@ -174,7 +195,7 @@ export default function InputWithLabel(props: Props) {
         css={css`
           padding: 0.2rem 0;
           height: 1.5rem;
-          font-size: 1rem;
+          font-size: 0.75rem;
           color: ${colors.red400};
         `}
       >
