@@ -12,6 +12,15 @@ const nextConfig = {
       autoLabel: 'dev-only',
     },
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'domo-s3.s3.ap-northeast-2.amazonaws.com',
+        pathname: '/users/**',
+      },
+    ],
+  },
   swcMinify: true,
 };
 
