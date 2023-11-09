@@ -19,5 +19,5 @@ const LayoutContainer = styled.div`
 `;
 
 export default function Layout({ children }: PropsWithChildren) {
-  return <LayoutContainer> {children}</LayoutContainer>;
+  return <LayoutContainer>{children}</LayoutContainer>;
 }

@@ -4,6 +4,8 @@ import { css } from '@emotion/react';
 import { bp } from '@/libs/styles/constants';
 import { LuPencil } from 'react-icons/lu';
 import Editor from '@/components/Editor';
+import { useForm } from 'react-hook-form';
+import { InferGetServerSidePropsType } from 'next';
 
 const Form = styled.form`
   width: 672px;
@@ -83,17 +85,52 @@ const Submit = styled.button`
   }
 `;
 
-export default function Update() {
-  const [profile, setProfile] = useState({
-    id: null,
-    email: 'jun@google.com',
-    name: '임준혁',
-    github_link: 'hello@github.com',
-    image_link: '/profile.jpg',
-    short_description: '안녕하세요 올리버쌤입니다.'.repeat(5),
-    grade: 1,
-    like: 12,
-    rating: 4.3,
+type FormData = {
+  name: string;
+  github_link: string;
+  image_link: string;
+  short_description: string;
+  grade: number;
+  like: number;
+  rating: number;
+};
+
+// ! Dummy
+const getProfile = () =>
+  new Promise<object>((resolve) =>
+    setTimeout(
+      () =>
+        resolve({
+          id: null,
+          email: 'jun@google.com',
+          name: '임준혁',
+          github_link: 'hello@github.com',
+          image_link: '/profile.jpg',
+          short_description: '안녕하세요 올리버쌤입니다.',
+          grade: 1,
+          like: 12,
+          rating: 4.3,
+        }),
+      1000,
+    ),
+  );
+
+export const getServerSideProps = async () => {
+  const res = await getProfile();
+  return { props: { res } };
+};
+
+export default function Update({ res }: InferGetServerSidePropsType<any>) {
+  const [shortDescription, setShortDescription] = useState(
+    res.short_description,
+  );
+  const { register, handleSubmit } = useForm<FormData>({
+    defaultValues: {
+      name: res.name,
+      github_link: res.github_link,
+      short_description: res.short_description,
+      image_link: res.image_link,
+    },
   });
 
   return (
@@ -107,7 +144,7 @@ export default function Update() {
         `}
       >
         <img
-          src={profile.image_link}
+          src={res.image_link}
           css={css`
             width: 256px;
             height: 256px;
@@ -160,42 +197,35 @@ export default function Update() {
           text-decoration: none;
         `}
       >
-        {profile.email}
+        {res.email}
       </h1>
       {/* name */}
       <List>
         <Label htmlFor="name">
           <Stressed>* </Stressed>닉네임
         </Label>
-        <Input id="name" type="text" value={profile.name} />
+        <Input id="name" type="text" {...register('name')} />
       </List>
       <List>
         <Label htmlFor="github_link">
           <Stressed>* </Stressed>깃허브 주소
         </Label>
-        <Input id="github_link" type="text" value={profile.github_link} />
+        <Input id="github_link" type="text" {...register('github_link')} />
       </List>
       <List>
         <Label htmlFor="short_description">
-          <Stressed>* </Stressed>자기소개
+          <Stressed>* </Stressed>한 줄 소개
         </Label>
-        <TextArea
+        <Input
           id="short_description"
-          rows={6}
-          value={profile.short_description}
-          maxLength={50}
+          type="text"
+          {...register('short_description')}
         />
-        <span
-          css={css`
-            position: absolute;
-            right: 0.5rem;
-            bottom: 0.5rem;
-          `}
-        >
-          {profile.short_description.length} / 50
-        </span>
       </List>
       <List>
+        <Label htmlFor="description">
+          <Stressed>* </Stressed>자기소개
+        </Label>
         <Editor />
       </List>
       <Submit type="submit">수정 완료</Submit>

@@ -8,6 +8,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import MenuBar from '@/components/MenuBar';
 import User from '@/components/User';
 import Layout from '@/components/Layout';
+import SnackBar from '@/components/SnackBar';
 
 const roboto = Roboto({
   weight: ['100', '300', '400', '500', '700', '900'],
@@ -32,6 +33,7 @@ export default function App({ Component, pageProps }: AppProps) {
           <Layout>
             <User>
               <MenuBar />
+              <SnackBar />
               <Component {...pageProps} />
             </User>
           </Layout>

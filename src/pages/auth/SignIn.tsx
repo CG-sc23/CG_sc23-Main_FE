@@ -3,7 +3,6 @@ import { FormEvent, useEffect, useState } from 'react';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { AiOutlineRight } from 'react-icons/ai';
-import Popup from '@/components/Popup';
 
 import useSignIn from '@/hooks/auth/useSignIn';
 import { Schema, validatedOnChange } from '@/libs/utils/validate';
@@ -42,20 +41,16 @@ export default function SignIn() {
   const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
 
-  const { signIn, kakao, naver, errorMessage, setErrorMessage, isPending } =
-    useSignIn();
+  const { signIn, kakao, naver } = useSignIn();
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log('Logged In');
     signIn({ email, password });
-    setErrorMessage('');
   };
 
   return (
     <LayoutContainer>
-      {/* invalid try */}
-      <Popup innerText={errorMessage} showModal={isPending} />
       {/* login with email & password find */}
       <Form onSubmit={onSubmit}>
         <InputWithLabel
