@@ -1,8 +1,9 @@
-import { useState } from "react";
-import styled from "@emotion/styled";
-import { css } from "@emotion/react";
-import { bp } from "@/libs/styles/constants";
-import { LuPencil } from "react-icons/lu";
+import { useState } from 'react';
+import styled from '@emotion/styled';
+import { css } from '@emotion/react';
+import { bp } from '@/libs/styles/constants';
+import { LuPencil } from 'react-icons/lu';
+import Editor from '@/components/Editor';
 
 const Form = styled.form`
   width: 672px;
@@ -85,11 +86,11 @@ const Submit = styled.button`
 export default function Update() {
   const [profile, setProfile] = useState({
     id: null,
-    email: "jun@google.com",
-    name: "임준혁",
-    github_link: "hello@github.com",
-    image_link: "/profile.jpg",
-    short_description: "안녕하세요 올리버쌤입니다.".repeat(5),
+    email: 'jun@google.com',
+    name: '임준혁',
+    github_link: 'hello@github.com',
+    image_link: '/profile.jpg',
+    short_description: '안녕하세요 올리버쌤입니다.'.repeat(5),
     grade: 1,
     like: 12,
     rating: 4.3,
@@ -191,10 +192,13 @@ export default function Update() {
             bottom: 0.5rem;
           `}
         >
-          {profile.short_description.length} / 50
-        </span>
-      </List>
-      <Submit type="submit">수정 완료</Submit>
-    </Form>
+            {profile.short_description.length} / 50
+          </span>
+        </List>
+        <List>
+          <Editor />
+        </List>
+        <Submit type="submit">수정 완료</Submit>
+      </Form>
   );
 }
