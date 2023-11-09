@@ -1,6 +1,6 @@
-import { PropsWithChildren } from "react";
-import styled from "@emotion/styled";
-import { bp } from "@/libs/styles/constants";
+import { PropsWithChildren } from 'react';
+import styled from '@emotion/styled';
+import { bp } from '@/libs/styles/constants';
 
 const LayoutContainer = styled.div`
   width: 100vw;

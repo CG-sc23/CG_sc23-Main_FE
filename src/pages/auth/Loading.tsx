@@ -1,5 +1,5 @@
-import useSocialAuth from "@/hooks/auth/useSocialAuth";
-import LayoutContainer from "@/components/Auth/LayoutContainer";
+import useSocialAuth from '@/hooks/auth/useSocialAuth';
+import LayoutContainer from '@/components/Auth/LayoutContainer';
 
 export default function Loading() {
   const { error } = useSocialAuth();

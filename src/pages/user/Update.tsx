@@ -192,13 +192,13 @@ export default function Update() {
             bottom: 0.5rem;
           `}
         >
-            {profile.short_description.length} / 50
-          </span>
-        </List>
-        <List>
-          <Editor />
-        </List>
-        <Submit type="submit">수정 완료</Submit>
-      </Form>
+          {profile.short_description.length} / 50
+        </span>
+      </List>
+      <List>
+        <Editor />
+      </List>
+      <Submit type="submit">수정 완료</Submit>
+    </Form>
   );
 }

@@ -45,37 +45,37 @@ export default function Profile() {
           align-items: center;
         `}
       >
-          <Image
-            width={164}
-            height={164}
-            src="https://domo-s3.s3.ap-northeast-2.amazonaws.com/users/qwerqwer%40naver.com/profile-image.jpeg"
-            alt="profile"
-            css={css`
-              border-radius: 9999px;
-              width: 164px;
-              height: 164px;
-              object-fit: cover;
-              ${bp[0]} {
-                width: 96px;
-                height: 96px;
-              }
-            `}
-          />
-          <Link
-            href="/user/Update"
-            css={css`
-              color: black;
-              outline: none;
-              text-decoration: none;
-              border-radius: 4px;
-              font-weight: 600;
-              border: 1px solid #e0e0e0;
-              padding: 12px 16px;
-              ${bp[0]} {
-                padding: 8px 12px;
-              }
-            `}
-          >
+        <Image
+          width={164}
+          height={164}
+          src="https://domo-s3.s3.ap-northeast-2.amazonaws.com/users/qwerqwer%40naver.com/profile-image.jpeg"
+          alt="profile"
+          css={css`
+            border-radius: 9999px;
+            width: 164px;
+            height: 164px;
+            object-fit: cover;
+            ${bp[0]} {
+              width: 96px;
+              height: 96px;
+            }
+          `}
+        />
+        <Link
+          href="/user/Update"
+          css={css`
+            color: black;
+            outline: none;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 600;
+            border: 1px solid #e0e0e0;
+            padding: 12px 16px;
+            ${bp[0]} {
+              padding: 8px 12px;
+            }
+          `}
+        >
           편집
         </Link>
       </div>
