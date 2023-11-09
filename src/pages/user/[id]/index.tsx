@@ -25,38 +25,26 @@ export default function Profile() {
   return (
     <div
       css={css`
-        width: 100vw;
-        height: 100vh;
+        width: 672px;
+        margin: 0 auto;
+        padding: 2rem;
         display: flex;
         flex-direction: column;
-        align-items: center;
+        gap: 24px;
+        ${bp[0]} {
+          width: 100%;
+        }
       `}
     >
+      {/* image */}
       <div
         css={css`
-          width: 672px;
-          margin: 0 auto;
-          padding: 2rem;
           display: flex;
-          flex-direction: column;
-          gap: 24px;
-          ${bp[0]} {
-            width: 100%;
-            -webkit-box-sizing: border-box;
-            -moz-box-sizing: border-box;
-            box-sizing: border-box;
-          }
+          position: relative;
+          justify-content: space-between;
+          align-items: center;
         `}
       >
-        {/* image */}
-        <div
-          css={css`
-            display: flex;
-            position: relative;
-            justify-content: space-between;
-            align-items: center;
-          `}
-        >
           <Image
             width={164}
             height={164}
@@ -88,154 +76,153 @@ export default function Profile() {
               }
             `}
           >
-            편집
-          </Link>
-        </div>
-        {/* details */}
+          편집
+        </Link>
+      </div>
+      {/* details */}
+      <div
+        css={css`
+          display: flex;
+          justify-content: space-between;
+          gap: 16px;
+          font-size: 12px;
+        `}
+      >
+        {/* name, email, github_link, grade, rating */}
         <div
           css={css`
             display: flex;
-            justify-content: space-between;
-            gap: 16px;
-            font-size: 12px;
+            flex-direction: column;
+            justify-content: end;
+            gap: 1rem;
           `}
         >
-          {/* name, email, github_link, grade, rating */}
           <div
             css={css`
               display: flex;
               flex-direction: column;
-              justify-content: end;
-              gap: 1rem;
+              gap: 0.5rem;
             `}
           >
+            {/* name */}
+            <h2
+              css={css`
+                font-weight: 600;
+                font-size: 36px;
+                ${bp[0]} {
+                  font-size: 28px;
+                }
+              `}
+            >
+              {profile.name} {convertGradeToMedal(profile.grade)}
+            </h2>
+            {/* rating, grade */}
             <div
               css={css`
                 display: flex;
-                flex-direction: column;
+                align-items: center;
                 gap: 0.5rem;
               `}
             >
-              {/* name */}
-              <h2
-                css={css`
-                  font-weight: 600;
-                  font-size: 36px;
-                  ${bp[0]} {
-                    font-size: 28px;
-                  }
-                `}
-              >
-                {profile.name} {convertGradeToMedal(profile.grade)}
-              </h2>
-              {/* rating, grade */}
-              <div
-                css={css`
-                  display: flex;
-                  align-items: center;
-                  gap: 0.5rem;
-                `}
-              >
-                <ReactStars count={5} size={16} value={profile.rating} />
-                <div>{profile.rating}</div>
-              </div>
-            </div>
-            {/* email */}
-            <div
-              css={css`
-                display: flex;
-                align-items: center;
-                gap: 1rem;
-                font-size: 16px;
-              `}
-            >
-              <img
-                src="/mail.png"
-                css={css`
-                  width: 24px;
-                  object-fit: cover;
-                `}
-              />
-              <h2
-                css={css`
-                  text-decoration: none;
-                `}
-              >
-                {profile.email}
-              </h2>
-            </div>
-            {/* github_link */}
-            <div
-              css={css`
-                display: flex;
-                align-items: center;
-                gap: 1rem;
-                font-size: 16px;
-              `}
-            >
-              <img
-                src="/github.png"
-                css={css`
-                  width: 24px;
-                  object-fit: cover;
-                `}
-              />
-              <h2
-                css={css`
-                  text-decoration: none;
-                `}
-              >
-                {profile.github_link}
-              </h2>
+              <ReactStars count={5} size={16} value={profile.rating} />
+              <div>{profile.rating}</div>
             </div>
           </div>
-          {/* like */}
+          {/* email */}
           <div
             css={css`
               display: flex;
-              flex-direction: column;
-              justify-content: end;
-              padding: 0px 4px;
+              align-items: center;
+              gap: 1rem;
               font-size: 16px;
             `}
           >
-            <div
+            <img
+              src="/mail.png"
               css={css`
-                display: flex;
-                align-items: center;
-                gap: 0.25rem;
+                width: 24px;
+                object-fit: cover;
+              `}
+            />
+            <h2
+              css={css`
+                text-decoration: none;
               `}
             >
-              <button
-                css={css`
-                  outline: none;
-                  border: none;
-                  background-color: white;
-                  cursor: pointer;
-                `}
-              >
-                <AiOutlineHeart size="24" color="red" />
-              </button>
-              <div>{profile.like}</div>
-            </div>
+              {profile.email}
+            </h2>
+          </div>
+          {/* github_link */}
+          <div
+            css={css`
+              display: flex;
+              align-items: center;
+              gap: 1rem;
+              font-size: 16px;
+            `}
+          >
+            <img
+              src="/github.png"
+              css={css`
+                width: 24px;
+                object-fit: cover;
+              `}
+            />
+            <h2
+              css={css`
+                text-decoration: none;
+              `}
+            >
+              {profile.github_link}
+            </h2>
           </div>
         </div>
+        {/* like */}
         <div
           css={css`
-            width: 100%;
-            height: 2px;
-            background-color: #cdcdcd;
-          `}
-        />
-        {/* descriptiions */}
-        <p
-          css={css`
-            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            justify-content: end;
+            padding: 0px 4px;
+            font-size: 16px;
           `}
         >
-          {profile.short_description}
-        </p>
+          <div
+            css={css`
+              display: flex;
+              align-items: center;
+              gap: 0.25rem;
+            `}
+          >
+            <button
+              css={css`
+                outline: none;
+                border: none;
+                background-color: white;
+                cursor: pointer;
+              `}
+            >
+              <AiOutlineHeart size="24" color="red" />
+            </button>
+            <div>{profile.like}</div>
+          </div>
+        </div>
       </div>
+      <div
+        css={css`
+          width: 100%;
+          height: 2px;
+          background-color: #cdcdcd;
+        `}
+      />
+      {/* descriptiions */}
+      <p
+        css={css`
+          line-height: 1.6;
+        `}
+      >
+        {profile.short_description}
+      </p>
     </div>
   );
 }

@@ -4,6 +4,7 @@ import styled from "@emotion/styled";
 import Link from "next/link";
 import { AiOutlineMenu } from "react-icons/ai";
 import { useState, type PropsWithChildren, FormEvent } from "react";
+import Image from "next/image";
 
 const logoCss = css({
   fontSize: "1.5rem",
@@ -25,7 +26,6 @@ const submenuMobileCss = css({
 
 const Container = styled.div`
   width: 100vw;
-  height: 100vh;
 `;
 
 export default function MenuBar({ children }: PropsWithChildren) {
@@ -77,9 +77,20 @@ export default function MenuBar({ children }: PropsWithChildren) {
           `}
         >
           {/* home */}
-          <Link href="/" css={logoCss}>
-            DOMO
-          </Link>
+          <div
+            css={css`
+              display: flex;
+              align-items: center;
+              gap: 0.5rem;
+            `}
+          >
+            <Link href="/">
+              <Image src="/icon.svg" alt="logo" width={32} height={32} />
+            </Link>
+            <Link href="/" css={logoCss}>
+              DOMO
+            </Link>
+          </div>
           {/* submenus in web*/}
           <div
             css={css`
@@ -217,7 +228,7 @@ export default function MenuBar({ children }: PropsWithChildren) {
       <div
         css={css`
           width: 100%;
-          height: 4rem;
+          height: 5rem;
         `}
       />
       {children}

@@ -1,15 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-console */
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { Provider, SocialAuthResponse } from '@/libs/type/client';
-import { mutationKey, queryKey } from '@/libs/constant';
-import client from '@/api/client';
+import { Provider, SocialAuthResponse } from "@/libs/type/client";
+import { mutationKey, queryKey } from "@/libs/constant";
+import client from "@/api/client";
 
-import { useQueryParam } from '../useQueryParam';
-import useSignIn from './useSignIn';
+import { useQueryParam } from "../useQueryParam";
+import useSignIn from "./useSignIn";
 
 type AuthParams = {
   authCode: string;
@@ -17,10 +17,10 @@ type AuthParams = {
 };
 
 export default function useSocialAuth() {
-  const [error, setError] = useState<string>('');
+  const [error, setError] = useState<string>("");
   const router = useRouter();
-  const code = useQueryParam('code');
-  const state = useQueryParam('state');
+  const code = useQueryParam("code");
+  const state = useQueryParam("state");
   const queryClient = useQueryClient();
   const { socialLogin } = useSignIn();
 
@@ -40,9 +40,9 @@ export default function useSocialAuth() {
       if (!data.isUser && data.preAccessToken) {
         queryClient.setQueryData(
           [queryKey.PRE_ACCESS_TOKEN],
-          data.preAccessToken,
+          data.preAccessToken
         );
-        router.replace('/auth/SignUp');
+        router.replace("/auth/SignUp");
       }
 
       if (data.isUser && data.token) {
@@ -52,7 +52,7 @@ export default function useSocialAuth() {
 
     onError: (e: unknown) => {
       console.error(e);
-      setError('An error occurred during social authentication');
+      setError("An error occurred during social authentication");
     },
   });
 
@@ -60,7 +60,7 @@ export default function useSocialAuth() {
     const isNaver = Boolean(state);
     if (!code) return;
 
-    const provider = isNaver ? 'NAVER' : 'KAKAO';
+    const provider = isNaver ? "NAVER" : "KAKAO";
     socialAuth({ authCode: code, provider });
   }, [code]);
 

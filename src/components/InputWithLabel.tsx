@@ -4,11 +4,12 @@ import {
   type ChangeEvent,
   useEffect,
   useRef,
-} from 'react';
-import { css } from '@emotion/react';
-import { useAnimation, motion } from 'framer-motion';
+} from "react";
+import { css } from "@emotion/react";
+import { useAnimation, motion } from "framer-motion";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
-import { colors } from './constant/color';
+import { colors } from "./constant/color";
 
 type Props = {
   type: HTMLInputTypeAttribute;
@@ -29,7 +30,7 @@ const initialVariant = {
 };
 const afterVariant = {
   x: 0,
-  y: '-35px',
+  y: "-35px",
   scale: 0.8,
   color: colors.grey600,
 };
@@ -37,7 +38,7 @@ const afterVariant = {
 const errorVariants = {
   initial: {
     opacity: 0.2,
-    y: '-10px',
+    y: "-10px",
   },
   animate: {
     opacity: 1,
@@ -56,7 +57,7 @@ export default function InputWithLabel(props: Props) {
     autoFocus = true,
     readonly = false,
   } = props;
-  const isPassword = type === 'password';
+  const isPassword = type === "password";
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isFocused, setIsFocused] = useState(false);
@@ -94,8 +95,9 @@ export default function InputWithLabel(props: Props) {
   return (
     <div
       css={css`
+        width: 100%;
         flex: 1;
-        padding: 40px 0 0 0;
+        padding: 1rem 0 0 0;
       `}
     >
       <label
@@ -117,12 +119,12 @@ export default function InputWithLabel(props: Props) {
           `}
           initial={value ? afterVariant : initialVariant}
           animate={controls}
-          transition={{ type: 'spring', damping: 15, stiffness: 100 }}
+          transition={{ type: "spring", damping: 20, stiffness: 200 }}
         >
           {label}
         </motion.span>
         <motion.input
-          type={isPassword && isVisible ? 'text' : type}
+          type={isPassword && isVisible ? "text" : type}
           id={label}
           value={value}
           name={name}
@@ -135,9 +137,9 @@ export default function InputWithLabel(props: Props) {
             color: ${readonly ? colors.grey400 : colors.grey800};
             width: 100%;
             background-color: transparent;
-            padding: 0 0 4px;
+            padding: 0 0 0.5rem;
             font-weight: 500;
-            font-size: 28px;
+            font-size: 1rem;
             border-radius: 1px;
             caret-color: ${error ? colors.red400 : colors.blue400};
             outline: none;
@@ -145,7 +147,7 @@ export default function InputWithLabel(props: Props) {
             border-bottom: 2px solid ${error ? colors.red300 : colors.grey300};
             z-index: 10;
             :focus {
-              border-bottom-color: ${error ? colors.red300 : colors.blue400};
+              border-bottom-color: ${error ? colors.red300 : colors.black};
             }
             transition:
               background-color 0.2s ease,
@@ -155,25 +157,45 @@ export default function InputWithLabel(props: Props) {
         {isPassword && (
           <button
             type="button"
-            onClick={() => setIsVisible((prev) => !prev)}
+            onClick={(e) => {
+              e.preventDefault();
+              setIsVisible((prev) => !prev);
+            }}
             css={css`
               position: absolute;
+              right: 0;
               cursor: pointer;
             `}
           >
-            {isVisible ? 'X' : 'O'}
+            {isVisible ? (
+              <AiOutlineEyeInvisible
+                css={css`
+                  width: 1.25rem;
+                  height: 1.25rem;
+                  color: black;
+                `}
+              />
+            ) : (
+              <AiOutlineEye
+                css={css`
+                  width: 1.25rem;
+                  height: 1.25rem;
+                  color: black;
+                `}
+              />
+            )}
           </button>
         )}
       </label>
       <motion.div
         variants={errorVariants}
         initial="initial"
-        animate={error !== '' ? 'animate' : 'initial'}
+        animate={error !== "" ? "animate" : "initial"}
         exit="initial"
         css={css`
           padding: 0.2rem 0;
           height: 1.5rem;
-          font-size: 1rem;
+          font-size: 0.75rem;
           color: ${colors.red400};
         `}
       >
