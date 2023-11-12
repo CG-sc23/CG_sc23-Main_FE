@@ -1,30 +1,47 @@
-@use 'reset';
+@use "reset";
 
+// video 태그 속성
 video {
   width: 100%;
 }
 
+// markdown 에디터 속성 부여
 .w-md-editor-text-input,
 .w-md-editor-text-pre > code,
 .w-md-editor-text-pre > code > span,
 .w-md-editor-text-pre {
-  font-family: 'Roboto' !important;
+  font-family: "Roboto" !important;
   font-size: 1.2rem !important;
   line-height: 1.5rem !important;
 }
 
 .w-md-editor {
-  --md-editor-font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial,
+  --md-editor-font-family: "Roboto", "Helvetica Neue", Helvetica, Arial,
     sans-serif !important;
 }
-  button {
+
+// button 기본속성 제거
+button {
   background: none;
   outline: none;
   border: none;
 }
 
+// a 태그 밑줄 및 스타일 제거
 a {
   text-decoration: none;
   color: black;
+}
 
+// input 자동 완성시 색상 변경 제거
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 30px #fff inset;
+  -webkit-text-fill-color: #000;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  transition: background-color 5000s ease-in-out 0s;
 }
