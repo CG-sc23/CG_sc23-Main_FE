@@ -1,14 +1,14 @@
-import { css } from '@emotion/react';
-import styled from '@emotion/styled';
-import { useState } from 'react';
-import Link from 'next/link';
-import { AiOutlineRight } from 'react-icons/ai';
-import Switch from 'react-switch';
+import { css } from "@emotion/react";
+import styled from "@emotion/styled";
+import { useState } from "react";
+import Link from "next/link";
+import { AiOutlineRight } from "react-icons/ai";
+import Switch from "react-switch";
 
-import { bp } from '@/libs/styles/constants';
-import { mySingupStrategy } from '@/libs/utils/profile';
-import { colors } from '@/components/constant/color';
-import useDeactivate from '@/hooks/user/useDeactivate';
+import { bp } from "@/libs/styles/constants";
+import { mySingupStrategy } from "@/libs/utils/profile";
+import { colors } from "@/components/constant/color";
+import useDeactivate from "@/hooks/user/useDeactivate";
 
 const Block = styled.div`
   display: flex;
@@ -48,30 +48,22 @@ const Button = styled.button`
   padding: 1rem 0;
   text-decoration: none;
   color: black;
-
   font-size: 1rem;
-
   cursor: pointer;
-
-  transition: background-color 0.2s ease;
-
-  &:hover {
-    background-color: ${colors.grey100};
-  }
 `;
 
 export default function Settings() {
   const [profile, setProfile] = useState({
     id: null,
-    email: 'jun@google.com',
-    name: '임준혁',
-    github_link: 'hello@github.com',
-    image_link: '/profile.jpg',
-    short_description: '안녕하세요 올리버쌤입니다.'.repeat(5),
+    email: "jun@google.com",
+    name: "임준혁",
+    github_link: "hello@github.com",
+    image_link: "/profile.jpg",
+    short_description: "안녕하세요 올리버쌤입니다.".repeat(5),
     grade: 1,
     like: 12,
     rating: 4.3,
-    provider: 'our',
+    provider: "our",
   });
 
   const { deactivate } = useDeactivate();
@@ -168,7 +160,7 @@ export default function Settings() {
                 gap: 1rem;
               `}
             >
-              <span>{checked ? '공개' : '비공개'}</span>
+              <span>{checked ? "공개" : "비공개"}</span>
               <Switch
                 onChange={handleToggleChange}
                 checked={checked}
