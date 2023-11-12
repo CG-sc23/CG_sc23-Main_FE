@@ -67,8 +67,8 @@ export default function Dropzone({
     <div
       css={css`
         display: flex;
-        width: 18rem;
-        height: 18rem;
+        width: 100%;
+        height: 100%;
         justify-content: center;
         align-items: center;
         margin-bottom: 1rem;
