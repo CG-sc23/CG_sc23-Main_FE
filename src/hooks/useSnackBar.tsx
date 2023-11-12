@@ -1,9 +1,8 @@
-import styled from '@emotion/styled';
-import { usePresence } from 'framer-motion';
-import { useCallback, useEffect } from 'react';
+import { usePresence } from "framer-motion";
+import { useCallback, useEffect } from "react";
 
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { snackBarAtom } from '@/store';
+import { useRecoilState } from "recoil";
+import { snackBarAtom } from "@/store";
 
 export default function useSnackBar() {
   const [snackBar, setSnackBar] = useRecoilState(snackBarAtom);
