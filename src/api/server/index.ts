@@ -9,6 +9,7 @@ import {
   Password,
 } from '@/api/server/auth';
 import { Deactivate, UserInfo } from '@/api/server/user';
+import { Resources } from '@/api/server/resource';
 import { handleApiError } from '@/api/handleError';
 
 const server = {
@@ -29,6 +30,7 @@ const server = {
   ...Password,
   ...Deactivate,
   ...UserInfo,
+  ...Resources,
 };
 
 export default server;

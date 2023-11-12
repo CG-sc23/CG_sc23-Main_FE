@@ -4,19 +4,10 @@ import { css } from '@emotion/react';
 import MDEditor, { ContextStore, RefMDEditor } from '@uiw/react-md-editor';
 import { colors } from '../constant/color';
 
-import rehypeSanitize from 'rehype-sanitize';
-
-//! Dummy
-const uploadImg = (_: any) =>
-  new Promise<string>((resolve) =>
-    setTimeout(
-      () =>
-        resolve(
-          'https://velog.velcdn.com/images/greencloud/post/b5f233e1-628a-4771-bfdf-dbcdf64440a8/image.gif',
-        ),
-      1000,
-    ),
-  );
+import client from '@/api/client';
+import { safeLocalStorage } from '@toss/storage';
+import { queryKey } from '@/libs/constant';
+import { uploadImg } from '@/libs/utils/s3';
 
 //! Utils
 interface TextRange {
@@ -72,7 +63,12 @@ function setSelectionRange(ref: RefMDEditor, range: TextRange): TextState {
   return commandOrchestrator.textApi.setSelectionRange(range);
 }
 
+// ! DROP FILE UPLOAD
 const dropFileUpload = async (file: File, ref: RefMDEditor) => {
+  // ! REMOVE TOKEN
+  const token = safeLocalStorage.get(queryKey.USER_ACCESS_TOKEN);
+  assert(token, 'No Token');
+
   const notSupport = !/^(image)\/.+$/.test(file?.type);
   if (notSupport) {
     const fail = `\n![지원하는 파일 형식이 아닙니다!]()\n`;
@@ -92,20 +88,35 @@ const dropFileUpload = async (file: File, ref: RefMDEditor) => {
   });
 
   try {
-    const url = await uploadImg(file);
+    const url = await uploadImg({
+      file,
+      filename: file.name,
+      token,
+    });
     const fileName = removeExtension(file.name);
     const insertedMarkdown = `\n![${fileName}](${url})\n`;
     replaceSelection(ref, insertedMarkdown);
 
     return url;
   } catch (error) {
-    // TODO HANDLE ERROR
     const errorMarkdown = '![에러!](...)';
     replaceSelection(ref, errorMarkdown);
   } finally {
     URL.revokeObjectURL(blobUrl);
   }
 };
+
+function extractImageLinks(markdownText: string): string[] {
+  const regex = /!\[.*?\]\((.*?)\)/g;
+  let matches;
+  const links: string[] = [];
+
+  while ((matches = regex.exec(markdownText)) !== null) {
+    links.push(matches[1]);
+  }
+
+  return links;
+}
 
 // * Component
 export default function Editor() {
@@ -181,9 +192,6 @@ export default function Editor() {
           minHeight={200}
           maxHeight={500}
           preview={preview ? 'preview' : 'edit'}
-          previewOptions={{
-            rehypePlugins: [[rehypeSanitize]],
-          }}
           css={css`
             border-radius: 5px;
             transition: border 0.1s ease;
@@ -224,7 +232,13 @@ export default function Editor() {
           preview
         </button>
       </div>
-      <MDEditor.Markdown source={markdown} rehypePlugins={[[rehypeSanitize]]} />
+      <button
+        type="button"
+        onClick={() => console.log(extractImageLinks(markdown))}
+      >
+        TEST
+      </button>
+      <MDEditor.Markdown source={markdown} />
     </>
   );
 }

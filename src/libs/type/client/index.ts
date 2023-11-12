@@ -51,3 +51,25 @@ export type GetUserInfoResponse = OkAndOptionalReason & {
   name?: string;
   profileImageLink?: string | null;
 };
+
+/** RESOURCE */
+export type AWSResponse = {
+  url: string;
+  fields: {
+    key: string;
+    'x-amz-algorithm': string;
+    'x-amz-credential': string;
+    'x-amz-date': string;
+    policy: string;
+    'x-amz-signature': string;
+  };
+};
+export type GetPreSignedURLParamAndAuthToken = {
+  token: string;
+  file_name: string;
+  file_type: string;
+};
+export type GetPreSignedURLResponse = OkAndOptionalReason & {
+  url?: string;
+  aws_response?: AWSResponse;
+};

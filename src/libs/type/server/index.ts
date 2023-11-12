@@ -40,3 +40,28 @@ export type GetUserInfoApiResponse = {
   profile_image_link?: string | null;
   detail?: string;
 };
+
+/** RESOURCE */
+type AWSResponse = {
+  url: string;
+  fields: {
+    key: string;
+    'x-amz-algorithm': string;
+    'x-amz-credential': string;
+    'x-amz-date': string;
+    policy: string;
+    'x-amz-signature': string;
+  };
+};
+export type GetPreSignedURLApiParamAndAuthToken = {
+  token: string;
+  file_name: string;
+  file_type: string;
+};
+export type GetPreSignedURLApiResponse = {
+  success?: boolean;
+  detail?: string;
+  reason?: string;
+  url?: string;
+  aws_response?: AWSResponse;
+};

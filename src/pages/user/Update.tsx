@@ -3,9 +3,11 @@ import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 import { bp } from '@/libs/styles/constants';
 import { LuPencil } from 'react-icons/lu';
-import Editor from '@/components/Editor';
 import { useForm } from 'react-hook-form';
 import { InferGetServerSidePropsType } from 'next';
+import dynamic from 'next/dynamic';
+
+const Editor = dynamic(() => import('@/components/Editor'), { ssr: false });
 
 const Form = styled.form`
   width: 672px;

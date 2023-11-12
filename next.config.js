@@ -26,6 +26,14 @@ const nextConfig = {
       },
     ],
   },
+  async rewrites() {
+    return [
+      {
+        source: '/s3',
+        destination: 'https://domo-s3.s3.amazonaws.com',
+      },
+    ];
+  },
   swcMinify: true,
 };
 
