@@ -6,6 +6,7 @@ import client from "@/api/client";
 import { queryKey } from "@/libs/constant";
 import { useQueryClient } from "@tanstack/react-query";
 import { useFunnel } from "../useFunnel";
+import useSnackBar from "@/hooks/useSnackBar";
 
 type List = NonEmptyArray<string> | readonly string[];
 type Options = {
@@ -23,6 +24,7 @@ export default function useSignUpFunnel(
   const router = useRouter();
 
   const [status, setStatus] = useState<Status>("pending");
+  const { openSnackBar } = useSnackBar();
 
   const queryClient = useQueryClient();
 
@@ -57,7 +59,9 @@ export default function useSignUpFunnel(
       afterStepChange(state[name] ?? "");
 
       if (name !== DONE) return setStatus(name);
+
       const formData = new FormData();
+
       Object.entries(state).forEach((s) => {
         const [key, val] = s;
         if (key === DONE || key === "step") return;
@@ -68,6 +72,7 @@ export default function useSignUpFunnel(
       if (preAccessToken) formData.append("pre_access_token", preAccessToken);
 
       setStatus("loading");
+      openSnackBar("회원가입 요청을 처리 중입니다.");
       // eslint-disable-next-line no-console
       const result = await client.signUp(formData).catch(console.error);
 

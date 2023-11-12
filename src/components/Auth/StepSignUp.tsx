@@ -4,7 +4,6 @@ import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 
 import type { Status } from "@/hooks/auth/useSignUpFunnel";
-import { toUpperCaseFirstLetter } from "@/libs/utils";
 import {
   Schema,
   type SchemaKey,
@@ -15,11 +14,14 @@ import client from "@/api/client";
 import InputWithLabel from "../InputWithLabel";
 import { colors } from "../constant/color";
 import Dropzone from "../Dropzone";
+import SignUpSuccess from "./SignUp/Success";
+import SignUpFail from "./SignUp/Fail";
 
 type Props = {
   step: string;
   stepCount: number;
   title: string;
+  subTitle: string;
   status: Status;
   current: string | File;
   setCurrent: Dispatch<SetStateAction<string | File>>;
@@ -46,12 +48,14 @@ const Form = styled.form`
 const DropZoneWrapper = styled.div`
   width: 18rem;
   height: 16rem;
+  margin-bottom: 2rem;
 `;
 
 export default function StepSignUp({
   step,
   stepCount,
   title,
+  subTitle,
   status,
   current,
   setCurrent,
@@ -161,13 +165,19 @@ export default function StepSignUp({
     if (!codeVerified) {
       return !code;
     }
-
     return false;
   }
 
-  if (status === "loading") return <div>loading</div>;
-  if (status === "fulfilled") return <div>done</div>;
-  if (status === "rejected") return <div>fail</div>;
+  // 회원가입 완료 후 대기
+  if (status === "loading") {
+    return <></>;
+  }
+
+  // 회원가입 완료 후 성공
+  if (status === "fulfilled") return <SignUpSuccess></SignUpSuccess>;
+
+  // 회원가입 완료 후 실패
+  if (status === "rejected") return <SignUpFail></SignUpFail>;
 
   // step 정보
   const stepWithText = step as SchemaKey;
@@ -188,7 +198,7 @@ export default function StepSignUp({
         <Header>{title}</Header>
         {/* email 입력 */}
         <InputWithLabel
-          label={toUpperCaseFirstLetter(step)}
+          label={subTitle}
           type={step}
           name={step}
           value={current as string}
@@ -236,7 +246,7 @@ export default function StepSignUp({
           css={css`
             width: 100%;
             padding: 0.8rem 0;
-            border-radius: 10px;
+            border-radius: 0.5rem;
             font-size: 1.2rem;
             color: ${colors.white};
             background-color: ${getEmailDisabled()
@@ -280,7 +290,7 @@ export default function StepSignUp({
           css={css`
             width: 100%;
             padding: 0.8rem 0;
-            border-radius: 10px;
+            border-radius: 0.5rem;
             font-size: 1.2rem;
             color: ${colors.white};
             background-color: ${isDisabled ? colors.grey500 : colors.black};
@@ -305,7 +315,7 @@ export default function StepSignUp({
       <Form key={step} onSubmit={onSubmit}>
         <Header>{title}</Header>
         <InputWithLabel
-          label={toUpperCaseFirstLetter(step)}
+          label={subTitle}
           type={step}
           value={current as string}
           onChange={validatedOnChange({
@@ -319,7 +329,7 @@ export default function StepSignUp({
           css={css`
             width: 100%;
             padding: 0.8rem 0;
-            border-radius: 10px;
+            border-radius: 0.5rem;
             font-size: 1.2rem;
             color: ${colors.white};
             background-color: ${isDisabled ? colors.grey500 : colors.black};
@@ -342,7 +352,7 @@ export default function StepSignUp({
     <Form key={step} onSubmit={onSubmit}>
       <Header>{title}</Header>
       <InputWithLabel
-        label={toUpperCaseFirstLetter(step)}
+        label={subTitle}
         type={step}
         value={current as string}
         onChange={(e) => setCurrent(e.target.value)}
@@ -352,7 +362,7 @@ export default function StepSignUp({
         css={css`
           width: 100%;
           padding: 0.8rem 0;
-          border-radius: 10px;
+          border-radius: 0.5rem;
 
           font-size: 1.2rem;
           color: ${colors.white};
