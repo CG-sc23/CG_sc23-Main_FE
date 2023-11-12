@@ -20,7 +20,13 @@ export default function Home() {
     >
       <Link href="/auth/SignIn">SignIn</Link>
       <Link href="/auth/SignUp">SignUp</Link>
-      <button type="button" onClick={() => signOut()}>
+      <button
+        type="button"
+        onClick={() => {
+          console.log('SIGN OUT');
+          signOut();
+        }}
+      >
         Sign Out
       </button>
     </div>

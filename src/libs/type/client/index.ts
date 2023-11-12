@@ -45,3 +45,9 @@ export type PasswordResetConfirmPayload = PasswordResetCheckQueries & {
 /** USER */
 export type DeactivateAuthToken = { token: string };
 export type DeactivateResponse = OkAndOptionalReason;
+export type GetUserInfoAuthToken = { token: string };
+export type GetUserInfoResponse = OkAndOptionalReason & {
+  email?: string;
+  name?: string;
+  profileImageLink?: string | null;
+};

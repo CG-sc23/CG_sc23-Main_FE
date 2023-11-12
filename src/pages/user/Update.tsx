@@ -122,14 +122,14 @@ export const getServerSideProps = async () => {
 
 export default function Update({ res }: InferGetServerSidePropsType<any>) {
   const [shortDescription, setShortDescription] = useState(
-    res.short_description,
+    res?.short_description,
   );
   const { register, handleSubmit } = useForm<FormData>({
     defaultValues: {
-      name: res.name,
-      github_link: res.github_link,
-      short_description: res.short_description,
-      image_link: res.image_link,
+      name: res?.name,
+      github_link: res?.github_link,
+      short_description: res?.short_description,
+      image_link: res?.image_link,
     },
   });
 
@@ -144,7 +144,7 @@ export default function Update({ res }: InferGetServerSidePropsType<any>) {
         `}
       >
         <img
-          src={res.image_link}
+          src={res?.image_link}
           css={css`
             width: 256px;
             height: 256px;
@@ -197,7 +197,7 @@ export default function Update({ res }: InferGetServerSidePropsType<any>) {
           text-decoration: none;
         `}
       >
-        {res.email}
+        {res?.email}
       </h1>
       {/* name */}
       <List>

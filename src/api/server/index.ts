@@ -8,7 +8,7 @@ import {
   SignOut,
   Password,
 } from '@/api/server/auth';
-import { Deactivate } from '@/api/server/user';
+import { Deactivate, UserInfo } from '@/api/server/user';
 import { handleApiError } from '@/api/handleError';
 
 const server = {
@@ -28,6 +28,7 @@ const server = {
   ...SocialAuth,
   ...Password,
   ...Deactivate,
+  ...UserInfo,
 };
 
 export default server;

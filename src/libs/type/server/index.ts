@@ -32,3 +32,11 @@ export type SocialAuthApiPayload = { code: string };
 /** USER */
 export type DeactivateApiAuthToken = { token: string };
 export type DeactivateApiResponse = { success?: boolean; detail?: string };
+export type GetUserInfoApiAuthToken = { token: string };
+export type GetUserInfoApiResponse = {
+  success?: boolean;
+  email?: string;
+  name?: string;
+  profile_image_link?: string | null;
+  detail?: string;
+};
