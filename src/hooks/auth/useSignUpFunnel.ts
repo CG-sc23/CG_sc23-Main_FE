@@ -13,7 +13,7 @@ type Options = {
   afterStepChange: (current: string | File) => void;
 };
 
-export type Status = 'loading' | 'fulfilled' | 'rejected' | 'pending' | string;
+export type StatusType = 'loading' | 'fulfilled' | 'rejected' | 'pending';
 
 const DONE = 'done';
 
@@ -23,7 +23,7 @@ export default function useSignUpFunnel(
 ) {
   const router = useRouter();
 
-  const [status, setStatus] = useState<Status>('pending');
+  const [status, setStatus] = useState<StatusType>('pending');
   const { openSnackBar } = useSnackBar();
 
   const preAccessToken = safeLocalStorage.get(queryKey.PRE_ACCESS_TOKEN);
@@ -54,7 +54,7 @@ export default function useSignUpFunnel(
     onStepChange: async (name) => {
       afterStepChange(state[name] ?? '');
 
-      if (name !== DONE) return setStatus(name);
+      if (name !== DONE) return;
 
       const formData = new FormData();
 
@@ -69,6 +69,7 @@ export default function useSignUpFunnel(
 
       setStatus('loading');
       openSnackBar('회원가입 요청을 처리 중입니다.');
+
       // eslint-disable-next-line no-console
       const result = await client
         .signUp(formData)
