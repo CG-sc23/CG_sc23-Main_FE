@@ -127,6 +127,7 @@ export default function MenuBar() {
           </div>
         </div>
         {/* Right : submenus in mobile */}
+
         <div
           css={css`
             display: none;
@@ -135,53 +136,73 @@ export default function MenuBar() {
             }
           `}
         >
-          <button
-            css={css`
-              background-color: transparent;
-              border: none;
-              color: white;
-            `}
-            onClick={toggleVisibleSubmenu}
-          >
-            <AiOutlineMenu
+          {isLoggedIn ? (
+            <button
               css={css`
-                width: 1.5rem;
-                height: 1.5rem;
+                background-color: transparent;
+                border: none;
+                color: white;
               `}
-            />
-            <div
+              onClick={toggleVisibleSubmenu}
+            >
+              <AiOutlineMenu
+                css={css`
+                  width: 1.5rem;
+                  height: 1.5rem;
+                `}
+              />
+              <div
+                css={css`
+                  display: flex;
+                  flex-direction: column;
+                  gap: 1rem;
+                  position: absolute;
+                  right: 1rem;
+                  top: 4rem;
+                  padding: 1rem 1rem;
+                  color: black;
+                  font-weight: 500;
+                  border: 2px solid black;
+                  border-radius: 0.25rem;
+                  background-color: white;
+                  z-index: 10;
+                  display: ${visibleSubMenu ? "flex" : "none"};
+                `}
+              >
+                <Link href="/" css={submenuMobileCss}>
+                  프로젝트
+                </Link>
+                <Link href="/" css={submenuMobileCss}>
+                  친구검색
+                </Link>
+                <Link href={`/user/${user?.name}`} css={submenuMobileCss}>
+                  내 계정
+                </Link>
+                <Link href="/settings" css={submenuMobileCss}>
+                  설정
+                </Link>
+              </div>
+            </button>
+          ) : (
+            <Link
+              href="/auth/SignIn"
               css={css`
-                display: flex;
-                flex-direction: column;
-                gap: 1rem;
-                position: absolute;
-                right: 1rem;
-                top: 4rem;
-                padding: 1rem 1rem;
-                color: black;
-                font-weight: 500;
-                border: 2px solid black;
-                border-radius: 0.25rem;
+                color: ${colors.white};
+                padding: 0.8rem 1.2rem;
                 background-color: white;
-                z-index: 10;
-                display: ${visibleSubMenu ? "flex" : "none"};
+                color: black;
+                border-radius: 0.4rem;
+                font-weight: 600;
+                &:hover {
+                  background-color: ${colors.grey200};
+                }
               `}
             >
-              <Link href="/" css={submenuMobileCss}>
-                프로젝트
-              </Link>
-              <Link href="/" css={submenuMobileCss}>
-                친구검색
-              </Link>
-              <Link href={`/user/${user?.name}`} css={submenuMobileCss}>
-                내 계정
-              </Link>
-              <Link href="/settings" css={submenuMobileCss}>
-                설정
-              </Link>
-            </div>
-          </button>
+              로그인
+            </Link>
+          )}
         </div>
+
         {/* Right : submenus in web */}
         <div
           css={css`
@@ -266,9 +287,17 @@ export default function MenuBar() {
               href="/auth/SignIn"
               css={css`
                 color: ${colors.white};
+                padding: 0.8rem 1.2rem;
+                background-color: white;
+                color: black;
+                border-radius: 0.4rem;
+                font-weight: 600;
+                &:hover {
+                  background-color: ${colors.grey200};
+                }
               `}
             >
-              SingIn
+              로그인
             </Link>
           )}
         </div>
