@@ -1,13 +1,20 @@
-import { ChangeEvent, DragEvent, useRef, useState } from 'react';
+import {
+  ChangeEvent,
+  Dispatch,
+  DragEvent,
+  SetStateAction,
+  useRef,
+  useState,
+} from 'react';
 import { assert } from '@/libs/utils/assert';
 import { css } from '@emotion/react';
 import MDEditor, { ContextStore, RefMDEditor } from '@uiw/react-md-editor';
-import { colors } from '../constant/color';
 
-import client from '@/api/client';
 import { safeLocalStorage } from '@toss/storage';
 import { queryKey } from '@/libs/constant';
 import { uploadImg } from '@/libs/utils/s3';
+
+import { colors } from '../constant/color';
 
 //! Utils
 interface TextRange {
@@ -119,11 +126,16 @@ function extractImageLinks(markdownText: string): string[] {
 }
 
 // * Component
-export default function Editor() {
+type EditorProps = {
+  markdown: string;
+  setMarkdown: Dispatch<SetStateAction<string>>;
+};
+export default function Editor({ markdown, setMarkdown }: EditorProps) {
   const [preview, setPreview] = useState(false);
-  const [markdown, setMarkdown] = useState('');
   const [highlight, setHighlight] = useState(false);
   const editorRef = useRef<RefMDEditor>(null);
+
+  const isPreviewVisible = !preview && highlight;
 
   function onChange(
     value?: string | undefined,
@@ -159,7 +171,7 @@ export default function Editor() {
       try {
         return await dropFileUpload(files[0], ref);
       } catch (error) {
-        // TODO HANDLE ERROR
+        console.error(error);
       } finally {
         setHighlight(false);
       }
@@ -200,7 +212,7 @@ export default function Editor() {
             }
           `}
         />
-        {!preview && highlight ? (
+        {isPreviewVisible ? (
           <div
             css={css`
               position: absolute;
@@ -232,12 +244,6 @@ export default function Editor() {
           preview
         </button>
       </div>
-      <button
-        type="button"
-        onClick={() => console.log(extractImageLinks(markdown))}
-      >
-        TEST
-      </button>
       <MDEditor.Markdown source={markdown} />
     </>
   );

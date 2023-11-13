@@ -228,7 +228,7 @@ export default function Update({ res }: InferGetServerSidePropsType<any>) {
         <Label htmlFor="description">
           <Stressed>* </Stressed>자기소개
         </Label>
-        <Editor />
+        <Editor markdown={shortDescription} setMarkdown={setShortDescription} />
       </List>
       <Submit type="submit">수정 완료</Submit>
     </Form>
