@@ -5,11 +5,22 @@ import { type SchemaKey } from '@/libs/utils/validate';
 
 import Status from './Status';
 import dynamic from 'next/dynamic';
-const EmailStep = dynamic(() => import('./Step/EmailStep'), { ssr: false });
-const ImageStep = dynamic(() => import('./Step/ImageStep'), { ssr: false });
-const LinkStep = dynamic(() => import('./Step/LinkStep'), { ssr: false });
+import LoadingSpinner from '@/components/Spinner';
+const EmailStep = dynamic(() => import('./Step/EmailStep'), {
+  ssr: true,
+  loading: () => <LoadingSpinner />,
+});
+const ImageStep = dynamic(() => import('./Step/ImageStep'), {
+  ssr: true,
+  loading: () => <LoadingSpinner />,
+});
+const LinkStep = dynamic(() => import('./Step/LinkStep'), {
+  ssr: true,
+  loading: () => <LoadingSpinner />,
+});
 const PlainTextStep = dynamic(() => import('./Step/PlainTextStep'), {
-  ssr: false,
+  ssr: true,
+  loading: () => <LoadingSpinner />,
 });
 
 type Props = {
