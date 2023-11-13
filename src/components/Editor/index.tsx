@@ -193,6 +193,7 @@ export default function Editor({ markdown, setMarkdown }: EditorProps) {
           width: 100%;
         `}
         onDragEnter={onStartDragEnter}
+        data-color-mode="light"
       >
         <MDEditor
           ref={editorRef}
@@ -243,8 +244,8 @@ export default function Editor({ markdown, setMarkdown }: EditorProps) {
         >
           preview
         </button>
+        <MDEditor.Markdown source={markdown} />
       </div>
-      <MDEditor.Markdown source={markdown} />
     </>
   );
 }
