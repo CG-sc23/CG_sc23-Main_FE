@@ -7,8 +7,8 @@ import Switch from "react-switch";
 
 import { bp } from "@/libs/styles/constants";
 import { mySingupStrategy } from "@/libs/utils/profile";
-import { colors } from "@/components/constant/color";
 import useDeactivate from "@/hooks/user/useDeactivate";
+import useSignOut from "@/hooks/auth/useSignOut";
 
 const Block = styled.div`
   display: flex;
@@ -67,6 +67,7 @@ export default function Settings() {
   });
 
   const { deactivate } = useDeactivate();
+  const { signOut } = useSignOut();
 
   const [checked, setChecked] = useState(false);
   const handleToggleChange = (nextChecked: boolean) => setChecked(nextChecked);
@@ -176,6 +177,16 @@ export default function Settings() {
               `}
             >
               회원탈퇴
+            </span>
+            <AiOutlineRight />
+          </Button>
+          <Button type="button" onClick={() => signOut()}>
+            <span
+              css={css`
+                font-weight: 500;
+              `}
+            >
+              로그아웃
             </span>
             <AiOutlineRight />
           </Button>
