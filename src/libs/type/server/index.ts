@@ -35,6 +35,7 @@ export type DeactivateApiResponse = { success?: boolean; detail?: string };
 export type GetUserInfoApiAuthToken = AuthToken;
 export type GetUserInfoApiResponse = {
   success?: boolean;
+  user_id?: number;
   email?: string;
   name?: string;
   profile_image_link?: string | null;

@@ -37,6 +37,7 @@ export default async function handleUserInfo(
 
   return res.status(200).json({
     ok: true,
+    id: data.user_id,
     email: data.email,
     name: data.name,
     profileImageLink: data.profile_image_link,

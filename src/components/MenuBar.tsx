@@ -251,7 +251,7 @@ export default function MenuBar() {
                       z-index: 10;
                     `}
                   >
-                    <Link href={`/user/${user?.name}`} css={submenuMobileCss}>
+                    <Link href={`/user/${user?.id}`} css={submenuMobileCss}>
                       내 계정
                     </Link>
                     <Link href="/settings" css={submenuMobileCss}>

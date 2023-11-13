@@ -49,6 +49,8 @@ export type DeactivateAuthToken = AuthToken;
 export type DeactivateResponse = OkAndOptionalReason;
 export type GetUserInfoAuthToken = AuthToken;
 export type GetUserInfoResponse = OkAndOptionalReason & {
+  id?: number;
+  number?: string;
   email?: string;
   name?: string;
   profileImageLink?: string | null;
