@@ -3,9 +3,11 @@ import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 import { bp } from '@/libs/styles/constants';
 import { LuPencil } from 'react-icons/lu';
-import Editor from '@/components/Editor';
 import { useForm } from 'react-hook-form';
 import { InferGetServerSidePropsType } from 'next';
+import dynamic from 'next/dynamic';
+
+const Editor = dynamic(() => import('@/components/Editor'), { ssr: false });
 
 const Form = styled.form`
   width: 672px;
@@ -122,14 +124,14 @@ export const getServerSideProps = async () => {
 
 export default function Update({ res }: InferGetServerSidePropsType<any>) {
   const [shortDescription, setShortDescription] = useState(
-    res.short_description,
+    res?.short_description,
   );
   const { register, handleSubmit } = useForm<FormData>({
     defaultValues: {
-      name: res.name,
-      github_link: res.github_link,
-      short_description: res.short_description,
-      image_link: res.image_link,
+      name: res?.name,
+      github_link: res?.github_link,
+      short_description: res?.short_description,
+      image_link: res?.image_link,
     },
   });
 
@@ -144,7 +146,7 @@ export default function Update({ res }: InferGetServerSidePropsType<any>) {
         `}
       >
         <img
-          src={res.image_link}
+          src={res?.image_link}
           css={css`
             width: 256px;
             height: 256px;
@@ -197,7 +199,7 @@ export default function Update({ res }: InferGetServerSidePropsType<any>) {
           text-decoration: none;
         `}
       >
-        {res.email}
+        {res?.email}
       </h1>
       {/* name */}
       <List>
@@ -226,7 +228,7 @@ export default function Update({ res }: InferGetServerSidePropsType<any>) {
         <Label htmlFor="description">
           <Stressed>* </Stressed>자기소개
         </Label>
-        <Editor />
+        <Editor markdown={shortDescription} setMarkdown={setShortDescription} />
       </List>
       <Submit type="submit">수정 완료</Submit>
     </Form>

@@ -1,5 +1,10 @@
-import FunnelSignUp from "@/components/Auth/FunnelSignUp";
-import LayoutContainer from "@/components/Auth/LayoutContainer";
+import LayoutContainer from '@/components/Auth/LayoutContainer';
+import dynamic from 'next/dynamic';
+
+const FunnelSignUp = dynamic(() => import('@/components/Auth/FunnelSignUp'), {
+  ssr: false,
+  loading: () => <div>Loading...</div>,
+});
 
 export default function SignUp() {
   return (

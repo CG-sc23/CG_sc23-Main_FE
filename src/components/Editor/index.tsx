@@ -1,31 +1,20 @@
-import { ChangeEvent, DragEvent, useRef, useState } from 'react';
+import {
+  ChangeEvent,
+  Dispatch,
+  DragEvent,
+  SetStateAction,
+  useRef,
+  useState,
+} from 'react';
 import { assert } from '@/libs/utils/assert';
 import { css } from '@emotion/react';
 import MDEditor, { ContextStore, RefMDEditor } from '@uiw/react-md-editor';
-import rehypeVideo from 'rehype-video';
-import { colors } from '../constant/color';
 
-//! Dummy
-const uploadImg = (_: any) =>
-  new Promise<string>((resolve) =>
-    setTimeout(
-      () =>
-        resolve(
-          'https://velog.velcdn.com/images/greencloud/post/b5f233e1-628a-4771-bfdf-dbcdf64440a8/image.gif',
-        ),
-      1000,
-    ),
-  );
-const uploadVideo = (_: any) =>
-  new Promise<string>((resolve) =>
-    setTimeout(
-      () =>
-        resolve(
-          'https://velog.velcdn.com/images/ung7497/post/5790d720-b23a-48a9-930c-6550faf8735b/image.mov',
-        ),
-      1000,
-    ),
-  );
+import { safeLocalStorage } from '@toss/storage';
+import { queryKey } from '@/libs/constant';
+import { uploadImg } from '@/libs/utils/s3';
+
+import { colors } from '../constant/color';
 
 //! Utils
 interface TextRange {
@@ -81,8 +70,13 @@ function setSelectionRange(ref: RefMDEditor, range: TextRange): TextState {
   return commandOrchestrator.textApi.setSelectionRange(range);
 }
 
+// ! DROP FILE UPLOAD
 const dropFileUpload = async (file: File, ref: RefMDEditor) => {
-  const notSupport = !/^(image|video)\/.+$/.test(file?.type);
+  // ! REMOVE TOKEN
+  const token = safeLocalStorage.get(queryKey.USER_ACCESS_TOKEN);
+  assert(token, 'No Token');
+
+  const notSupport = !/^(image)\/.+$/.test(file?.type);
   if (notSupport) {
     const fail = `\n![지원하는 파일 형식이 아닙니다!]()\n`;
     replaceSelection(ref, fail);
@@ -91,10 +85,7 @@ const dropFileUpload = async (file: File, ref: RefMDEditor) => {
 
   const blobUrl = URL.createObjectURL(file);
 
-  const isImage = file.type.includes('image');
-  const loadingMarkdown = isImage
-    ? `\n![업로드 중...](${blobUrl})\n`
-    : `\n<!--업로드 중...-->\n<video controls src="${blobUrl}" style="max-height: 640px;"></video>\n`;
+  const loadingMarkdown = `\n![업로드 중...](${blobUrl})\n`;
 
   const initState = getStateFromTextArea(ref);
   const loadingState = replaceSelection(ref, loadingMarkdown);
@@ -104,16 +95,17 @@ const dropFileUpload = async (file: File, ref: RefMDEditor) => {
   });
 
   try {
-    const url = isImage ? await uploadImg(file) : await uploadVideo(file);
+    const url = await uploadImg({
+      file,
+      filename: file.name,
+      token,
+    });
     const fileName = removeExtension(file.name);
-    const insertedMarkdown = isImage
-      ? `\n![${fileName}](${url})\n`
-      : `\n<!--${fileName}-->\n${url}\n`;
+    const insertedMarkdown = `\n![${fileName}](${url})\n`;
     replaceSelection(ref, insertedMarkdown);
 
     return url;
   } catch (error) {
-    // TODO HANDLE ERROR
     const errorMarkdown = '![에러!](...)';
     replaceSelection(ref, errorMarkdown);
   } finally {
@@ -121,12 +113,29 @@ const dropFileUpload = async (file: File, ref: RefMDEditor) => {
   }
 };
 
+function extractImageLinks(markdownText: string): string[] {
+  const regex = /!\[.*?\]\((.*?)\)/g;
+  let matches;
+  const links: string[] = [];
+
+  while ((matches = regex.exec(markdownText)) !== null) {
+    links.push(matches[1]);
+  }
+
+  return links;
+}
+
 // * Component
-export default function Editor() {
+type EditorProps = {
+  markdown: string;
+  setMarkdown: Dispatch<SetStateAction<string>>;
+};
+export default function Editor({ markdown, setMarkdown }: EditorProps) {
   const [preview, setPreview] = useState(false);
-  const [markdown, setMarkdown] = useState('');
   const [highlight, setHighlight] = useState(false);
   const editorRef = useRef<RefMDEditor>(null);
+
+  const isPreviewVisible = !preview && highlight;
 
   function onChange(
     value?: string | undefined,
@@ -162,7 +171,7 @@ export default function Editor() {
       try {
         return await dropFileUpload(files[0], ref);
       } catch (error) {
-        // TODO HANDLE ERROR
+        console.error(error);
       } finally {
         setHighlight(false);
       }
@@ -176,7 +185,7 @@ export default function Editor() {
           display: none;
         `}
         type="file"
-        accept=".jpg,.png,.jpeg,.jfif,.gif"
+        accept=".jpg,.png,.jpeg,.gif"
       />
       <div
         css={css`
@@ -195,9 +204,6 @@ export default function Editor() {
           minHeight={200}
           maxHeight={500}
           preview={preview ? 'preview' : 'edit'}
-          previewOptions={{
-            rehypePlugins: [[rehypeVideo, { details: false }]],
-          }}
           css={css`
             border-radius: 5px;
             transition: border 0.1s ease;
@@ -206,7 +212,7 @@ export default function Editor() {
             }
           `}
         />
-        {!preview && highlight ? (
+        {isPreviewVisible ? (
           <div
             css={css`
               position: absolute;
@@ -238,10 +244,7 @@ export default function Editor() {
           preview
         </button>
       </div>
-      <MDEditor.Markdown
-        source={markdown}
-        rehypePlugins={[[rehypeVideo as any, { details: false }]]}
-      />
+      <MDEditor.Markdown source={markdown} />
     </>
   );
 }

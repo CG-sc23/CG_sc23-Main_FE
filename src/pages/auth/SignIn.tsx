@@ -1,15 +1,15 @@
-import Link from "next/link";
-import { FormEvent, useEffect, useState } from "react";
-import { css } from "@emotion/react";
-import styled from "@emotion/styled";
-import { AiOutlineRight } from "react-icons/ai";
+import Link from 'next/link';
+import { FormEvent, useState } from 'react';
+import { css } from '@emotion/react';
+import styled from '@emotion/styled';
+import { AiOutlineRight } from 'react-icons/ai';
 
-import useSignIn from "@/hooks/auth/useSignIn";
-import { Schema, validatedOnChange } from "@/libs/utils/validate";
+import useSignIn from '@/hooks/auth/useSignIn';
+import { Schema, validatedOnChange } from '@/libs/utils/validate';
 
-import LayoutContainer from "@/components/Auth/LayoutContainer";
-import { colors } from "@/components/constant/color";
-import InputWithLabel from "@/components/InputWithLabel";
+import LayoutContainer from '@/components/Auth/LayoutContainer';
+import { colors } from '@/components/constant/color';
+import InputWithLabel from '@/components/InputWithLabel';
 
 const Form = styled.form`
   position: relative;
@@ -22,7 +22,7 @@ const Form = styled.form`
 const Button = styled.button<{ bgColor?: string; color?: string }>`
   padding: 1rem 0;
   background-color: ${(props) => props.bgColor};
-  color: ${(props) => props.color ?? "white"};
+  color: ${(props) => props.color ?? 'white'};
   border-radius: 0.5rem;
   font-size: 1rem;
   font-weight: 600;
@@ -36,16 +36,15 @@ const HR = styled.hr`
 `;
 
 export default function SignIn() {
-  const [email, setEmail] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [password, setPassword] = useState("");
-  const [passwordError, setPasswordError] = useState("");
+  const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [password, setPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
 
   const { signIn, kakao, naver } = useSignIn();
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Logged In");
     signIn({ email, password });
   };
 
@@ -116,10 +115,10 @@ export default function SignIn() {
           gap: 1rem;
         `}
       >
-        <Button onClick={kakao} bgColor={colors.kakao} color={"black"}>
+        <Button onClick={kakao} bgColor={colors.kakao} color={'black'}>
           카카오 소셜 로그인
         </Button>
-        <Button onClick={naver} bgColor={colors.naver} color={"white"}>
+        <Button onClick={naver} bgColor={colors.naver} color={'white'}>
           네이버 소셜 로그인
         </Button>
       </div>
@@ -150,7 +149,7 @@ export default function SignIn() {
             color: ${colors.grey800};
           `}
         >
-          {" "}
+          {' '}
           가입하기 <AiOutlineRight />
         </Link>
       </div>

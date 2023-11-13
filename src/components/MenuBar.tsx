@@ -1,54 +1,68 @@
-import { bp } from "@/libs/styles/constants";
-import { css } from "@emotion/react";
-import styled from "@emotion/styled";
-import Link from "next/link";
-import { AiOutlineMenu } from "react-icons/ai";
-import { useState, type PropsWithChildren, FormEvent } from "react";
-import Image from "next/image";
+import { bp } from '@/libs/styles/constants';
+import { css } from '@emotion/react';
+import styled from '@emotion/styled';
+import Link from 'next/link';
+import { AiOutlineMenu } from 'react-icons/ai';
+import { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
+import useUser from '@/hooks/user/useUser';
+import { colors } from './constant/color';
+import { AnimatePresence, motion } from 'framer-motion';
 
 const logoCss = css({
-  fontSize: "1.5rem",
-  color: "white",
-  textDecoration: "none",
+  fontSize: '1.5rem',
+  color: 'white',
+  textDecoration: 'none',
 });
 
 const submenuCss = css({
-  fontSize: "1rem",
-  color: "white",
-  textDecoration: "none",
+  fontSize: '1rem',
+  color: 'white',
+  textDecoration: 'none',
 });
 
 const submenuMobileCss = css({
-  fontSize: "1rem",
-  color: "black",
-  textDecoration: "none",
+  fontSize: '1rem',
+  color: 'black',
+  textDecoration: 'none',
 });
 
-const Container = styled.div`
+export const NavContainer = styled.div`
   width: 100vw;
+  height: 5rem;
+  background-color: black;
 `;
 
-export default function MenuBar({ children }: PropsWithChildren) {
-  const [showSubmenu, setShowSubmenu] = useState(false);
-  const [profile, setProfile] = useState({
-    id: null,
-    email: "jun@google.com",
-    name: "임준혁",
-    github_link: "hello@github.com",
-    image_link: "/profile.jpg",
-    short_description: "안녕하세요 올리버쌤입니다.".repeat(5),
-    grade: 1,
-    like: 12,
-    rating: 4.3,
-  });
+export default function MenuBar() {
+  const { user, isLoading, isLoggedIn } = useUser();
+  const [visibleSubMenu, setVisibleSubMenu] = useState(false);
 
-  const handleSubmenuOpen = (e: FormEvent<HTMLButtonElement>) => {
-    console.log(showSubmenu);
-    setShowSubmenu((prev) => !prev);
+  const subMenuRef = useRef<HTMLDivElement>(null);
+
+  const onClickOutSide = (e: MouseEvent) => {
+    const target = e.target as HTMLDivElement;
+    if (!target) return;
+
+    if (visibleSubMenu && !subMenuRef.current?.contains(target)) {
+      setVisibleSubMenu(false);
+    }
+  };
+
+  useEffect(() => {
+    if (visibleSubMenu) {
+      document.addEventListener('mousedown', onClickOutSide);
+    }
+    return () => {
+      document.removeEventListener('mousedown', onClickOutSide);
+    };
+  }, [visibleSubMenu, onClickOutSide]);
+
+  const toggleVisibleSubmenu = () => {
+    setVisibleSubMenu((prev) => !prev);
   };
 
   return (
-    <Container>
+    <NavContainer>
       {/* menubar */}
       <div
         css={css`
@@ -56,16 +70,18 @@ export default function MenuBar({ children }: PropsWithChildren) {
           justify-content: space-between;
           align-items: center;
           position: fixed;
+
           width: 100%;
+          height: 5rem;
+
           -webkit-box-sizing: border-box;
           -moz-box-sizing: border-box;
           box-sizing: border-box;
-          height: 5rem;
           padding: 0 1rem;
           background-color: black;
           color: white;
           z-index: 10;
-          border-bottom: 1px solid #c0cbda;
+          /* border-bottom: 1px solid #c0cbda; */
         `}
       >
         {/* Left */}
@@ -125,7 +141,7 @@ export default function MenuBar({ children }: PropsWithChildren) {
               border: none;
               color: white;
             `}
-            onClick={handleSubmenuOpen}
+            onClick={toggleVisibleSubmenu}
           >
             <AiOutlineMenu
               css={css`
@@ -148,7 +164,7 @@ export default function MenuBar({ children }: PropsWithChildren) {
                 border-radius: 0.25rem;
                 background-color: white;
                 z-index: 10;
-                display: ${showSubmenu ? "flex" : "none"};
+                display: ${visibleSubMenu ? 'flex' : 'none'};
               `}
             >
               <Link href="/" css={submenuMobileCss}>
@@ -157,7 +173,7 @@ export default function MenuBar({ children }: PropsWithChildren) {
               <Link href="/" css={submenuMobileCss}>
                 친구검색
               </Link>
-              <Link href={`/user/${profile.id}`} css={submenuMobileCss}>
+              <Link href={`/user/${user?.name}`} css={submenuMobileCss}>
                 내 계정
               </Link>
               <Link href="/settings" css={submenuMobileCss}>
@@ -177,51 +193,84 @@ export default function MenuBar({ children }: PropsWithChildren) {
             }
           `}
         >
-          <button
-            css={css`
-              background-color: transparent;
-              border: none;
-              color: white;
-              cursor: pointer;
-            `}
-            onClick={handleSubmenuOpen}
-          >
-            <img
-              src={profile.image_link}
-              alt={"profile_image"}
+          {isLoggedIn ? (
+            <button
               css={css`
-                width: 2rem;
-                height: 2rem;
-                border-radius: 9999%;
-                object-fit: cover;
+                position: relative;
+                background-color: transparent;
+
+                user-select: none;
+                border: none;
+                color: white;
+
+                cursor: pointer;
               `}
-            />
-            <div
+              onClick={toggleVisibleSubmenu}
+            >
+              {isLoading ? null : (
+                <Image
+                  src={user?.profileImageLink as string}
+                  alt="profile_image"
+                  css={css`
+                    border-radius: 9999%;
+                    object-fit: cover;
+                    cursor: pointer;
+                  `}
+                  width={50}
+                  height={50}
+                  priority
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                />
+              )}
+              <AnimatePresence mode="wait">
+                {visibleSubMenu && (
+                  <motion.div
+                    key="submenu"
+                    ref={subMenuRef}
+                    initial={{ opacity: 0, y: -10, x: 10 }}
+                    animate={{ opacity: 1, y: 0, x: 0 }}
+                    exit={{ opacity: 0, y: -10, x: 10 }}
+                    transition={{ duration: 0.3 }}
+                    css={css`
+                      position: absolute;
+
+                      display: flex;
+                      flex-direction: column;
+
+                      width: 100%;
+
+                      gap: 1rem;
+                      right: 1rem;
+                      top: 4rem;
+                      padding: 1rem 1rem;
+                      color: black;
+                      font-weight: 500;
+                      border: 2px solid black;
+                      border-radius: 0.25rem;
+                      background-color: white;
+                      z-index: 10;
+                    `}
+                  >
+                    <Link href={`/user/${user?.name}`} css={submenuMobileCss}>
+                      내 계정
+                    </Link>
+                    <Link href="/settings" css={submenuMobileCss}>
+                      설정
+                    </Link>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </button>
+          ) : (
+            <Link
+              href="/auth/SignIn"
               css={css`
-                display: flex;
-                flex-direction: column;
-                gap: 1rem;
-                position: absolute;
-                right: 1rem;
-                top: 4rem;
-                padding: 1rem 1rem;
-                color: black;
-                font-weight: 500;
-                border: 2px solid black;
-                border-radius: 0.25rem;
-                background-color: white;
-                z-index: 10;
-                display: ${showSubmenu ? "flex" : "none"};
+                color: ${colors.white};
               `}
             >
-              <Link href={`/user/${profile.id}`} css={submenuMobileCss}>
-                내 계정
-              </Link>
-              <Link href="/settings" css={submenuMobileCss}>
-                설정
-              </Link>
-            </div>
-          </button>
+              SingIn
+            </Link>
+          )}
         </div>
       </div>
       {/* menubar */}
@@ -231,7 +280,6 @@ export default function MenuBar({ children }: PropsWithChildren) {
           height: 5rem;
         `}
       />
-      {children}
-    </Container>
+    </NavContainer>
   );
 }

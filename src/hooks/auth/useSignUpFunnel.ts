@@ -1,36 +1,32 @@
-import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
-import { type NonEmptyArray, QS } from "@toss/utils";
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import { type NonEmptyArray, QS } from '@toss/utils';
 
-import client from "@/api/client";
-import { queryKey } from "@/libs/constant";
-import { useQueryClient } from "@tanstack/react-query";
-import { useFunnel } from "../useFunnel";
-import useSnackBar from "@/hooks/useSnackBar";
+import client from '@/api/client';
+import { queryKey } from '@/libs/constant';
+import { useFunnel } from '../useFunnel';
+import useSnackBar from '@/hooks/useSnackBar';
+import { safeLocalStorage } from '@toss/storage';
 
 type List = NonEmptyArray<string> | readonly string[];
 type Options = {
   afterStepChange: (current: string | File) => void;
 };
 
-export type Status = "loading" | "fulfilled" | "rejected" | "pending" | string;
+export type StatusType = 'loading' | 'fulfilled' | 'rejected' | 'pending';
 
-const DONE = "done";
+const DONE = 'done';
 
 export default function useSignUpFunnel(
   list: List,
-  { afterStepChange }: Options
+  { afterStepChange }: Options,
 ) {
   const router = useRouter();
 
-  const [status, setStatus] = useState<Status>("pending");
+  const [status, setStatus] = useState<StatusType>('pending');
   const { openSnackBar } = useSnackBar();
 
-  const queryClient = useQueryClient();
-
-  const preAccessToken = queryClient.getQueryData<string>([
-    queryKey.PRE_ACCESS_TOKEN,
-  ]);
+  const preAccessToken = safeLocalStorage.get(queryKey.PRE_ACCESS_TOKEN);
 
   const steps = [...list, DONE] as NonEmptyArray<string>;
 
@@ -38,55 +34,61 @@ export default function useSignUpFunnel(
     [key in (typeof steps)[number]]?: string | File;
   };
 
-  if (!steps.includes("email") || !steps.includes("password")) {
-    throw new Error("Steps에 이메일과 비밀번호가 필요합니다.");
+  if (!steps.includes('email') || !steps.includes('password')) {
+    throw new Error('Steps에 이메일과 비밀번호가 필요합니다.');
   }
   if (
-    steps.findIndex((step) => step === "email") !== 0 ||
-    steps.findIndex((step) => step === "password") !== 1
+    steps.findIndex((step) => step === 'email') !== 0 ||
+    steps.findIndex((step) => step === 'password') !== 1
   ) {
-    throw new Error("이메일과 비밀번호는 각각 첫번째 두번째 단계여야 합니다.");
+    throw new Error('이메일과 비밀번호는 각각 첫번째 두번째 단계여야 합니다.');
   }
 
   const initialStep = preAccessToken
-    ? steps.at(steps.findIndex((step) => step === "password") + 1)
+    ? steps.at(steps.findIndex((step) => step === 'password') + 1)
     : steps.at(0);
 
   const [Funnel, state, setStep] = useFunnel(steps, {
     initialStep,
-    stepQueryKey: "step",
+    stepQueryKey: 'step',
     onStepChange: async (name) => {
-      afterStepChange(state[name] ?? "");
+      afterStepChange(state[name] ?? '');
 
-      if (name !== DONE) return setStatus(name);
+      if (name !== DONE) return;
 
       const formData = new FormData();
 
       Object.entries(state).forEach((s) => {
         const [key, val] = s;
-        if (key === DONE || key === "step") return;
+        if (key === DONE || key === 'step') return;
         if (!val) return;
 
         formData.append(key, val);
       });
-      if (preAccessToken) formData.append("pre_access_token", preAccessToken);
+      if (preAccessToken) formData.append('pre_access_token', preAccessToken);
 
-      setStatus("loading");
-      openSnackBar("회원가입 요청을 처리 중입니다.");
+      setStatus('loading');
+      openSnackBar('회원가입 요청을 처리 중입니다.');
+
       // eslint-disable-next-line no-console
-      const result = await client.signUp(formData).catch(console.error);
+      const result = await client
+        .signUp(formData)
+        .catch(console.error)
+        .finally(() => {
+          safeLocalStorage.remove(queryKey.PRE_ACCESS_TOKEN);
+        });
 
-      if (result?.ok) return setStatus("fulfilled");
-      return setStatus("rejected");
+      if (result?.ok) return setStatus('fulfilled');
+      return setStatus('rejected');
     },
   }).withState<State>({});
 
   function prevStep() {
-    const target = QS.get("step") as (typeof steps)[number] | undefined;
+    const target = QS.get('step') as (typeof steps)[number] | undefined;
     if (target === undefined) return;
 
     const index = steps.findIndex((v) => v === target);
-    if (index === 0 || state[steps[index - 1]] === "") return;
+    if (index === 0 || state[steps[index - 1]] === '') return;
 
     setStep((prev) => ({
       ...prev,
@@ -95,7 +97,7 @@ export default function useSignUpFunnel(
   }
 
   function nextStep(update: string | File) {
-    const target = QS.get("step") as (typeof steps)[number] | undefined;
+    const target = QS.get('step') as (typeof steps)[number] | undefined;
     if (target === undefined) return;
 
     const index = steps.findIndex((v) => v === target);

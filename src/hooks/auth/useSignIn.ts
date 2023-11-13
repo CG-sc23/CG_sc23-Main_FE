@@ -1,17 +1,16 @@
 import client from '@/api/client';
 import { mutationKey, queryKey } from '@/libs/constant';
 import { SignInPayload, SignInResponse } from '@/libs/type/client';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { safeLocalStorage } from '@toss/storage';
 import { useRouter } from 'next/navigation';
 import useSnackBar from '../useSnackBar';
 
 export default function useSignIn() {
   const router = useRouter();
-  const queryClient = useQueryClient();
   const { openSnackBar } = useSnackBar();
 
-  const { mutate: signIn, isPending } = useMutation<
+  const { mutate: signIn } = useMutation<
     SignInResponse | undefined,
     unknown,
     SignInPayload
@@ -21,10 +20,8 @@ export default function useSignIn() {
       return client.signIn({ email: params.email, password: params.password });
     },
     onSuccess: (res) => {
-      console.log(res);
       if (!res) return;
       if (res?.ok && res.token) {
-        queryClient.setQueryData([queryKey.USER_ACCESS_TOKEN], res.token);
         safeLocalStorage.set(queryKey.USER_ACCESS_TOKEN, res.token);
         return router.push('/');
       }
@@ -46,7 +43,6 @@ export default function useSignIn() {
   };
 
   const socialLogin = (token: string) => {
-    queryClient.setQueryData([queryKey.USER_ACCESS_TOKEN], token);
     safeLocalStorage.set(queryKey.USER_ACCESS_TOKEN, token);
     return router.push('/');
   };

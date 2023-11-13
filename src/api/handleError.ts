@@ -13,8 +13,5 @@ export function handleApiError<T>(e: unknown) {
 
   console.error('API 서버 에러\n', error);
 
-  return {
-    data: error.response?.data,
-    status: error.status,
-  };
+  return error.response;
 }
