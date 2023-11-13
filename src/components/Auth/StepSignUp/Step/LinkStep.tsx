@@ -41,20 +41,17 @@ export default function LinkStep({
     e.preventDefault();
 
     if (!linkVerified) {
-      // TODO APPLY GITHUB URL CHECK API
-      // setIsLoading(true);
+      setIsLoading(true);
 
-      // const result = await client
-      //   .signUpEmailVerify({ email: emailValue })
-      //   // eslint-disable-next-line no-console
-      //   .catch(console.error)
-      //   .finally(() => setIsLoading(false));
+      const result = await client
+        .gitHubAccountCheck({ github_link: link })
+        .catch(console.error)
+        .finally(() => setIsLoading(false));
 
-      // if (!result) return;
-      // if (!result?.ok) return setError(result?.reason as string);
+      if (!result) return;
+      if (!result?.ok) return setError(result?.reason as string);
 
       setLinkVerified(true);
-
       return;
     }
 

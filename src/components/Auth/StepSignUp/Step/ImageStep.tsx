@@ -24,8 +24,6 @@ export default function ImageStep({
   function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    console.log(image);
-
     return nextStep(image);
   }
 

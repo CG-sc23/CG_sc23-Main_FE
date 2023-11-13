@@ -10,6 +10,7 @@ import {
 } from '@/api/server/auth';
 import { Deactivate, UserInfo } from '@/api/server/user';
 import { Resources } from '@/api/server/resource';
+import { GitHub } from '@/api/server/externalHistory';
 import { handleApiError } from '@/api/handleError';
 
 const server = {
@@ -31,6 +32,7 @@ const server = {
   ...Deactivate,
   ...UserInfo,
   ...Resources,
+  ...GitHub,
 };
 
 export default server;
