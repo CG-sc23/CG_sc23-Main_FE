@@ -1,31 +1,23 @@
-import client from '@/api/client';
-import LayoutContainer from '@/components/Auth/LayoutContainer';
-import InputWithLabel from '@/components/InputWithLabel';
-import { colors } from '@/components/constant/color';
-import { toUpperCaseFirstLetter } from '@/libs/utils';
-import { Schema, validatedOnChange } from '@/libs/utils/validate';
-import { css } from '@emotion/react';
-import styled from '@emotion/styled';
-import { useRouter } from 'next/navigation';
-import { FormEvent, useState } from 'react';
+import client from "@/api/client";
+import LayoutContainer from "@/components/Auth/LayoutContainer";
+import InputWithLabel from "@/components/InputWithLabel";
+import { colors } from "@/components/constant/color";
+import { toUpperCaseFirstLetter } from "@/libs/utils";
+import { Schema, validatedOnChange } from "@/libs/utils/validate";
+import { css } from "@emotion/react";
+import styled from "@emotion/styled";
+import { useRouter } from "next/navigation";
+import { FormEvent, useState } from "react";
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1rem;
+  width: 100%;
 `;
 
 const Button = styled.button<{ bgColor?: string }>`
-  background: none;
-  outline: none;
-  border: none;
-
   padding: 1rem 0;
-
-  background-color: ${(props) =>
-    props.bgColor ? props.bgColor : colors.blue300};
-  color: ${(props) => (props.color ? props.color : colors.white)};
-
   border-radius: 5px;
   font-size: larger;
   font-weight: 600;
@@ -35,14 +27,14 @@ const Button = styled.button<{ bgColor?: string }>`
 export default function SignIn() {
   const router = useRouter();
 
-  const [email, setEmail] = useState('');
-  const [emailError, setEmailError] = useState('');
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
 
-  const [password, setPassword] = useState('');
-  const [passwordError, setPasswordError] = useState('');
+  const [password, setPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
-  const [code, setCode] = useState('');
-  const [codeError, setCodeError] = useState('');
+  const [code, setCode] = useState("");
+  const [codeError, setCodeError] = useState("");
 
   const [sentCode, setSentCode] = useState(false);
   const [codeVerified, setCodeVerified] = useState(false);
@@ -51,20 +43,20 @@ export default function SignIn() {
   const [isLoading, setIsLoading] = useState(false);
 
   const isDisabled = (current: string, error: string) =>
-    current === '' || error !== '';
+    current === "" || error !== "";
 
   async function onSubmitPasswordReset(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.currentTarget;
 
     const emailInput = form.querySelector(
-      'input[name="email"]',
+      'input[name="email"]'
     ) as HTMLInputElement | null;
     const codeInput = form.querySelector(
-      'input[name="code"]',
+      'input[name="code"]'
     ) as HTMLInputElement | null;
     const passwordInput = form.querySelector(
-      'input[name="password"]',
+      'input[name="password"]'
     ) as HTMLInputElement | null;
 
     if (!sentCode) {
@@ -133,37 +125,37 @@ export default function SignIn() {
     }
 
     // TODO After Password Reset
-    router.push('/auth/SignIn');
+    router.push("/auth/SignIn");
   }
 
   function getTitleText() {
     if (!sentCode) {
-      return '이메일을 입력하세요.';
+      return "이메일을 입력하세요.";
     }
     if (!codeVerified) {
-      return '인증코드를 입력하세요.';
+      return "인증코드를 입력하세요.";
     }
     if (!passwordVerified) {
-      return '새로운 비밀번호를 입력해주세요.';
+      return "새로운 비밀번호를 입력해주세요.";
     }
-    return '새로운 비밀번호로 로그인 해주세요.';
+    return "새로운 비밀번호로 로그인 해주세요.";
   }
 
   function getButtonText() {
     if (isLoading) {
-      return '로딩 중';
+      return "로딩 중";
     }
 
     if (!sentCode) {
-      return '인증번호 전송';
+      return "인증번호 전송";
     }
     if (!codeVerified) {
-      return '인증번호 확인';
+      return "인증번호 확인";
     }
     if (!passwordVerified) {
-      return '새 비밀번호 입력';
+      return "새 비밀번호 입력";
     }
-    return '확인';
+    return "확인";
   }
 
   function getDisabled() {
@@ -182,30 +174,18 @@ export default function SignIn() {
 
   return (
     <LayoutContainer>
-      <div
-        css={css`
-          width: 5rem;
-          height: 5rem;
-          background-color: aqua;
-          margin: auto;
-          border-radius: 50%;
-        `}
-      />
       <Form onSubmit={onSubmitPasswordReset}>
-        <span
+        <h1
           css={css`
-            padding: 0 2rem;
+            margin-bottom: 3rem;
             font-size: 1.5rem;
-
-            word-break: break-all;
-            line-break: auto;
             text-align: center;
           `}
         >
           {getTitleText()}
-        </span>
+        </h1>
         <InputWithLabel
-          label={toUpperCaseFirstLetter('email')}
+          label={toUpperCaseFirstLetter("email")}
           type="email"
           name="email"
           value={email}
@@ -219,7 +199,7 @@ export default function SignIn() {
         />
         {sentCode ? (
           <InputWithLabel
-            label={toUpperCaseFirstLetter('code')}
+            label={toUpperCaseFirstLetter("code")}
             type="text"
             name="code"
             value={code as string}
@@ -230,8 +210,8 @@ export default function SignIn() {
         ) : null}
         {codeVerified ? (
           <InputWithLabel
-            label={toUpperCaseFirstLetter('password')}
-            type={'password'}
+            label={toUpperCaseFirstLetter("password")}
+            type={"password"}
             name="password"
             value={password}
             onChange={validatedOnChange({
@@ -244,27 +224,18 @@ export default function SignIn() {
         ) : null}
         <Button
           css={css`
-            background: none;
-            outline: none;
-            border: none;
-
             width: 100%;
             padding: 0.8rem 0;
             border-radius: 10px;
-
             font-size: 1.2rem;
             color: ${colors.white};
-            background-color: ${getDisabled()
-              ? colors.blue200
-              : colors.blue400};
-            cursor: ${getDisabled() ? 'not-allowed' : 'pointer'};
-
+            background-color: ${getDisabled() ? colors.grey500 : colors.black};
+            cursor: ${getDisabled() ? "not-allowed" : "pointer"};
             transition: background-color 0.2s ease;
-
             :hover {
               background-color: ${getDisabled()
-                ? colors.blue100
-                : colors.blue300};
+                ? colors.grey600
+                : colors.grey700};
             }
           `}
           type="submit"
