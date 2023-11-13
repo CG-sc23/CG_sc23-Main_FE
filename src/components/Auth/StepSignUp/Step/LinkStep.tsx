@@ -79,6 +79,12 @@ export default function LinkStep({
     return false;
   }
 
+  const handleChange = validatedOnChange({
+    schema: Schema.github_link,
+    setValue: setLink,
+    setError,
+  });
+
   return (
     <Form onSubmit={onSubmit}>
       <Header>{title}</Header>
@@ -96,13 +102,9 @@ export default function LinkStep({
           onChange={(e) => {
             if (e.target.value.length === 0) setLinkVerified(true);
             if (linkVerified) setLinkVerified(false);
-            const handleChange = validatedOnChange({
-              schema: Schema.github_link,
-              setValue: setLink,
-              setError,
-            });
 
             handleChange(e);
+            if (e.target.value.length === 0) setError('');
           }}
           error={error}
         />

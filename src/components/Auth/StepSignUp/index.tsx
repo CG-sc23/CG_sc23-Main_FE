@@ -1,14 +1,16 @@
 import { type Dispatch, type SetStateAction } from 'react';
-import styled from '@emotion/styled';
 
 import type { StatusType } from '@/hooks/auth/useSignUpFunnel';
 import { type SchemaKey } from '@/libs/utils/validate';
 
 import Status from './Status';
-import EmailStep from './Step/EmailStep';
-import ImageStep from './Step/ImageStep';
-import LinkStep from './Step/LinkStep';
-import PlainTextStep from './Step/PlainTextStep';
+import dynamic from 'next/dynamic';
+const EmailStep = dynamic(() => import('./Step/EmailStep'), { ssr: false });
+const ImageStep = dynamic(() => import('./Step/ImageStep'), { ssr: false });
+const LinkStep = dynamic(() => import('./Step/LinkStep'), { ssr: false });
+const PlainTextStep = dynamic(() => import('./Step/PlainTextStep'), {
+  ssr: false,
+});
 
 type Props = {
   step: string;

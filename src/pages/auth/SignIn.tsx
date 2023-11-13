@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { AiOutlineRight } from 'react-icons/ai';

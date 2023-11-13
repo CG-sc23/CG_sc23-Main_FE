@@ -29,6 +29,7 @@ export default function PlainTextStep({
   error,
   setError,
 }: EmailStepProps) {
+  const schema = Schema[step as SchemaKey] || null;
   function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
@@ -43,13 +44,13 @@ export default function PlainTextStep({
         type={step}
         value={text}
         onChange={validatedOnChange({
-          schema: Schema[step as SchemaKey] || null,
+          schema,
           setValue: setText,
           setError,
         })}
         error={error}
       />
-      <Button type="submit" disabled={isDisabled}>
+      <Button type="submit" disabled={schema && isDisabled}>
         다음 ({stepCount}/6)
       </Button>
     </Form>
