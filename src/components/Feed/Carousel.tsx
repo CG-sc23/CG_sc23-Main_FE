@@ -4,8 +4,8 @@ import { css } from "@emotion/react";
 import { PropsWithChildren } from "react";
 
 const CardWrapper = styled.div`
-  position : relative;
-  width : 100%;
+  position: relative;
+  width: 100%;
   overflow-x: auto;
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -14,7 +14,7 @@ const CardWrapper = styled.div`
   }
 `;
 
-export function Carousel({ children} : PropsWithChildren) {
+export function Carousel({ children }: PropsWithChildren) {
   return (
     <CardWrapper>
       {/* lists */}
