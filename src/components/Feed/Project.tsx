@@ -1,16 +1,38 @@
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 import { colors } from "../constant/color";
-import Card from "../Card";
-import { bpmax } from "@/libs/styles/constants";
+import { bpmax, bpmin } from "@/libs/styles/constants";
+import Link from "next/link";
 
 type Props = {
   title: string;
-  author: string;
+  owner: string;
   projectTitle: string;
-  projectId: string;
+  projectId: number;
   likes: number;
+  created_at : string;
+  id:number;
 };
+
+export const Container = styled(Link)`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 16rem;
+  padding: 1rem;
+  border-radius: 0.2rem;
+  border: 0.1rem solid ${colors.grey200};
+  gap: 1rem;
+
+  ${bpmin[0]} {
+    &:hover {
+      background-color: ${colors.grey800};
+      color: white;
+      cursor: pointer;
+    }
+  }
+`;
 
 const HR = styled.hr`
   width: 100%;
@@ -22,11 +44,13 @@ export function Project({
   title,
   projectTitle,
   projectId,
-  author,
+  owner,
   likes,
+  created_at,
+  id
 }: Props) {
   return (
-    <Card>
+    <Container href={`/projects/${id}`}>
       {/* title */}
       <h1
         css={css`
@@ -38,6 +62,6 @@ export function Project({
       </h1>
       <HR />
       {/*  */}
-    </Card>
+    </Container>
   );
 }
