@@ -25,8 +25,8 @@ export function Commerce({ imageUrl }: Props) {
           justify-content: space-between;
           border-top: 1px solid ${colors.grey300};
           padding-top: 1rem;
-          font-weight: 600;
-          font-size: 1.2rem;
+          font-weight: 500;
+          font-size: 1rem;
           ${bpmax[0]} {
             display: none;
           }
