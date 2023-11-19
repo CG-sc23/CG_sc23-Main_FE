@@ -22,10 +22,15 @@ export const Container = styled(Link)`
   border: 0.1rem solid ${colors.grey200};
   gap: 1rem;
 
+  /* mobile */
   ${bpmax[0]} {
     width: 9rem;
+    box-shadow: 2px 2px 4px ${colors.grey400};
+    margin-right: 4px;
+    margin-bottom: 4px;
   }
 
+  /* web */
   ${bpmin[0]} {
     &:hover {
       background-color: ${colors.grey800};
@@ -50,8 +55,8 @@ export function User({ name, profile, id, short_description }: Props) {
       {/* name */}
       <h1
         css={css`
-          font-size: 1rem;
-          font-weight: 600;
+          font-size: 1.2rem;
+          font-weight: 500;
         `}
       >
         {name}
