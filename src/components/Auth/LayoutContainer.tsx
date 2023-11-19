@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { type PropsWithChildren } from "react";
-import { bp } from "@/libs/styles/constants";
+import { bpmax } from "@/libs/styles/constants";
 
 const Container = styled.div`
   display: flex;
@@ -11,7 +11,7 @@ const Container = styled.div`
   width: 448px;
   height: 100%;
 
-  ${bp[0]} {
+  ${bpmax[0]} {
     width: 80%;
   }
 `;

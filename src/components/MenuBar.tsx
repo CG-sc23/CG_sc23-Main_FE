@@ -1,4 +1,4 @@
-import { bp } from "@/libs/styles/constants";
+import { bpmax } from "@/libs/styles/constants";
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 import Link from "next/link";
@@ -113,12 +113,12 @@ export default function MenuBar() {
               display: flex;
               padding: 0 1rem;
               gap: 1rem;
-              ${bp[0]} {
+              ${bpmax[0]} {
                 display: none;
               }
             `}
           >
-            <Link href="/" css={submenuCss}>
+            <Link href="/projects" css={submenuCss}>
               프로젝트
             </Link>
             <Link href="/" css={submenuCss}>
@@ -131,7 +131,7 @@ export default function MenuBar() {
         <div
           css={css`
             display: none;
-            ${bp[0]} {
+            ${bpmax[0]} {
               display: flex;
             }
           `}
@@ -209,7 +209,7 @@ export default function MenuBar() {
             display: flex;
             align-items: center;
             gap: 1rem;
-            ${bp[0]} {
+            ${bpmax[0]} {
               display: none;
             }
           `}
