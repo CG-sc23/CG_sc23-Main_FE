@@ -1,16 +1,15 @@
 import styled from "@emotion/styled";
 import { colors } from "@/components/constant/color";
-import { bpmin } from "@/libs/styles/constants";
+import { bpmax, bpmin } from "@/libs/styles/constants";
 
 const Card = styled.div`
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
   gap: 1rem;
-
   width: 100%;
-  padding: 1rem;
 
+  /* web */
   ${bpmin[0]} {
     padding: 1rem;
     border: none;
@@ -18,6 +17,11 @@ const Card = styled.div`
     box-shadow: 2px 2px 4px ${colors.grey400};
     background-color: white;
     transition: 0.5s;
+  }
+
+  /* mobile */
+  ${bpmax[0]} {
+    padding: 0.5rem 1rem;
   }
 `;
 
