@@ -1,7 +1,8 @@
-import { bpmax } from "@/libs/styles/constants";
+import { bpmax, bpmin } from "@/libs/styles/constants";
 import styled from "@emotion/styled";
 import { css } from "@emotion/react";
 import { colors } from "../constant/color";
+import Link from "next/link";
 
 type Props = {
   name: string;
@@ -10,7 +11,7 @@ type Props = {
   short_description: string;
 };
 
-export const Container = styled.div`
+export const Container = styled(Link)`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -22,19 +23,21 @@ export const Container = styled.div`
   gap: 1rem;
 
   ${bpmax[0]} {
-    width: 8rem;
+    width: 9rem;
   }
 
-  &:hover {
-    background-color: ${colors.grey800};
-    color: white;
-    cursor: pointer;
+  ${bpmin[0]} {
+    &:hover {
+      background-color: ${colors.grey800};
+      color: white;
+      cursor: pointer;
+    }
   }
 `;
 
 export function User({ name, profile, id, short_description }: Props) {
   return (
-    <Container>
+    <Container href={`/user/${id}`}>
       {/* profile image */}
       <img
         src={profile ?? "/profile.jpg"}
