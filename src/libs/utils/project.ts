@@ -11,7 +11,7 @@ export function myProjectStatus(provider: string): ProjectStatus {
       text: "진행중",
       color: colors.green500,
     },
-    complete: {
+    completed: {
       text: "프로젝트 종료",
       color: colors.red500,
     },
