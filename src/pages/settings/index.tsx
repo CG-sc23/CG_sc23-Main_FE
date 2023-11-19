@@ -5,7 +5,7 @@ import Link from "next/link";
 import { AiOutlineRight } from "react-icons/ai";
 import Switch from "react-switch";
 
-import { bp } from "@/libs/styles/constants";
+import { bpmax } from "@/libs/styles/constants";
 import { mySingupStrategy } from "@/libs/utils/profile";
 import useDeactivate from "@/hooks/user/useDeactivate";
 import useSignOut from "@/hooks/auth/useSignOut";
@@ -89,7 +89,7 @@ export default function Settings() {
           padding: 3rem;
           display: flex;
           flex-direction: column;
-          ${bp[0]} {
+          ${bpmax[0]} {
             padding: 3rem 0;
             width: 90%;
           }

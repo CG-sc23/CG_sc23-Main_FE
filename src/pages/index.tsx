@@ -1,72 +1,139 @@
-// import Card from '@/components/Card';
-import client from '@/api/client';
-import useSignOut from '@/hooks/auth/useSignOut';
-import { queryKey } from '@/libs/constant';
-import { css } from '@emotion/react';
-import { safeLocalStorage } from '@toss/storage';
-import Link from 'next/link';
-// import { colors } from '@/components/constant/color';
-// import InputWithLabel from '@/components/InputWithLabel';
+import { queryKey } from "@/libs/constant";
+import styled from "@emotion/styled";
+import { safeLocalStorage } from "@toss/storage";
+import { bpmax } from "@/libs/styles/constants";
+import { Block } from "@/components/Feed/Block";
+import { Commerce } from "@/components/Feed/Commerce";
+import { Carousel } from "@/components/Feed/Carousel";
+import { Project } from "@/components/Feed/Project";
+import { User } from "@/components/Feed/User";
+import { Task } from "@/components/Feed/Task";
+
+import { UserDatas, ProjectDatas, TaskDatas } from "@/libs/constant/test";
+
+// Container for main page
+const Container = styled.div`
+  width: 896px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+
+  /* mobile */
+  ${bpmax[0]} {
+    width: 100%;
+    padding: 0;
+    gap: 0;
+  }
+`;
 
 export default function Home() {
-  const { signOut } = useSignOut();
   const token = safeLocalStorage.get(queryKey.USER_ACCESS_TOKEN);
 
   return (
-    <div
-      css={css`
-        width: 100vw;
-        height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-      `}
-    >
-      <Link href="/auth/SignIn">SignIn</Link>
-      <Link href="/auth/SignUp">SignUp</Link>
-      <button
-        type="button"
-        onClick={() => {
-          console.log('SIGN OUT');
-          signOut();
-        }}
+    <Container>
+      {/* tasks */}
+      {TaskDatas.map((task) => (
+        <Block>
+          <Task
+            key={task.id}
+            id={task.id}
+            title={task.title}
+            content={task.content}
+            author={task.author}
+            projectTitle={task.projectTitle}
+            projectId={task.projectId}
+            milestoneTitle={task.milestoneTitle}
+            milestoneId={task.milestoneId}
+            taskGroupTitle={task.taskGroupTitle}
+            taskGroupId={task.taskGroupId}
+            created_at={task.created_at}
+            author_profile={task?.author_profile}
+          />
+        </Block>
+      ))}
+      {/* projects */}
+      <Block
+        hasTitle={true}
+        title="프로젝트"
+        showChevron={true}
+        href="/projects"
       >
-        Sign Out
-      </button>
-      <button
-        type="button"
-        onClick={async () => {
-          console.log('UPDATE STATUS');
-          if (!token) return;
-          const res = await client.gitHubUpdateStatus({ token });
-          console.log(res);
-        }}
+        <Carousel>
+          {ProjectDatas.map((project) => (
+            <Project
+              key={project.projectId}
+              projectTitle={project.projectTitle}
+              projectId={project.projectId}
+              likes={project.likes}
+              status={project.status}
+              thumbnail={project.thumbnail}
+              short_description={project.short_description}
+            />
+          ))}
+        </Carousel>
+      </Block>
+      {/* users */}
+      <Block
+        hasTitle={true}
+        title="사용자 추천"
+        showChevron={true}
+        href="/users"
       >
-        UPDATE STATUS
-      </button>
-      <button
-        type="button"
-        onClick={async () => {
-          console.log('STACK');
-          if (!token) return;
-          const res = await client.gitHubStack({ token });
-          console.log(res);
-        }}
+        <Carousel>
+          {UserDatas.map((user) => (
+            <User
+              key={user.id}
+              name={user.name}
+              profile={user.profile}
+              short_description={user.short_description}
+              id={user.id}
+            />
+          ))}
+        </Carousel>
+      </Block>
+      {/* commercials */}
+      <Commerce imageUrl={undefined} />
+      {/* tasks */}
+      {TaskDatas.map((task) => (
+        <Block>
+          <Task
+            key={task.id}
+            id={task.id}
+            title={task.title}
+            content={task.content}
+            author={task.author}
+            projectTitle={task.projectTitle}
+            projectId={task.projectId}
+            milestoneTitle={task.milestoneTitle}
+            milestoneId={task.milestoneId}
+            taskGroupTitle={task.taskGroupTitle}
+            taskGroupId={task.taskGroupId}
+            created_at={task.created_at}
+            author_profile={task?.author_profile}
+          />
+        </Block>
+      ))}
+      {/* users */}
+      <Block
+        hasTitle={true}
+        title="사용자 추천"
+        showChevron={true}
+        href="/users"
       >
-        STACK
-      </button>
-      <button
-        type="button"
-        onClick={async () => {
-          console.log('MANUAL_UPDATE');
-          if (!token) return;
-          const res = await client.gitHubManualUpdate({ token });
-          console.log(res);
-        }}
-      >
-        MANUAL_UPDATE
-      </button>
-    </div>
+        <Carousel>
+          {UserDatas.map((user) => (
+            <User
+              key={user.id}
+              name={user.name}
+              profile={user.profile}
+              short_description={user.short_description}
+              id={user.id}
+            />
+          ))}
+        </Carousel>
+      </Block>
+    </Container>
   );
 }

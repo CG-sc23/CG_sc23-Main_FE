@@ -25,6 +25,7 @@ button {
   background: none;
   outline: none;
   border: none;
+  color: black;
 }
 
 // a 태그 밑줄 및 스타일 제거
@@ -37,6 +38,11 @@ a {
 input:-webkit-autofill {
   -webkit-box-shadow: 0 0 0 30px #fff inset;
   -webkit-text-fill-color: #000;
+}
+
+// p 태그 줄간격
+p {
+  line-height: 1.6;
 }
 
 input:-webkit-autofill,

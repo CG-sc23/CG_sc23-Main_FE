@@ -1,22 +1,22 @@
 /* eslint-disable @next/next/no-img-element */
-import { css } from '@emotion/react';
-import Link from 'next/link';
-import { useState } from 'react';
-import { AiOutlineHeart } from 'react-icons/ai';
-import ReactStars from 'react-stars';
+import { css } from "@emotion/react";
+import Link from "next/link";
+import { useState } from "react";
+import { AiOutlineHeart } from "react-icons/ai";
+import ReactStars from "react-stars";
 
-import { convertGradeToMedal } from '@/libs/utils/grade';
-import { bp } from '@/libs/styles/constants';
-import Image from 'next/image';
+import { convertGradeToMedal } from "@/libs/utils/grade";
+import { bpmax } from "@/libs/styles/constants";
+import Image from "next/image";
 
 export default function Profile() {
   const [profile, setProfile] = useState({
     id: null,
-    email: 'jun@google.com',
-    name: '임준혁',
-    github_link: 'hello@github.com',
-    image_link: '/profile.jpg',
-    short_description: '안녕하세요 올리버쌤입니다.'.repeat(5),
+    email: "jun@google.com",
+    name: "임준혁",
+    github_link: "hello@github.com",
+    image_link: "/profile.jpg",
+    short_description: "안녕하세요 올리버쌤입니다.".repeat(5),
     grade: 1,
     like: 12,
     rating: 4.3,
@@ -31,7 +31,7 @@ export default function Profile() {
         display: flex;
         flex-direction: column;
         gap: 24px;
-        ${bp[0]} {
+        ${bpmax[0]} {
           width: 100%;
         }
       `}
@@ -55,7 +55,7 @@ export default function Profile() {
             width: 164px;
             height: 164px;
             object-fit: cover;
-            ${bp[0]} {
+            ${bpmax[0]} {
               width: 96px;
               height: 96px;
             }
@@ -71,7 +71,7 @@ export default function Profile() {
             font-weight: 600;
             border: 1px solid #e0e0e0;
             padding: 12px 16px;
-            ${bp[0]} {
+            ${bpmax[0]} {
               padding: 8px 12px;
             }
           `}
@@ -109,7 +109,7 @@ export default function Profile() {
               css={css`
                 font-weight: 600;
                 font-size: 36px;
-                ${bp[0]} {
+                ${bpmax[0]} {
                   font-size: 28px;
                 }
               `}
