@@ -27,6 +27,8 @@ export function Commerce({ imageUrl }: Props) {
           padding-top: 1rem;
           font-weight: 500;
           font-size: 1rem;
+
+          /* mobile */
           ${bpmax[0]} {
             display: none;
           }
