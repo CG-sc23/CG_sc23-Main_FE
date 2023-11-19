@@ -3,28 +3,30 @@ import styled from "@emotion/styled";
 import { colors } from "../constant/color";
 import { bpmax, bpmin } from "@/libs/styles/constants";
 import Link from "next/link";
+import { myProjectStatus } from "@/libs/utils/project";
+import { IoIosHeartEmpty } from "react-icons/io";
 
 type Props = {
-  title: string;
-  owner: string;
   projectTitle: string;
   projectId: number;
   likes: number;
-  created_at : string;
-  id:number;
+  status: string;
+  thumbnail: string;
+  short_description: string;
 };
 
-export const Container = styled(Link)`
+const Container = styled(Link)`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   width: 16rem;
   padding: 1rem;
   border-radius: 0.2rem;
   border: 0.1rem solid ${colors.grey200};
   gap: 1rem;
 
+  /* mobile */
   ${bpmin[0]} {
     &:hover {
       background-color: ${colors.grey800};
@@ -32,36 +34,116 @@ export const Container = styled(Link)`
       cursor: pointer;
     }
   }
+
+  /* web */
+  ${bpmax[0]} {
+    margin-bottom: 4px;
+    margin-right: 4px;
+    box-shadow: 2px 2px 4px ${colors.grey400};
+  }
 `;
 
 const HR = styled.hr`
   width: 100%;
-  color: gray;
-  border: 0.5px solid ${colors.grey700};
+  border: 0.5px solid ${colors.grey300};
 `;
 
 export function Project({
-  title,
   projectTitle,
   projectId,
-  owner,
   likes,
-  created_at,
-  id
+  status,
+  thumbnail,
+  short_description,
 }: Props) {
   return (
-    <Container href={`/projects/${id}`}>
-      {/* title */}
-      <h1
+    <Container href={`/projects/${projectId}`}>
+      <div
         css={css`
-          font-size: 1.2rem;
-          font-weight: 600;
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
         `}
       >
-        {title}
-      </h1>
-      <HR />
-      {/*  */}
+        {/* thumbnail */}
+        <img
+          src={thumbnail}
+          css={css`
+            width: 100%;
+            object-fit: contain;
+          `}
+        />
+        {/* projectTitle */}
+        <h1
+          css={css`
+            font-size: 1.2rem;
+            font-weight: 500;
+            word-break: ${projectTitle.indexOf(" ") > 12 ||
+            projectTitle.indexOf(" ") == -1
+              ? "break-all"
+              : "keep-all"};
+            text-align: center;
+            line-height: 1.4;
+          `}
+        >
+          {projectTitle}
+        </h1>
+        {/* shortDescriptions */}
+        <p>{short_description}</p>
+      </div>
+      {/* status, likes */}
+      <div
+        css={css`
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+          gap: 0.5rem;
+        `}
+      >
+        <HR />
+        <div
+          css={css`
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+          `}
+        >
+          <span
+            css={css`
+              font-weight: 500;
+              color: ${myProjectStatus(status).color};
+            `}
+          >
+            {myProjectStatus(status).text}
+          </span>
+          <button
+            onClick={(e) => e.preventDefault()}
+            css={css`
+              display: flex;
+              align-items: center;
+              gap: 0.4rem;
+              transition: 0.5s;
+              &:hover {
+                cursor: pointer;
+                transform: scale(1.2);
+              }
+            `}
+          >
+            <div
+              css={css`
+                display: flex;
+                &:hover {
+                  color: red;
+                }
+              `}
+            >
+              <IoIosHeartEmpty size={18} />
+            </div>
+            <span>{likes}</span>
+          </button>
+        </div>
+      </div>
     </Container>
   );
 }
