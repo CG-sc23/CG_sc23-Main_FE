@@ -5,12 +5,13 @@ import Link from 'next/link';
 import { AiOutlineRight } from 'react-icons/ai';
 import Switch from 'react-switch';
 
-import { bp, bpmax } from '@/libs/styles/constants';
+import { bpmax } from '@/libs/styles/constants';
 import { mySignUpStrategy } from '@/libs/utils/profile';
 import useDeactivate from '@/hooks/user/useDeactivate';
 import useSignOut from '@/hooks/auth/useSignOut';
 import useUser from '@/hooks/user/useUser';
 import LoadingSpinner from '@/components/Spinner';
+import { colors } from '@/components/constant/color';
 const Block = styled.div`
   display: flex;
   flex-direction: column;
@@ -66,6 +67,7 @@ export default function Settings() {
   return (
     <div
       css={css`
+        background-color: ${colors.white};
         width: 100vw;
         height: 100vh;
         display: flex;

@@ -14,7 +14,7 @@ import { preProcessCommonStackName } from '@/libs/utils';
 
 import { motion } from 'framer-motion';
 import { colors } from './constant/color';
-import { bp } from '@/libs/styles/constants';
+import { bpmax } from '@/libs/styles/constants';
 import GitHubSkeleton from './GitHubSkeleton';
 
 const flipAnimation = {
@@ -154,7 +154,7 @@ export default function Stack({ hasGitHub = true }: Props) {
         display: flex;
         flex-direction: column;
 
-        ${bp[1]} {
+        ${bpmax[1]} {
           display: block;
         }
       `}
@@ -181,7 +181,7 @@ export default function Stack({ hasGitHub = true }: Props) {
           justify-content: center;
           align-items: center;
 
-          ${bp[1]} {
+          ${bpmax[1]} {
             display: block;
             height: 100%;
           }
@@ -193,7 +193,7 @@ export default function Stack({ hasGitHub = true }: Props) {
               css={css`
                 width: 50%;
 
-                ${bp[1]} {
+                ${bpmax[1]} {
                   display: none;
                 }
               `}
@@ -209,7 +209,7 @@ export default function Stack({ hasGitHub = true }: Props) {
                 display: flex;
                 flex-direction: column;
 
-                ${bp[1]} {
+                ${bpmax[1]} {
                   width: 100%;
                 }
               `}

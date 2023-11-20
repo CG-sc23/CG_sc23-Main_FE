@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
-import { bp, bpmax } from '@/libs/styles/constants';
+import { bpmax } from '@/libs/styles/constants';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import dynamic from 'next/dynamic';
@@ -19,10 +19,12 @@ import { DropZoneWrapper } from '@/components/Auth/StepSignUp/common';
 import { uploadImg } from '@/libs/utils/s3';
 import { safeLocalStorage } from '@toss/storage';
 import { queryKey } from '@/libs/constant';
+import { colors } from '@/components/constant/color';
 
-const Editor = dynamic(() => import("@/components/Editor"), { ssr: false });
+const Editor = dynamic(() => import('@/components/Editor'), { ssr: false });
 
 const Form = styled.form`
+  background-color: ${colors.white};
   width: 672px;
   margin: 0 auto;
   padding: 2rem;
@@ -182,13 +184,13 @@ export default function Update({ user, id }: InferGetServerSidePropsType<any>) {
         <Label htmlFor="name">
           <Stressed>* </Stressed>닉네임
         </Label>
-        <Input id="name" type="text" {...register("name")} />
+        <Input id="name" type="text" {...register('name')} />
       </List>
       <List>
         <Label htmlFor="github_link">
           <Stressed>* </Stressed>깃허브 주소
         </Label>
-        <Input id="github_link" type="text" {...register("github_link")} />
+        <Input id="github_link" type="text" {...register('github_link')} />
       </List>
       <List>
         <Label htmlFor="short_description">
@@ -197,7 +199,7 @@ export default function Update({ user, id }: InferGetServerSidePropsType<any>) {
         <Input
           id="short_description"
           type="text"
-          {...register("short_description")}
+          {...register('short_description')}
         />
       </List>
       <List>

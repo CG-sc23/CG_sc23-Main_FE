@@ -1,4 +1,4 @@
-import { bp, bpmax } from '@/libs/styles/constants';
+import { bpmax } from '@/libs/styles/constants';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import Link from 'next/link';
@@ -8,6 +8,7 @@ import Image from 'next/image';
 import useUser from '@/hooks/user/useUser';
 import { colors } from './constant/color';
 import { AnimatePresence, motion } from 'framer-motion';
+import useSignOut from '@/hooks/auth/useSignOut';
 
 const logoCss = css({
   fontSize: '1.5rem',
@@ -35,6 +36,7 @@ export const NavContainer = styled.div`
 
 export default function MenuBar() {
   const { user, isLoading, isLoggedIn } = useUser();
+  const { signOut } = useSignOut();
   const [visibleSubMenu, setVisibleSubMenu] = useState(false);
 
   const subMenuRef = useRef<HTMLDivElement>(null);
@@ -118,7 +120,6 @@ export default function MenuBar() {
               }
             `}
           >
-            <Link href="/project" css={submenuCss}>
             <Link href="/projects" css={submenuCss}>
               프로젝트
             </Link>
@@ -279,6 +280,17 @@ export default function MenuBar() {
                     <Link href="/settings" css={submenuMobileCss}>
                       설정
                     </Link>
+                    <button
+                      css={css`
+                        font-size: 1rem;
+                        white-space: nowrap;
+                        cursor: pointer;
+                      `}
+                      onClick={() => signOut()}
+                      type="button"
+                    >
+                      로그아웃
+                    </button>
                   </motion.div>
                 )}
               </AnimatePresence>
