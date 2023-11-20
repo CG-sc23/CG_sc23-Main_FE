@@ -23,6 +23,8 @@
     "@uiw/react-md-editor": "^3.25.2",
     "axios": "^1.5.1",
     "chart.js": "^4.4.0",
+    "chartjs-plugin-datalabels": "^2.2.0",
+    "chartjs-plugin-labels": "^1.1.0",
     "eslint-config-next": "^13.5.6",
     "eslint-plugin-next": "^0.0.0",
     "fast-deep-equal": "^3.1.3",

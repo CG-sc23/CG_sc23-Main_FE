@@ -69,4 +69,26 @@ export const extractBGHexFromUrl = (url: string): string | null => {
   return getRandomHexColor();
 };
 
+function hexToRGB(hex: string) {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+
+  return [r, g, b];
+}
+
+function RGBToHex(r: number, g: number, b: number) {
+  return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+}
+
+export function getComplementaryHex(hex: string) {
+  const [r, g, b] = hexToRGB(hex);
+
+  const rComp = 255 - r;
+  const gComp = 255 - g;
+  const bComp = 255 - b;
+
+  return RGBToHex(rComp, gComp, bComp);
+}
+
 export const userLocalStorage = generateStorage();

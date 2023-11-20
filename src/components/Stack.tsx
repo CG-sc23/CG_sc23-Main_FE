@@ -21,6 +21,8 @@ import { colors } from './constant/color';
 import { bpmax } from '@/libs/styles/constants';
 import GitHubSkeleton from './GitHubSkeleton';
 
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+
 const flipAnimation = {
   hidden: { rotateY: 0 },
   visible: { rotateY: 180 },
@@ -29,7 +31,7 @@ const flipAnimation = {
 type Props = {
   hasGitHub: boolean;
 };
-Chart.register(ArcElement, Tooltip, Legend);
+Chart.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 export default function Stack({ hasGitHub = true }: Props) {
   if (!hasGitHub) return <GitHubSkeleton title="언어" />;
   const [flipBinary, setFlipBinary] = useState('000000');
@@ -52,11 +54,11 @@ export default function Stack({ hasGitHub = true }: Props) {
         if (a[1] === b[1]) return 0;
         return 1;
       });
-      const ect = sorted.reduce((acc, cur, idx) => {
+      const etc = sorted.reduce((acc, cur, idx) => {
         if (idx < threshold) return acc;
         return acc + cur[1];
       }, 0);
-      return [...sorted.slice(0, threshold), ['ect', ect]];
+      return [...sorted.slice(0, threshold), ['Etc', etc]];
     },
     enabled: !!id,
     retry: 0,
@@ -186,7 +188,28 @@ export default function Stack({ hasGitHub = true }: Props) {
                 }
               `}
             >
-              <Pie data={chartData} />
+              <Pie
+                data={chartData}
+                options={{
+                  plugins: {
+                    datalabels: {
+                      formatter: (value, context) => {
+                        return context.chart.data.labels?.at(context.dataIndex);
+                      },
+                      color: colors.black,
+                      textShadowColor: colors.black,
+                      textStrokeColor: colors.white,
+                      textStrokeWidth: 1.5,
+                      textShadowBlur: 10,
+                      font: {
+                        weight: 'bold',
+                        size: 20,
+                        family: 'Roboto',
+                      },
+                    },
+                  },
+                }}
+              />
             </div>
             <div
               css={css`
@@ -290,7 +313,7 @@ export default function Stack({ hasGitHub = true }: Props) {
                         justify-content: center;
                       `}
                     >
-                      ECT
+                      ETC
                     </div>
                   )}
                 </motion.div>

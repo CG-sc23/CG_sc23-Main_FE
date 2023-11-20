@@ -2,6 +2,7 @@ import { useQueryParam } from '@/hooks/useQueryParam';
 import { useQuery } from '@tanstack/react-query';
 
 import { Chart, ArcElement, Tooltip, Legend } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Pie } from 'react-chartjs-2';
 import LoadingSpinner from './Spinner';
 import { css } from '@emotion/react';
@@ -29,7 +30,7 @@ const flipAnimation = {
 type Props = {
   hasGitHub: boolean;
 };
-Chart.register(ArcElement, Tooltip, Legend);
+Chart.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 export default function Keyword({ hasGitHub = true }: Props) {
   if (!hasGitHub) return <GitHubSkeleton title="라이브러리" />;
   const [flipBinary, setFlipBinary] = useState('000000');
@@ -52,11 +53,11 @@ export default function Keyword({ hasGitHub = true }: Props) {
         if (a[1] === b[1]) return 0;
         return 1;
       });
-      const ect = sorted.reduce((acc, cur, idx) => {
+      const etc = sorted.reduce((acc, cur, idx) => {
         if (idx < threshold) return acc;
         return acc + cur[1];
       }, 0);
-      return [...sorted.slice(0, threshold), ['ect', ect]];
+      return [...sorted.slice(0, threshold), ['Etc', etc]];
     },
     enabled: !!id,
     retry: 0,
@@ -186,7 +187,28 @@ export default function Keyword({ hasGitHub = true }: Props) {
                 }
               `}
             >
-              <Pie data={chartData} />
+              <Pie
+                data={chartData}
+                options={{
+                  plugins: {
+                    datalabels: {
+                      formatter: (value, context) => {
+                        return context.chart.data.labels?.at(context.dataIndex);
+                      },
+                      color: colors.black,
+                      textShadowColor: colors.black,
+                      textStrokeColor: colors.white,
+                      textStrokeWidth: 1.5,
+                      textShadowBlur: 10,
+                      font: {
+                        weight: 'bold',
+                        size: 20,
+                        family: 'Roboto',
+                      },
+                    },
+                  },
+                }}
+              />
             </div>
             <div
               css={css`
@@ -291,7 +313,7 @@ export default function Keyword({ hasGitHub = true }: Props) {
                         justify-content: center;
                       `}
                     >
-                      ECT
+                      ETC
                     </div>
                   )}
                 </motion.div>
