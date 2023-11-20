@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { css } from '@emotion/react';
 
-import { bp } from '@/libs/styles/constants';
+import { bp, bpmax } from '@/libs/styles/constants';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import MDEditor from '@uiw/react-md-editor';
 
@@ -50,8 +50,7 @@ export default function Profile({
         display: flex;
         flex-direction: column;
         gap: 24px;
-
-        ${bp[1]} {
+        ${bpmax[1]} {
           width: 100%;
           box-sizing: border-box;
         }
@@ -83,7 +82,7 @@ export default function Profile({
               width: 164px;
               height: 164px;
               object-fit: cover;
-              ${bp[1]} {
+              ${bpmax[1]} {
                 width: 96px;
                 height: 96px;
               }
@@ -110,7 +109,7 @@ export default function Profile({
               font-weight: 600;
               border: 1px solid #e0e0e0;
               padding: 12px 16px;
-              ${bp[1]} {
+              ${bpmax[1]} {
                 padding: 8px 12px;
               }
             `}

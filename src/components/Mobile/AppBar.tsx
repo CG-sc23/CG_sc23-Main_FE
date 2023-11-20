@@ -1,5 +1,5 @@
 import { css } from "@emotion/react";
-import { bp } from "@/libs/styles/constants";
+import { bpmax } from "@/libs/styles/constants";
 import { BiArrowBack } from "react-icons/bi";
 import { useRouter } from "next/router";
 
@@ -11,7 +11,7 @@ export default function AppBar() {
       css={css`
         z-index: 10;
         display: none;
-        ${bp[0]} {
+        ${bpmax[0]} {
           display: flex;
         }
       `}
