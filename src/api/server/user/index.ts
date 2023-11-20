@@ -5,6 +5,10 @@ import {
   DeactivateApiResponse,
   GetUserInfoApiAuthToken,
   GetUserInfoApiResponse,
+  UserDetailInfoApiQuery,
+  UserDetailInfoApiResponse,
+  ModifyUserDetailInfoApiAuthTokenAndBody,
+  ModifyUserDetailInfoApiResponse,
 } from '@/libs/type/server';
 
 export const Deactivate = {
@@ -31,6 +35,30 @@ export const UserInfo = {
       });
     } catch (e) {
       return handleApiError<GetUserInfoApiResponse>(e);
+    }
+  },
+  async getUserDetailInfo(query: UserDetailInfoApiQuery) {
+    try {
+      return await http.get<UserDetailInfoApiResponse>(
+        `/user/v1/detail/${query.user_id}`,
+      );
+    } catch (e) {
+      return handleApiError<UserDetailInfoApiResponse>(e);
+    }
+  },
+  async putModifyUserInfo(payload: ModifyUserDetailInfoApiAuthTokenAndBody) {
+    try {
+      return await http.put<ModifyUserDetailInfoApiResponse>(
+        `/user/v1/detail/own`,
+        payload.body,
+        {
+          headers: {
+            Authorization: `Token ${payload.token}`,
+          },
+        },
+      );
+    } catch (e) {
+      return handleApiError<ModifyUserDetailInfoApiResponse>(e);
     }
   },
 };

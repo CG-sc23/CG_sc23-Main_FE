@@ -55,8 +55,37 @@ export type GetUserInfoResponse = OkAndOptionalReason & {
   name?: string;
   profileImageLink?: string | null;
 };
+export type UserDetailInfoQuery = {
+  user_id: string;
+};
+export type UserDetailInfoResponse = OkAndOptionalReason & {
+  email?: string;
+  name?: string;
+  profile_image_link?: string | null;
+  github_link?: string;
+  short_description?: string;
+  description?: string;
+  description_resource_links?: string[];
+  provider?: 'our' | 'naver' | 'kakao';
+};
+export type ModifyUserDetailInfoAuthTokenAndBody = {
+  token: string;
+  body: {
+    name?: string;
+    profile_image_link?: string | null;
+    github_link?: string;
+    short_description?: string;
+    description?: string;
+    description_resource_links?: string[];
+  };
+};
+export type ModifyUserDetailInfoResponse = OkAndOptionalReason;
 
 /** ExternalHistory */
+export type CommonStackQuery = { stack: string };
+export type CommonStackResponse = OkAndOptionalReason & {
+  url?: string;
+};
 export type GitHubAccountCheckQuery = {
   github_link: string;
 };
@@ -67,12 +96,16 @@ export type GithubUpdateStatusResponse = OkAndOptionalReason & {
   status?: GITHUB_STATUS;
   last_update?: string;
 };
-export type GitHubStackAuthToken = AuthToken;
+export type GitHubStackQuery = { user_id: string };
 export type GitHubStackResponse = OkAndOptionalReason & {
   count?: number;
   stacks?: {
     [key: string]: number;
   };
+};
+export type GitHubKeywordQuery = { user_id: string };
+export type GitHubKeywordResponse = OkAndOptionalReason & {
+  keywords?: { [keyword: string]: number };
 };
 export type GitHubManualUpdateAuthToken = AuthToken;
 export type GitHubManualUpdateResponse = OkAndOptionalReason;

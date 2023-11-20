@@ -2,7 +2,10 @@
 export type BaseApiResponse = {
   success: boolean;
 };
-type SuccessAndOptionalReason = BaseApiResponse & { reason?: string };
+type SuccessAndOptionalReason = BaseApiResponse & {
+  reason?: string;
+  detail?: string;
+};
 type AuthToken = { token: string };
 
 /** Auth */
@@ -41,8 +44,40 @@ export type GetUserInfoApiResponse = {
   profile_image_link?: string | null;
   detail?: string;
 };
+export type UserDetailInfoApiQuery = {
+  user_id: string;
+};
+export type UserDetailInfoApiResponse = {
+  success?: boolean;
+  email?: string;
+  name?: string;
+  profile_image_link?: string | null;
+  github_link?: string;
+  short_description?: string;
+  description?: string;
+  description_resource_links?: string[];
+  provider?: 'our' | 'naver' | 'kakao';
+  detail?: string;
+};
+export type ModifyUserDetailInfoApiAuthTokenAndBody = {
+  token: string;
+  body: {
+    name?: string;
+    profile_image_link?: string | null;
+    github_link?: string;
+    short_description?: string;
+    description?: string;
+    description_resource_links?: string[];
+  };
+};
+export type ModifyUserDetailInfoApiResponse = SuccessAndOptionalReason;
 
 /** ExternalHistory */
+export type CommonStackApiQuery = { stack: string };
+export type CommonStackApiResponse = SuccessAndOptionalReason & {
+  id?: string;
+  url?: string;
+};
 export type GitHubAccountCheckApiQuery = {
   github_link: string;
 };
@@ -55,12 +90,16 @@ export type GithubUpdateStatusApiResponse = {
   status?: GITHUB_STATUS;
   last_update: string;
 };
-export type GitHubStackApiAuthToken = AuthToken;
+export type GitHubStackApiQuery = { user_id: string };
 export type GitHubStackApiResponse = SuccessAndOptionalReason & {
   count?: number;
   stacks?: {
     [key: string]: number;
   };
+};
+export type GitHubKeywordApiQuery = { user_id: string };
+export type GitHubKeywordApiResponse = SuccessAndOptionalReason & {
+  keywords?: { [keyword: string]: number };
 };
 export type GitHubManualUpdateApiAuthToken = AuthToken;
 export type GitHubManualUpdateApiResponse = SuccessAndOptionalReason;

@@ -1,6 +1,6 @@
-import { PropsWithChildren } from "react";
-import styled from "@emotion/styled";
-import { bpmax } from "@/libs/styles/constants";
+import { PropsWithChildren } from 'react';
+import styled from '@emotion/styled';
+import { bp, bpmax } from '@/libs/styles/constants';
 import { colors } from "./constant/color";
 
 const LayoutContainer = styled.div`

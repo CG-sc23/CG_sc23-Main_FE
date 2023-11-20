@@ -1,5 +1,5 @@
 import server from '@/api/server';
-import type { GitHubStackResponse } from '@/libs/type/client';
+import type { ModifyUserDetailInfoResponse } from '@/libs/type/client';
 import { assert } from '@/libs/utils/assert';
 import type { NextApiResponse, NextApiRequest } from 'next';
 
@@ -11,17 +11,17 @@ function getTokenFromAuthHeader(authHeader: AuthHeader) {
   return token;
 }
 
-export default async function handleStack(
+export default async function handleModifyUserInfo(
   req: NextApiRequest,
-  res: NextApiResponse<GitHubStackResponse>,
+  res: NextApiResponse<ModifyUserDetailInfoResponse>,
 ) {
-  if (req.method !== 'GET') return res.status(405).end();
+  if (req.method !== 'PUT') return res.status(405).end();
 
   if (!req.headers.authorization) return res.status(401).end();
   const authHeader = req.headers.authorization as AuthHeader;
-
-  const result = await server.getGitHubStack({
+  const result = await server.putModifyUserInfo({
     token: getTokenFromAuthHeader(authHeader),
+    body: req.body,
   });
 
   if (result === undefined)
@@ -33,12 +33,10 @@ export default async function handleStack(
   const { data } = result;
 
   if (!data.success) {
-    return res.status(400).json({ ok: false, reason: data.reason });
+    return res.status(401).json({ ok: false, reason: data.detail });
   }
 
   return res.status(200).json({
     ok: true,
-    count: data.count,
-    stacks: data.stacks,
   });
 }

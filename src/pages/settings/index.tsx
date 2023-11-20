@@ -1,15 +1,16 @@
-import { css } from "@emotion/react";
-import styled from "@emotion/styled";
-import { useState } from "react";
-import Link from "next/link";
-import { AiOutlineRight } from "react-icons/ai";
-import Switch from "react-switch";
+import { css } from '@emotion/react';
+import styled from '@emotion/styled';
+import { useState } from 'react';
+import Link from 'next/link';
+import { AiOutlineRight } from 'react-icons/ai';
+import Switch from 'react-switch';
 
-import { bpmax } from "@/libs/styles/constants";
-import { mySingupStrategy } from "@/libs/utils/profile";
-import useDeactivate from "@/hooks/user/useDeactivate";
-import useSignOut from "@/hooks/auth/useSignOut";
-
+import { bp, bpmax } from '@/libs/styles/constants';
+import { mySignUpStrategy } from '@/libs/utils/profile';
+import useDeactivate from '@/hooks/user/useDeactivate';
+import useSignOut from '@/hooks/auth/useSignOut';
+import useUser from '@/hooks/user/useUser';
+import LoadingSpinner from '@/components/Spinner';
 const Block = styled.div`
   display: flex;
   flex-direction: column;
@@ -53,18 +54,7 @@ const Button = styled.button`
 `;
 
 export default function Settings() {
-  const [profile, setProfile] = useState({
-    id: null,
-    email: "jun@google.com",
-    name: "임준혁",
-    github_link: "hello@github.com",
-    image_link: "/profile.jpg",
-    short_description: "안녕하세요 올리버쌤입니다.".repeat(5),
-    grade: 1,
-    like: 12,
-    rating: 4.3,
-    provider: "our",
-  });
+  const { user, isLoading } = useUser();
 
   const { deactivate } = useDeactivate();
   const { signOut } = useSignOut();
@@ -72,6 +62,7 @@ export default function Settings() {
   const [checked, setChecked] = useState(false);
   const handleToggleChange = (nextChecked: boolean) => setChecked(nextChecked);
 
+  if (!user || isLoading) return <LoadingSpinner />;
   return (
     <div
       css={css`
@@ -112,7 +103,7 @@ export default function Settings() {
                 text-decoration: none;
               `}
             >
-              {profile.email}
+              {user.email}
             </p>
             <p
               css={css`
@@ -120,7 +111,7 @@ export default function Settings() {
                 color: #cdcdcd;
               `}
             >
-              {mySingupStrategy(profile.provider)}
+              {mySignUpStrategy('our')}
             </p>
           </div>
         </Block>
@@ -161,7 +152,7 @@ export default function Settings() {
                 gap: 1rem;
               `}
             >
-              <span>{checked ? "공개" : "비공개"}</span>
+              <span>{checked ? '공개' : '비공개'}</span>
               <Switch
                 onChange={handleToggleChange}
                 checked={checked}

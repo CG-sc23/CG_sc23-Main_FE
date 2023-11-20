@@ -1,30 +1,30 @@
-import { bpmax } from "@/libs/styles/constants";
-import { css } from "@emotion/react";
-import styled from "@emotion/styled";
-import Link from "next/link";
-import { AiOutlineMenu } from "react-icons/ai";
-import { useState, useEffect, useRef } from "react";
-import Image from "next/image";
-import useUser from "@/hooks/user/useUser";
-import { colors } from "./constant/color";
-import { AnimatePresence, motion } from "framer-motion";
+import { bp, bpmax } from '@/libs/styles/constants';
+import { css } from '@emotion/react';
+import styled from '@emotion/styled';
+import Link from 'next/link';
+import { AiOutlineMenu } from 'react-icons/ai';
+import { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
+import useUser from '@/hooks/user/useUser';
+import { colors } from './constant/color';
+import { AnimatePresence, motion } from 'framer-motion';
 
 const logoCss = css({
-  fontSize: "1.5rem",
-  color: "white",
-  textDecoration: "none",
+  fontSize: '1.5rem',
+  color: 'white',
+  textDecoration: 'none',
 });
 
 const submenuCss = css({
-  fontSize: "1rem",
-  color: "white",
-  textDecoration: "none",
+  fontSize: '1rem',
+  color: 'white',
+  textDecoration: 'none',
 });
 
 const submenuMobileCss = css({
-  fontSize: "1rem",
-  color: "black",
-  textDecoration: "none",
+  fontSize: '1rem',
+  color: 'black',
+  textDecoration: 'none',
 });
 
 export const NavContainer = styled.div`
@@ -50,10 +50,10 @@ export default function MenuBar() {
 
   useEffect(() => {
     if (visibleSubMenu) {
-      document.addEventListener("mousedown", onClickOutSide);
+      document.addEventListener('mousedown', onClickOutSide);
     }
     return () => {
-      document.removeEventListener("mousedown", onClickOutSide);
+      document.removeEventListener('mousedown', onClickOutSide);
     };
   }, [visibleSubMenu, onClickOutSide]);
 
@@ -118,6 +118,7 @@ export default function MenuBar() {
               }
             `}
           >
+            <Link href="/project" css={submenuCss}>
             <Link href="/projects" css={submenuCss}>
               프로젝트
             </Link>
@@ -166,10 +167,10 @@ export default function MenuBar() {
                   border-radius: 0.25rem;
                   background-color: white;
                   z-index: 10;
-                  display: ${visibleSubMenu ? "flex" : "none"};
+                  display: ${visibleSubMenu ? 'flex' : 'none'};
                 `}
               >
-                <Link href="/" css={submenuMobileCss}>
+                <Link href="/project" css={submenuMobileCss}>
                   프로젝트
                 </Link>
                 <Link href="/" css={submenuMobileCss}>
@@ -230,7 +231,7 @@ export default function MenuBar() {
             >
               {isLoading ? null : (
                 <Image
-                  src={user?.profileImageLink ?? ("/profile.jpg" as string)}
+                  src={user?.profileImageLink ?? ('/profile.jpg' as string)}
                   alt="profile_image"
                   css={css`
                     border-radius: 9999%;
