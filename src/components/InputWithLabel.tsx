@@ -4,12 +4,12 @@ import {
   type ChangeEvent,
   useEffect,
   useRef,
-} from "react";
-import { css } from "@emotion/react";
-import { useAnimation, motion } from "framer-motion";
-import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+} from 'react';
+import { css } from '@emotion/react';
+import { useAnimation, motion } from 'framer-motion';
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 
-import { colors } from "./constant/color";
+import { colors } from './constant/color';
 
 type Props = {
   type: HTMLInputTypeAttribute;
@@ -30,7 +30,7 @@ const initialVariant = {
 };
 const afterVariant = {
   x: 0,
-  y: "-35px",
+  y: '-35px',
   scale: 0.8,
   color: colors.grey600,
 };
@@ -38,7 +38,7 @@ const afterVariant = {
 const errorVariants = {
   initial: {
     opacity: 0.2,
-    y: "-10px",
+    y: '-10px',
   },
   animate: {
     opacity: 1,
@@ -57,7 +57,7 @@ export default function InputWithLabel(props: Props) {
     autoFocus = true,
     readonly = false,
   } = props;
-  const isPassword = type === "password";
+  const isPassword = type === 'password';
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isFocused, setIsFocused] = useState(false);
@@ -114,17 +114,18 @@ export default function InputWithLabel(props: Props) {
             transform-origin: 0 0;
             font-weight: 600;
             text-align: left;
-            z-index: -10;
+            z-index: 0;
+            user-select: none;
             color: ${colors.grey400};
           `}
           initial={value ? afterVariant : initialVariant}
           animate={controls}
-          transition={{ type: "spring", damping: 20, stiffness: 200 }}
+          transition={{ type: 'spring', damping: 20, stiffness: 200 }}
         >
           {label}
         </motion.span>
         <motion.input
-          type={isPassword && isVisible ? "text" : type}
+          type={isPassword && isVisible ? 'text' : type}
           id={label}
           value={value}
           name={name}
@@ -190,7 +191,7 @@ export default function InputWithLabel(props: Props) {
       <motion.div
         variants={errorVariants}
         initial="initial"
-        animate={error !== "" ? "animate" : "initial"}
+        animate={error !== '' ? 'animate' : 'initial'}
         exit="initial"
         css={css`
           padding: 0.2rem 0;
