@@ -23,7 +23,6 @@ export default async function handlePreSignedURL(
   if (!req.query?.file) return res.status(404).end();
   const file = req.query.file as string;
 
-  console.log(file);
   const [file_name, file_type] = file.split('.');
   assert(!!file_name && !!file_type, 'Bad Request');
 

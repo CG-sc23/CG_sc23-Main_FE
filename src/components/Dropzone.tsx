@@ -1,19 +1,21 @@
-import React, { useState, DragEvent } from "react";
-import { css } from "@emotion/react";
-import Image from "next/image";
-import { colors } from "./constant/color";
+import React, { useState, DragEvent } from 'react';
+import { css } from '@emotion/react';
+import Image from 'next/image';
+import { colors } from './constant/color';
 
 interface DropzoneProps {
   onFileAdded: (file: File) => void;
   isDisabled?: boolean;
+  defaultThumbnail?: string | null;
 }
 
 export default function Dropzone({
   onFileAdded,
   isDisabled = false,
+  defaultThumbnail = null,
 }: DropzoneProps) {
   const [highlight, setHighlight] = useState<boolean>(false);
-  const [thumbnail, setThumbnail] = useState<string | null>(null); // 단일 썸네일 상태
+  const [thumbnail, setThumbnail] = useState<string | null>(defaultThumbnail); // 단일 썸네일 상태
 
   const updateThumbnail = (file: File) => {
     const reader = new FileReader();
@@ -25,7 +27,7 @@ export default function Dropzone({
 
   const openFileDialog = () => {
     if (isDisabled) return;
-    const fileInput = document.getElementById("fileInput") as HTMLInputElement;
+    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
     fileInput?.click();
   };
 
@@ -92,9 +94,9 @@ export default function Dropzone({
           background-color: ${highlight ? colors.blue300 : colors.white};
           color: ${colors.grey600};
           font-size: 1rem;
-          cursor: ${isDisabled ? "default" : "pointer"};
+          cursor: ${isDisabled ? 'default' : 'pointer'};
           &:hover {
-            border: ${isDisabled ? "" : `2px solid ${colors.grey600}`};
+            border: ${isDisabled ? '' : `2px solid ${colors.grey600}`};
           }
         `}
         role="button"
@@ -105,7 +107,7 @@ export default function Dropzone({
         onDrop={onDrop}
         onKeyDown={(e) => {
           e.preventDefault();
-          if (e.key === "Enter") {
+          if (e.key === 'Enter') {
             openFileDialog();
           }
         }}
@@ -135,6 +137,7 @@ export default function Dropzone({
               src={thumbnail}
               alt="Thumbnail"
               fill
+              priority
               css={css`
                 object-fit: contain;
               `}
@@ -147,8 +150,8 @@ export default function Dropzone({
             `}
           >
             {highlight
-              ? "여기다가 끌어주세요!"
-              : "파일을 드래그하거나 입력해주세요."}
+              ? '여기다가 끌어주세요!'
+              : '파일을 드래그하거나 입력해주세요.'}
           </div>
         )}
       </div>

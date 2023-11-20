@@ -17,7 +17,6 @@ export default async function handleStack(
 ) {
   if (req.method !== 'POST') return res.status(405).end();
 
-  console.log(req.headers);
   if (!req.headers.authorization) return res.status(401).end();
   const authHeader = req.headers.authorization as AuthHeader;
 

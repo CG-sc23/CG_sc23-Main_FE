@@ -49,12 +49,21 @@ export default function Home() {
         type="button"
         onClick={async () => {
           console.log('STACK');
-          if (!token) return;
-          const res = await client.gitHubStack({ token });
+          const res = await client.gitHubStack({ user_id: '3' });
           console.log(res);
         }}
       >
         STACK
+      </button>
+      <button
+        type="button"
+        onClick={async () => {
+          console.log('KEYWORD');
+          const res = await client.gitHubKeyword({ user_id: '3' });
+          console.log(res);
+        }}
+      >
+        KEYWORD
       </button>
       <button
         type="button"
@@ -66,6 +75,28 @@ export default function Home() {
         }}
       >
         MANUAL_UPDATE
+      </button>
+      <button
+        type="button"
+        onClick={async () => {
+          console.log('COMMON_STACK');
+
+          const res = await client.commonStack({ stack: 'Shell' });
+          console.log(res);
+        }}
+      >
+        COMMON STACK
+      </button>
+      <button
+        type="button"
+        onClick={async () => {
+          console.log('USER_DETAIL');
+
+          const res = await client.userDetail({ user_id: '3' });
+          console.log(res);
+        }}
+      >
+        USER_DETAIL
       </button>
     </div>
   );

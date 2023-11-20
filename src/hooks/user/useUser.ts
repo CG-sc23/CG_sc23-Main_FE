@@ -1,12 +1,10 @@
 import client from '@/api/client';
 import { queryKey } from '@/libs/constant';
-import { GetUserInfoAuthToken, GetUserInfoResponse } from '@/libs/type/client';
 import { assert } from '@/libs/utils/assert';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { safeLocalStorage } from '@toss/storage';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import useSignOut from '../auth/useSignOut';
 
 const AUTH_PATHS = ['/auth/SignIn', '/auth/SignUp'];
 

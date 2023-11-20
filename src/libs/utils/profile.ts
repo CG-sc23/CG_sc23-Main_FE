@@ -1,4 +1,4 @@
-export function mySingupStrategy(provider: string): string {
+export function mySignUpStrategy(provider: string): string {
   const strategies = {
     our: '직접 회원 가입',
     naver: '네이버 간편 가입',

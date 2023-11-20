@@ -1,10 +1,14 @@
 import { handleClientError } from '@/api/handleError';
 import { client as http } from '@/api/instance';
 import type {
+  CommonStackQuery,
+  CommonStackResponse,
   GitHubAccountCheckQuery,
   GitHubAccountCheckResponse,
-  GitHubStackAuthToken,
+  GitHubStackQuery,
   GitHubStackResponse,
+  GitHubKeywordQuery,
+  GitHubKeywordResponse,
   GithubUpdateStatusAuthToken,
   GithubUpdateStatusResponse,
   GitHubManualUpdateAuthToken,
@@ -12,6 +16,17 @@ import type {
 } from '@/libs/type/client';
 
 export const GitHub = {
+  async commonStack(queries: CommonStackQuery) {
+    try {
+      const { data } = await http.get<CommonStackResponse>(
+        `/api/external-history/common/${queries.stack}`,
+      );
+
+      return data;
+    } catch (e) {
+      return handleClientError<CommonStackResponse>(e);
+    }
+  },
   async gitHubAccountCheck(queries: GitHubAccountCheckQuery) {
     try {
       const { data } = await http.get<GitHubAccountCheckResponse>(
@@ -39,20 +54,26 @@ export const GitHub = {
       return handleClientError<GithubUpdateStatusResponse>(e);
     }
   },
-  async gitHubStack(queries: GitHubStackAuthToken) {
+  async gitHubStack(queries: GitHubStackQuery) {
     try {
       const { data } = await http.get<GitHubStackResponse>(
-        `/api/external-history/github/stack`,
-        {
-          headers: {
-            Authorization: `Token ${queries.token}`,
-          },
-        },
+        `/api/external-history/github/stack/${queries.user_id}`,
       );
 
       return data;
     } catch (e) {
       return handleClientError<GitHubStackResponse>(e);
+    }
+  },
+  async gitHubKeyword(queries: GitHubKeywordQuery) {
+    try {
+      const { data } = await http.get<GitHubKeywordResponse>(
+        `/api/external-history/github/keyword/${queries.user_id}`,
+      );
+
+      return data;
+    } catch (e) {
+      return handleClientError<GitHubKeywordResponse>(e);
     }
   },
   async gitHubManualUpdate(queries: GitHubManualUpdateAuthToken) {

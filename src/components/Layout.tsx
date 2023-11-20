@@ -1,7 +1,6 @@
-import { PropsWithChildren, useEffect } from 'react';
+import { PropsWithChildren } from 'react';
 import styled from '@emotion/styled';
 import { bp } from '@/libs/styles/constants';
-import useUser from '@/hooks/user/useUser';
 
 const LayoutContainer = styled.div`
   width: 100vw;

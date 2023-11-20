@@ -20,7 +20,6 @@ export default function useSignOut() {
       if (!res?.ok) return;
       queryClient.removeQueries({ queryKey: ['USER_INFO'], exact: true });
       safeLocalStorage.remove(queryKey.USER_ACCESS_TOKEN);
-      safeLocalStorage.remove('USER_INFO');
       return router.push('/auth/SignIn');
     },
   });

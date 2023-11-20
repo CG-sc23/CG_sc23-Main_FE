@@ -6,124 +6,15 @@ import {
   useRef,
   useState,
 } from 'react';
-import { assert } from '@/libs/utils/assert';
+
 import { css } from '@emotion/react';
 import MDEditor, { ContextStore, RefMDEditor } from '@uiw/react-md-editor';
 
 import { safeLocalStorage } from '@toss/storage';
 import { queryKey } from '@/libs/constant';
-import { uploadImg } from '@/libs/utils/s3';
 
-import { colors } from '../constant/color';
-
-//! Utils
-interface TextRange {
-  start: number;
-  end: number;
-}
-interface TextState {
-  text: string;
-  selectedText: string;
-  selection: TextRange;
-}
-
-function removeExtension(filename: string) {
-  const lastDotIndex = filename.lastIndexOf('.');
-  if (lastDotIndex === -1) return filename;
-  return filename.substring(0, lastDotIndex);
-}
-
-function getStateFromTextArea(ref: RefMDEditor): TextState {
-  const textArea = ref.current?.textarea;
-  assert(textArea, 'No TextArea');
-
-  return {
-    selection: {
-      start: textArea.selectionStart,
-      end: textArea.selectionEnd,
-    },
-    text: textArea.value,
-    selectedText: textArea.value?.slice(
-      textArea.selectionStart,
-      textArea.selectionEnd,
-    ),
-  };
-}
-
-function replaceSelection(ref: RefMDEditor, text: string): TextState {
-  const current = ref.current;
-  assert(current, 'No ref');
-
-  const commandOrchestrator = current.commandOrchestrator;
-  assert(commandOrchestrator, 'No command');
-
-  return commandOrchestrator.textApi.replaceSelection(text);
-}
-
-function setSelectionRange(ref: RefMDEditor, range: TextRange): TextState {
-  const current = ref.current;
-  assert(current, 'No ref');
-
-  const commandOrchestrator = current.commandOrchestrator;
-  assert(commandOrchestrator, 'No command');
-
-  return commandOrchestrator.textApi.setSelectionRange(range);
-}
-
-// ! DROP FILE UPLOAD
-const dropFileUpload = async (file: File, ref: RefMDEditor) => {
-  // ! REMOVE TOKEN
-  const token = safeLocalStorage.get(queryKey.USER_ACCESS_TOKEN);
-  assert(token, 'No Token');
-
-  const notSupport = !/^(image)\/.+$/.test(file?.type);
-  if (notSupport) {
-    const fail = `\n![지원하는 파일 형식이 아닙니다!]()\n`;
-    replaceSelection(ref, fail);
-    return;
-  }
-
-  const blobUrl = URL.createObjectURL(file);
-
-  const loadingMarkdown = `\n![업로드 중...](${blobUrl})\n`;
-
-  const initState = getStateFromTextArea(ref);
-  const loadingState = replaceSelection(ref, loadingMarkdown);
-  setSelectionRange(ref, {
-    start: initState.selection.start,
-    end: loadingState.selection.end,
-  });
-
-  try {
-    const url = await uploadImg({
-      file,
-      filename: file.name,
-      token,
-    });
-    const fileName = removeExtension(file.name);
-    const insertedMarkdown = `\n![${fileName}](${url})\n`;
-    replaceSelection(ref, insertedMarkdown);
-
-    return url;
-  } catch (error) {
-    const errorMarkdown = '![에러!](...)';
-    replaceSelection(ref, errorMarkdown);
-  } finally {
-    URL.revokeObjectURL(blobUrl);
-  }
-};
-
-function extractImageLinks(markdownText: string): string[] {
-  const regex = /!\[.*?\]\((.*?)\)/g;
-  let matches;
-  const links: string[] = [];
-
-  while ((matches = regex.exec(markdownText)) !== null) {
-    links.push(matches[1]);
-  }
-
-  return links;
-}
+import { colors } from '@/components/constant/color';
+import { dropFileUpload } from '@/libs/utils/editor';
 
 // * Component
 type EditorProps = {
@@ -131,6 +22,7 @@ type EditorProps = {
   setMarkdown: Dispatch<SetStateAction<string>>;
 };
 export default function Editor({ markdown, setMarkdown }: EditorProps) {
+  const token = safeLocalStorage.get(queryKey.USER_ACCESS_TOKEN) || '';
   const [preview, setPreview] = useState(false);
   const [highlight, setHighlight] = useState(false);
   const editorRef = useRef<RefMDEditor>(null);
@@ -169,7 +61,7 @@ export default function Editor({ markdown, setMarkdown }: EditorProps) {
       } = event;
 
       try {
-        return await dropFileUpload(files[0], ref);
+        await dropFileUpload({ file: files[0], ref, token });
       } catch (error) {
         console.error(error);
       } finally {
@@ -244,7 +136,6 @@ export default function Editor({ markdown, setMarkdown }: EditorProps) {
         >
           preview
         </button>
-        <MDEditor.Markdown source={markdown} />
       </div>
     </>
   );
