@@ -209,6 +209,9 @@ export default function Stack({ hasGitHub = true }: Props) {
                 display: flex;
                 flex-direction: column;
 
+                border-radius: 10px;
+                overflow: hidden;
+
                 ${bpmax[1]} {
                   width: 100%;
                 }
@@ -226,7 +229,6 @@ export default function Stack({ hasGitHub = true }: Props) {
 
                     user-select: none;
                     cursor: pointer;
-
                     transition: opacity 0.2s ease;
 
                     &:hover {
