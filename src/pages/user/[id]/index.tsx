@@ -98,7 +98,7 @@ export default function Profile({
               color: ${colors.grey700};
             `}
           >
-            {user?.short_description}
+            {user?.short_description ?? '아직 한 줄 소개가 비어있어요...!'}
           </span>
         </div>
         {isOwn ? (

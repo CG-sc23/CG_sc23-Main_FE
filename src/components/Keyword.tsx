@@ -10,7 +10,11 @@ import { hexToRgba } from '@toss/utils';
 import { GitHubKeywordResponse } from '@/libs/type/client';
 import { useMemo, useState } from 'react';
 import Image from 'next/image';
-import { preProcessCommonStackName } from '@/libs/utils';
+import {
+  extractBGHexFromUrl,
+  extractLogoHexFromUrl,
+  preProcessCommonStackName,
+} from '@/libs/utils';
 
 import { motion } from 'framer-motion';
 import { colors } from './constant/color';
@@ -20,25 +24,6 @@ import GitHubSkeleton from './GitHubSkeleton';
 const flipAnimation = {
   hidden: { rotateY: 0 },
   visible: { rotateY: 180 },
-};
-
-const extractHexFromUrl = (url: string): string | null => {
-  const urlSearchParams = new URLSearchParams(url.split('?')[1]);
-  const logoColor = urlSearchParams.get('logoColor');
-
-  if (logoColor === 'white' || logoColor === 'black' || !logoColor) {
-    const languageHexMatch = url.match(/-%23([0-9A-Fa-f]{6})/);
-    if (languageHexMatch) return languageHexMatch[1];
-
-    const languageHexMatchWithout23 = url.match(/-([0-9A-Fa-f]{6})\?style/);
-    if (languageHexMatchWithout23) return languageHexMatchWithout23[1];
-
-    const languageWordMatch = url.match(/-([0-9A-Za-z]+)\?style/);
-    if (languageWordMatch) return '000000';
-  }
-
-  const logoColorHexMatch = url.match(/logoColor=%23([0-9A-Fa-f]{6})/);
-  return logoColorHexMatch ? logoColorHexMatch[1] : null;
 };
 
 type Props = {
@@ -111,14 +96,17 @@ export default function Keyword({ hasGitHub = true }: Props) {
           alphaColor: hexToRgba('#515151', 0.3),
         };
       const url = logo.url;
-      const hexValue = extractHexFromUrl(logo.url);
-      const color = `#${hexValue}`;
-      const alphaColor = hexToRgba(color, 0.3);
+      const colorHexValue = extractBGHexFromUrl(logo.url);
+      const logoHexValue = extractLogoHexFromUrl(logo.url);
+      const color = `#${colorHexValue}`;
+      const logoColor = `#${logoHexValue}`;
+      const alphaColor = hexToRgba(logoColor, 0.3);
 
       return {
         url,
         color,
         alphaColor,
+        logoColor,
       };
     });
   }, [logoList]);
@@ -127,7 +115,7 @@ export default function Keyword({ hasGitHub = true }: Props) {
     const labels = stackList?.map((s) => s[0]);
     const data = stackList?.map((s) => s[1]);
     const backgroundColor = logoData?.map((l) => l.alphaColor);
-    const borderColor = logoData?.map((l) => l.color);
+    const borderColor = logoData?.map((l) => l.logoColor);
 
     return {
       labels,
@@ -282,7 +270,7 @@ export default function Keyword({ hasGitHub = true }: Props) {
                         priority
                         sizes="(max-width: 768px) 100px, (max-width: 1200px) 50vw, 33vw"
                         style={{
-                          objectFit: 'cover',
+                          objectFit: 'contain',
                         }}
                       />
                     </div>
