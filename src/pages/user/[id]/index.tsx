@@ -1,19 +1,22 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { css } from '@emotion/react';
+import { useMemo } from 'react';
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 
 import { bpmax } from '@/libs/styles/constants';
-import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import MDEditor from '@uiw/react-md-editor';
+import client from '@/api/client';
+
+import useUser from '@/hooks/user/useUser';
+import { assert } from '@/libs/utils/assert';
+import { UserDetailInfoResponse } from '@/libs/type/client';
 
 import Keyword from '@/components/Keyword';
 import Stack from '@/components/Stack';
-import client from '@/api/client';
-import { UserDetailInfoResponse } from '@/libs/type/client';
-import { assert } from '@/libs/utils/assert';
 import { colors } from '@/components/constant/color';
-import useUser from '@/hooks/user/useUser';
-import { useMemo } from 'react';
+import ProjectWrapper from '@/components/Projects/ProjectWrapper';
+import ProjectCard from '@/components/Projects/ProjectCard';
 
 export const getServerSideProps = (async (ctx) => {
   const id = ctx.params?.id as string;
@@ -45,15 +48,16 @@ export default function Profile({
     <div
       css={css`
         background-color: ${colors.white};
-        width: 672px;
+        width: 896px;
         margin: 0 auto;
         padding: 2rem;
         display: flex;
         flex-direction: column;
         gap: 24px;
-        ${bpmax[1]} {
+        ${bpmax[2]} {
           width: 100%;
           box-sizing: border-box;
+          padding: 2rem 0.5rem;
         }
       `}
     >
@@ -275,10 +279,18 @@ export default function Profile({
         css={css`
           font-size: 2rem;
           font-weight: bold;
+
+          padding: 0.5rem 0;
+          border-bottom: 2px solid #e0e0e0;
         `}
       >
         프로젝트
       </h1>
+      <ProjectWrapper>
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((el) => (
+          <ProjectCard id={el} />
+        ))}
+      </ProjectWrapper>
     </div>
   );
 }

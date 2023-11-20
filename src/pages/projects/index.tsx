@@ -1,7 +1,7 @@
-import styled from "@emotion/styled";
-import { bpmax } from "@/libs/styles/constants";
-import ProjectCard from "@/components/Projects/ProjectCard";
-import ProjectWrapper from "@/components/Projects/ProjectWrapper";
+import styled from '@emotion/styled';
+import { bpmax } from '@/libs/styles/constants';
+import ProjectCard from '@/components/Projects/ProjectCard';
+import ProjectWrapper from '@/components/Projects/ProjectWrapper';
 
 // Container for projects page
 const Container = styled.div`
@@ -12,9 +12,11 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   gap: 24px;
+
   ${bpmax[0]} {
+    box-sizing: border-box;
     width: 100%;
-    padding: 0;
+    padding: 0 0.5rem;
   }
 `;
 

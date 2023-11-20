@@ -1,13 +1,13 @@
 // [Layer] Project > Milestone > Task Group > Task
 
-import styled from "@emotion/styled";
-import { colors } from "../constant/color";
-import Link from "next/link";
-import { bpmax, bpmin } from "@/libs/styles/constants";
-import { useState } from "react";
-import { css } from "@emotion/react";
-import { myProjectStatus } from "@/libs/utils/project";
-import Image from "next/image";
+import styled from '@emotion/styled';
+import { colors } from '../constant/color';
+import Link from 'next/link';
+import { bpmax, bpmin } from '@/libs/styles/constants';
+import { useState } from 'react';
+import { css } from '@emotion/react';
+import { myProjectStatus } from '@/libs/utils/project';
+import Image from 'next/image';
 
 const Card = styled(Link)`
   display: flex;
@@ -16,8 +16,12 @@ const Card = styled(Link)`
   gap: 1rem;
 
   width: 100%;
-  padding: 1rem;
-  border-top: 0.2rem solid ${colors.grey300};
+  padding: 1rem 0;
+  border-top: 1px solid ${colors.grey300};
+
+  &:first-child {
+    border: none;
+  }
 
   ${bpmin[0]} {
     padding: 1rem;
@@ -35,11 +39,6 @@ const Card = styled(Link)`
   }
 `;
 
-const HR = styled.hr`
-  width: 100%;
-  border: 0.5px solid ${colors.grey300};
-`;
-
 type Props = { id: number };
 
 type Project = {
@@ -54,14 +53,14 @@ type Project = {
 
 // TODO : Erase this object as soon as implementation is finished
 const initialProject = {
-  title: "무제",
-  owner: "임준혁",
+  title: '무제',
+  owner: '임준혁',
   short_description:
-    "프로젝트 테스트 문구입니다. 확인부탁드립니다. 간단한 설명을 담고 있는 short - description 문장입니다.",
-  status: "in_progress",
-  due_date: "2023.11.18",
+    '프로젝트 테스트 문구입니다. 확인부탁드립니다. 간단한 설명을 담고 있는 short - description 문장입니다.',
+  status: 'in_progress',
+  due_date: '2023.11.18',
   thumbnail: null,
-  meta_tag: ["figma", "react", "svelte"],
+  meta_tag: ['figma', 'react', 'svelte'],
 };
 
 export default function Project({ id }: Props) {
@@ -123,7 +122,7 @@ export default function Project({ id }: Props) {
         `}
       >
         <Image
-          src={project.thumbnail ?? "/project.jpg"}
+          src={project.thumbnail ?? '/project.jpg'}
           alt={project.title}
           width={192}
           height={192}
@@ -140,8 +139,6 @@ export default function Project({ id }: Props) {
       >
         {project.short_description}
       </p>
-      {/* hr */}
-      <HR />
       {/* owner, meta tag */}
       {/* TODO : fetch each tag image */}
       <div
@@ -155,7 +152,7 @@ export default function Project({ id }: Props) {
       >
         {project.meta_tag.map((tag) => (
           <img
-            src={"/github.png"}
+            src={'/github.png'}
             alt={tag}
             css={css`
               width: 2rem;

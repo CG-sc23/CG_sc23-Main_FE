@@ -202,6 +202,7 @@ export default function Stack({ hasGitHub = true }: Props) {
 
                 ${bpmax[1]} {
                   width: 100%;
+                  height: 400px;
                 }
               `}
             >

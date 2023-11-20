@@ -1,4 +1,4 @@
-const breakpoints = [448, 768];
+const breakpoints = [448, 768, 896];
 
 export const bpmax = breakpoints.map((bp) => `@media (max-width : ${bp}px)`);
 
