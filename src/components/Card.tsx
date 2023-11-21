@@ -21,7 +21,7 @@ const Card = styled.div`
 
   /* mobile */
   ${bpmax[0]} {
-    padding: 0.5rem 1rem;
+    padding: 0.5rem;
   }
 `;
 
