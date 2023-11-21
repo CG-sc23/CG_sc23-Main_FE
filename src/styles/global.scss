@@ -36,7 +36,7 @@ a {
 
 // input 자동 완성시 색상 변경 제거
 input:-webkit-autofill {
-  -webkit-box-shadow: 0 0 0 30px #fff inset;
+  -webkit-box-shadow: 0 0 0 30px transparent inset;
   -webkit-text-fill-color: #000;
 }
 
