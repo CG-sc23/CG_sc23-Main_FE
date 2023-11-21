@@ -1223,7 +1223,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@popperjs/core@npm:^2.11.8":
+"@popperjs/core@npm:^2.11.8, @popperjs/core@npm:^2.9.2":
   version: 2.11.8
   resolution: "@popperjs/core@npm:2.11.8"
   checksum: e5c69fdebf52a4012f6a1f14817ca8e9599cb1be73dd1387e1785e2ed5e5f0862ff817f420a87c7fc532add1f88a12e25aeb010ffcbdc98eace3d55ce2139cf0
@@ -1619,6 +1619,18 @@ __metadata:
   version: 15.7.10
   resolution: "@types/prop-types@npm:15.7.10"
   checksum: 39ecc2d9e439ed16b32937a08d98b84ed4a70f53bcd52c8564c0cd7a36fe1004ca83a1fb94b13c1b7a5c048760f06445c3c6a91a6972c8eff652c0b50c9424b1
+  languageName: node
+  linkType: hard
+
+"@types/react-datepicker@npm:^4.19.3":
+  version: 4.19.3
+  resolution: "@types/react-datepicker@npm:4.19.3"
+  dependencies:
+    "@popperjs/core": ^2.9.2
+    "@types/react": "*"
+    date-fns: ^2.0.1
+    react-popper: ^2.2.5
+  checksum: e21c57c97955b355e582d9005cb2ce21ec41afcb7c1fef781437d9be54b1528d4c7e45fc402fcc15935a4ded59d77b5e2c5a3ef720c5d3ee43671e5cda07171c
   languageName: node
   linkType: hard
 
@@ -2578,6 +2590,7 @@ __metadata:
     "@types/jest": ^29.5.6
     "@types/node": ^20
     "@types/react": ^18
+    "@types/react-datepicker": ^4.19.3
     "@types/react-dom": ^18
     "@types/react-stars": ^2.2.3
     "@typescript-eslint/eslint-plugin": ^6.8.0
@@ -3024,7 +3037,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"date-fns@npm:^2.25.0, date-fns@npm:^2.30.0":
+"date-fns@npm:^2.0.1, date-fns@npm:^2.25.0, date-fns@npm:^2.30.0":
   version: 2.30.0
   resolution: "date-fns@npm:2.30.0"
   dependencies:
@@ -7910,7 +7923,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-popper@npm:^2.3.0":
+"react-popper@npm:^2.2.5, react-popper@npm:^2.3.0":
   version: 2.3.0
   resolution: "react-popper@npm:2.3.0"
   dependencies:
