@@ -5,16 +5,16 @@ import {
   SetStateAction,
   useRef,
   useState,
-} from 'react';
+} from "react";
 
-import { css } from '@emotion/react';
-import MDEditor, { ContextStore, RefMDEditor } from '@uiw/react-md-editor';
+import { css } from "@emotion/react";
+import MDEditor, { ContextStore, RefMDEditor } from "@uiw/react-md-editor";
 
-import { safeLocalStorage } from '@toss/storage';
-import { queryKey } from '@/libs/constant';
+import { safeLocalStorage } from "@toss/storage";
+import { queryKey } from "@/libs/constant";
 
-import { colors } from '@/components/constant/color';
-import { dropFileUpload } from '@/libs/utils/editor';
+import { colors } from "@/components/constant/color";
+import { dropFileUpload } from "@/libs/utils/editor";
 
 // * Component
 type EditorProps = {
@@ -22,7 +22,7 @@ type EditorProps = {
   setMarkdown: Dispatch<SetStateAction<string>>;
 };
 export default function Editor({ markdown, setMarkdown }: EditorProps) {
-  const token = safeLocalStorage.get(queryKey.USER_ACCESS_TOKEN) || '';
+  const token = safeLocalStorage.get(queryKey.USER_ACCESS_TOKEN) || "";
   const [preview, setPreview] = useState(false);
   const [highlight, setHighlight] = useState(false);
   const editorRef = useRef<RefMDEditor>(null);
@@ -32,7 +32,7 @@ export default function Editor({ markdown, setMarkdown }: EditorProps) {
   function onChange(
     value?: string | undefined,
     event?: ChangeEvent<HTMLTextAreaElement> | undefined,
-    state?: ContextStore | undefined,
+    state?: ContextStore | undefined
   ) {
     setMarkdown(value as string);
   }
@@ -96,12 +96,13 @@ export default function Editor({ markdown, setMarkdown }: EditorProps) {
           height={300}
           minHeight={200}
           maxHeight={500}
-          preview={preview ? 'preview' : 'edit'}
+          preview={preview ? "preview" : "edit"}
           css={css`
             border-radius: 5px;
             transition: border 0.1s ease;
             &:focus {
-              outline: 1px solid blue;
+              outline: none;
+              border: 1px solid black;
             }
           `}
         />
@@ -113,11 +114,10 @@ export default function Editor({ markdown, setMarkdown }: EditorProps) {
               height: 100%;
               top: 0;
               left: 0;
-
               transition:
                 background-color 0.2s ease,
                 opacity 0.2s ease;
-              background-color: ${highlight ? colors.blue100 : 'transparent'};
+              background-color: ${highlight ? colors.blue100 : "transparent"};
               opacity: ${highlight ? 0.1 : 0};
             `}
             onDragOver={onDragOver}
@@ -132,6 +132,10 @@ export default function Editor({ markdown, setMarkdown }: EditorProps) {
             position: absolute;
             right: 0;
             top: 0;
+            &:hover {
+              color: ${colors.grey500};
+              cursor: pointer;
+            }
           `}
         >
           preview
