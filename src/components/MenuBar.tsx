@@ -26,6 +26,7 @@ const submenuMobileCss = css({
   fontSize: '1rem',
   color: 'black',
   textDecoration: 'none',
+  cursor: 'pointer',
 });
 
 export const NavContainer = styled.div`
@@ -40,14 +41,16 @@ export default function MenuBar() {
   const [visibleSubMenu, setVisibleSubMenu] = useState(false);
 
   const subMenuRef = useRef<HTMLDivElement>(null);
+  const mobileSubMenuRef = useRef<HTMLDivElement>(null);
 
   const onClickOutSide = (e: MouseEvent) => {
     const target = e.target as HTMLDivElement;
     if (!target) return;
 
-    if (visibleSubMenu && !subMenuRef.current?.contains(target)) {
-      setVisibleSubMenu(false);
-    }
+    if (visibleSubMenu && subMenuRef.current?.contains(target)) return;
+    if (visibleSubMenu && mobileSubMenuRef.current?.contains(target)) return;
+
+    setVisibleSubMenu(false);
   };
 
   useEffect(() => {
@@ -123,7 +126,7 @@ export default function MenuBar() {
             <Link href="/projects" css={submenuCss}>
               프로젝트
             </Link>
-            <Link href="/" css={submenuCss}>
+            <Link href="/friends" css={submenuCss}>
               친구검색
             </Link>
           </div>
@@ -139,52 +142,56 @@ export default function MenuBar() {
           `}
         >
           {isLoggedIn ? (
-            <button
-              css={css`
-                background-color: transparent;
-                border: none;
-                color: white;
-              `}
-              onClick={toggleVisibleSubmenu}
-            >
-              <AiOutlineMenu
+            <>
+              <nav
                 css={css`
-                  width: 1.5rem;
-                  height: 1.5rem;
+                  background-color: transparent;
+                  border: none;
+                  color: white;
                 `}
-              />
-              <div
-                css={css`
-                  display: flex;
-                  flex-direction: column;
-                  gap: 1rem;
-                  position: absolute;
-                  right: 1rem;
-                  top: 4rem;
-                  padding: 1rem 1rem;
-                  color: black;
-                  font-weight: 500;
-                  border: 2px solid black;
-                  border-radius: 0.25rem;
-                  background-color: white;
-                  z-index: 10;
-                  display: ${visibleSubMenu ? 'flex' : 'none'};
-                `}
+                onClick={toggleVisibleSubmenu}
               >
-                <Link href="/project" css={submenuMobileCss}>
-                  프로젝트
-                </Link>
-                <Link href="/" css={submenuMobileCss}>
-                  친구검색
-                </Link>
-                <Link href={`/user/${user?.name}`} css={submenuMobileCss}>
-                  내 계정
-                </Link>
-                <Link href="/settings" css={submenuMobileCss}>
-                  설정
-                </Link>
-              </div>
-            </button>
+                <AiOutlineMenu
+                  css={css`
+                    width: 1.5rem;
+                    height: 1.5rem;
+                  `}
+                />
+              </nav>
+              {visibleSubMenu && (
+                <div
+                  ref={mobileSubMenuRef}
+                  css={css`
+                    display: flex;
+                    flex-direction: column;
+                    gap: 1rem;
+                    position: absolute;
+                    right: 1rem;
+                    top: 4rem;
+                    padding: 1rem 1rem;
+                    color: black;
+                    font-weight: 500;
+                    border: 2px solid black;
+                    border-radius: 0.25rem;
+                    background-color: white;
+                    z-index: 10;
+                  `}
+                >
+                  <Link href="/projects" css={submenuMobileCss}>
+                    프로젝트
+                  </Link>
+                  <Link href="/friends" css={submenuMobileCss}>
+                    친구검색
+                  </Link>
+                  <Link href={`/user/${user?.name}`} css={submenuMobileCss}>
+                    내 계정
+                  </Link>
+                  <Link href="/settings" css={submenuMobileCss}>
+                    설정
+                  </Link>
+                </div>
+              )}
+            </>
           ) : (
             <Link
               href="/auth/SignIn"

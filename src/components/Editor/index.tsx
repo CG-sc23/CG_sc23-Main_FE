@@ -23,7 +23,6 @@ import { queryKey } from '@/libs/constant';
 
 import { colors } from '@/components/constant/color';
 import { dropFileUpload, inputChangeUpload } from '@/libs/utils/editor';
-import { uploadImg } from '@/libs/utils/s3';
 
 const imgUpload = (
   inputRef: RefObject<HTMLInputElement>,
@@ -184,7 +183,8 @@ export default function Editor({
             border-radius: 5px;
             transition: border 0.1s ease;
             &:focus {
-              outline: 1px solid blue;
+              outline: none;
+              border: 1px solid black;
             }
           `}
         />
@@ -196,7 +196,6 @@ export default function Editor({
               height: 100%;
               top: 0;
               left: 0;
-
               transition:
                 background-color 0.2s ease,
                 opacity 0.2s ease;
@@ -208,19 +207,21 @@ export default function Editor({
             onDrop={onDrop(editorRef)}
           />
         ) : null}
-        {hiddenPreviewButton ? null : (
-          <button
-            type="button"
-            onClick={() => setPreview((prev) => !prev)}
-            css={css`
-              position: absolute;
-              right: 0;
-              top: 0;
-            `}
-          >
-            preview
-          </button>
-        )}
+        <button
+          type="button"
+          onClick={() => setPreview((prev) => !prev)}
+          css={css`
+            position: absolute;
+            right: 0;
+            top: 0;
+            &:hover {
+              color: ${colors.grey500};
+              cursor: pointer;
+            }
+          `}
+        >
+          preview
+        </button>
       </div>
     </>
   );
