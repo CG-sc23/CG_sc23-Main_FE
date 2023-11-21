@@ -20,7 +20,7 @@ export type SignOutAuthToken = { token: string };
 export type SignUpEmailVerifyResponse = OkAndOptionalReason;
 export type SignUpEmailVerifyConfirmResponse = OkAndOptionalReason;
 
-export type Provider = 'KAKAO' | 'NAVER';
+export type Provider = "KAKAO" | "NAVER";
 export type SocialAuthPayload = {
   code: string;
   provider: Provider;
@@ -66,7 +66,7 @@ export type UserDetailInfoResponse = OkAndOptionalReason & {
   short_description?: string;
   description?: string;
   description_resource_links?: string[];
-  provider?: 'our' | 'naver' | 'kakao';
+  provider?: "our" | "naver" | "kakao";
 };
 export type ModifyUserDetailInfoAuthTokenAndBody = {
   token: string;
@@ -90,7 +90,7 @@ export type GitHubAccountCheckQuery = {
   github_link: string;
 };
 export type GitHubAccountCheckResponse = OkAndOptionalReason;
-type GITHUB_STATUS = 'IN_PROGRESS' | 'COMPLETE' | 'FAIL';
+type GITHUB_STATUS = "IN_PROGRESS" | "COMPLETE" | "FAIL";
 export type GithubUpdateStatusAuthToken = AuthToken;
 export type GithubUpdateStatusResponse = OkAndOptionalReason & {
   status?: GITHUB_STATUS;
@@ -115,11 +115,11 @@ export type AWSResponse = {
   url: string;
   fields: {
     key: string;
-    'x-amz-algorithm': string;
-    'x-amz-credential': string;
-    'x-amz-date': string;
+    "x-amz-algorithm": string;
+    "x-amz-credential": string;
+    "x-amz-date": string;
     policy: string;
-    'x-amz-signature': string;
+    "x-amz-signature": string;
   };
 };
 export type GetPreSignedURLParamAndAuthToken = {
@@ -130,3 +130,5 @@ export type GetPreSignedURLResponse = OkAndOptionalReason & {
   url?: string;
   aws_response?: AWSResponse;
 };
+
+/** PROJECT **/
