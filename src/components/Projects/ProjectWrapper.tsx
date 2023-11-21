@@ -1,6 +1,6 @@
-import { PropsWithChildren } from 'react';
-import styled from '@emotion/styled';
-import { bpmax } from '@/libs/styles/constants';
+import { PropsWithChildren } from "react";
+import styled from "@emotion/styled";
+import { bpmax } from "@/libs/styles/constants";
 
 const Wrapper = styled.section`
   display: grid;
@@ -10,9 +10,9 @@ const Wrapper = styled.section`
   column-gap: 1.5rem;
   width: 100%;
 
-  ${bpmax[2]} {
-    grid-template-columns: 1fr;
-    row-gap: 1rem;
+  ${bpmax[0]} {
+    display: flex;
+    flex-direction: column;
   }
 `;
 
