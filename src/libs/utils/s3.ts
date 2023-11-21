@@ -33,17 +33,17 @@ export const uploadImg = async ({
   file,
   filename,
   token,
+  type = 'resource',
 }: {
   file: File;
   filename: string;
   token: string;
+  type?: 'resource' | 'profile';
 }) => {
-  const [file_name, file_type] = filename.split('.');
-  assert(!!file_name && !!file_type, 'Bad Request');
   const res = await client.preSignedURL({
     token,
-    file_name,
-    file_type,
+    file_name: filename,
+    type,
   });
 
   if (!res) return;

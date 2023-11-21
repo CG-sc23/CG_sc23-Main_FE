@@ -37,12 +37,7 @@ export const GitHub = {
   async getGitHubUpdateStatus(queries: GithubUpdateStatusApiAuthToken) {
     try {
       return await http.get<GithubUpdateStatusApiResponse>(
-        `/external-history/v1/github/status`,
-        {
-          headers: {
-            Authorization: `Token ${queries.token}`,
-          },
-        },
+        `/external-history/v1/github/status/${queries.user_id}`,
       );
     } catch (e) {
       return handleApiError<GithubUpdateStatusApiResponse>(e);

@@ -41,12 +41,7 @@ export const GitHub = {
   async gitHubUpdateStatus(queries: GithubUpdateStatusAuthToken) {
     try {
       const { data } = await http.get<GithubUpdateStatusResponse>(
-        `/api/external-history/github/update-status`,
-        {
-          headers: {
-            Authorization: `Token ${queries.token}`,
-          },
-        },
+        `/api/external-history/github/update-status/${queries.user_id}`,
       );
 
       return data;

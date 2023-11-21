@@ -7,7 +7,10 @@ import LoadingSpinner from './Spinner';
 import { css } from '@emotion/react';
 import client from '@/api/client';
 import { hexToRgba } from '@toss/utils';
-import { GitHubStackResponse } from '@/libs/type/client';
+import {
+  GitHubStackResponse,
+  GithubUpdateStatusResponse,
+} from '@/libs/type/client';
 import { useMemo, useState } from 'react';
 import Image from 'next/image';
 import {
@@ -29,11 +32,13 @@ const flipAnimation = {
 };
 
 type Props = {
-  hasGitHub: boolean;
+  status: GithubUpdateStatusResponse['status'];
 };
 Chart.register(ArcElement, Tooltip, Legend, ChartDataLabels);
-export default function Stack({ hasGitHub = true }: Props) {
-  if (!hasGitHub) return <GitHubSkeleton title="언어" />;
+export default function Stack({ status }: Props) {
+  if (!status || status !== 'COMPLETE') {
+    return <GitHubSkeleton title="언어" status={status} />;
+  }
   const [flipBinary, setFlipBinary] = useState('000000');
   const id = useQueryParam('id');
   const { data: stackList } = useQuery({

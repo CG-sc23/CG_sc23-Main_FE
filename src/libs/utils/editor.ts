@@ -1,4 +1,4 @@
-import { RefMDEditor } from '@uiw/react-md-editor';
+import { RefMDEditor, TextAreaTextApi } from '@uiw/react-md-editor';
 import { assert } from './assert';
 import { uploadImg } from './s3';
 
@@ -54,6 +54,57 @@ function removeExtension(filename: string) {
   return filename.substring(0, lastDotIndex);
 }
 
+type InputChangeUpload = {
+  token: string;
+  file: File;
+  api: TextAreaTextApi;
+};
+export const inputChangeUpload = async ({
+  api,
+  file,
+  token,
+}: InputChangeUpload) => {
+  if (!token) return;
+  const notSupport = !/^(image)\/.+$/.test(file?.type);
+  if (notSupport) {
+    const fail = `\n![지원하는 파일 형식이 아닙니다!]()\n`;
+    api.replaceSelection(fail);
+    return;
+  }
+
+  const blobUrl = URL.createObjectURL(file);
+  const imageStyle =
+    '<!--rehype:style=display: flex; justify-content: center; width: 100%; max-width: 500px; margin: auto; margin-top: 4px; margin-bottom: 4px; -->';
+
+  const loadingMarkdown = `\n![업로드 중...](${blobUrl})\n${imageStyle}\n`;
+
+  const initialState = api.replaceSelection('');
+  const loadingState = api.replaceSelection(loadingMarkdown);
+
+  api.setSelectionRange({
+    start: initialState.selection.start,
+    end: loadingState.selection.end,
+  });
+
+  try {
+    const url = await uploadImg({
+      file,
+      filename: file.name,
+      token,
+    });
+    const fileName = removeExtension(file.name);
+    const insertedMarkdown = `\n![${fileName}](${url})\n${imageStyle}\n`;
+    api.replaceSelection(insertedMarkdown);
+
+    return url;
+  } catch (error) {
+    const errorMarkdown = '![에러!](...)';
+    api.replaceSelection(errorMarkdown);
+  } finally {
+    URL.revokeObjectURL(blobUrl);
+  }
+};
+
 type DropFileUpload = {
   file: File;
   ref: RefMDEditor;
@@ -70,8 +121,10 @@ export const dropFileUpload = async ({ file, ref, token }: DropFileUpload) => {
   }
 
   const blobUrl = URL.createObjectURL(file);
+  const imageStyle =
+    '<!--rehype:style=display: flex; justify-content: center; width: 100%; max-width: 500px; margin: auto; margin-top: 4px; margin-bottom: 4px; -->';
 
-  const loadingMarkdown = `\n![업로드 중...](${blobUrl})\n`;
+  const loadingMarkdown = `\n![업로드 중...](${blobUrl})\n${imageStyle}\n`;
 
   const initState = getStateFromTextArea(ref);
   const loadingState = replaceSelection(ref, loadingMarkdown);
@@ -87,7 +140,7 @@ export const dropFileUpload = async ({ file, ref, token }: DropFileUpload) => {
       token,
     });
     const fileName = removeExtension(file.name);
-    const insertedMarkdown = `\n![${fileName}](${url})\n`;
+    const insertedMarkdown = `\n![${fileName}](${url})\n${imageStyle}\n`;
     replaceSelection(ref, insertedMarkdown);
 
     return url;

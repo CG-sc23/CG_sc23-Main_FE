@@ -19,7 +19,7 @@ const Card = styled(Link)`
   padding: 1rem 0;
   border-top: 1px solid ${colors.grey300};
 
-  &:first-child {
+  &:first-of-type {
     border: none;
   }
 

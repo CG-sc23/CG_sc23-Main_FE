@@ -41,5 +41,7 @@ export default async function handleUserInfo(
     email: data.email,
     name: data.name,
     profileImageLink: data.profile_image_link,
+    profileImageUpdatedAt: data.profile_image_updated_at,
+    provider: data.provider,
   });
 }

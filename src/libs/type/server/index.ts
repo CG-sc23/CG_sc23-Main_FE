@@ -42,6 +42,8 @@ export type GetUserInfoApiResponse = {
   email?: string;
   name?: string;
   profile_image_link?: string | null;
+  profile_image_updated_at?: string | null;
+  provider?: 'our' | 'naver' | 'kakao';
   detail?: string;
 };
 export type UserDetailInfoApiQuery = {
@@ -52,6 +54,7 @@ export type UserDetailInfoApiResponse = {
   email?: string;
   name?: string;
   profile_image_link?: string | null;
+  profile_image_updated_at?: string | null;
   github_link?: string;
   short_description?: string;
   description?: string;
@@ -67,7 +70,7 @@ export type ModifyUserDetailInfoApiAuthTokenAndBody = {
     github_link?: string;
     short_description?: string;
     description?: string;
-    description_resource_links?: string[];
+    description_resource_links?: string;
   };
 };
 export type ModifyUserDetailInfoApiResponse = SuccessAndOptionalReason;
@@ -83,7 +86,9 @@ export type GitHubAccountCheckApiQuery = {
 };
 export type GitHubAccountCheckApiResponse = SuccessAndOptionalReason;
 type GITHUB_STATUS = 'IN_PROGRESS' | 'COMPLETE' | 'FAIL';
-export type GithubUpdateStatusApiAuthToken = AuthToken;
+export type GithubUpdateStatusApiAuthToken = {
+  user_id: string;
+};
 export type GithubUpdateStatusApiResponse = {
   success?: boolean;
   reason?: string;
@@ -118,7 +123,7 @@ type AWSResponse = {
 };
 export type GetPreSignedURLApiParamAndAuthToken = AuthToken & {
   file_name: string;
-  file_type: string;
+  type: 'profile' | 'resource';
 };
 export type GetPreSignedURLApiResponse = {
   success?: boolean;

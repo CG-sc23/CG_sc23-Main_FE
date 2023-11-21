@@ -20,7 +20,7 @@ export type SignOutAuthToken = { token: string };
 export type SignUpEmailVerifyResponse = OkAndOptionalReason;
 export type SignUpEmailVerifyConfirmResponse = OkAndOptionalReason;
 
-export type Provider = "KAKAO" | "NAVER";
+export type Provider = 'KAKAO' | 'NAVER';
 export type SocialAuthPayload = {
   code: string;
   provider: Provider;
@@ -50,10 +50,11 @@ export type DeactivateResponse = OkAndOptionalReason;
 export type GetUserInfoAuthToken = AuthToken;
 export type GetUserInfoResponse = OkAndOptionalReason & {
   id?: number;
-  number?: string;
   email?: string;
   name?: string;
   profileImageLink?: string | null;
+  profileImageUpdatedAt?: string | null;
+  provider?: 'our' | 'naver' | 'kakao';
 };
 export type UserDetailInfoQuery = {
   user_id: string;
@@ -62,11 +63,12 @@ export type UserDetailInfoResponse = OkAndOptionalReason & {
   email?: string;
   name?: string;
   profile_image_link?: string | null;
+  profile_image_updated_at?: string | null;
   github_link?: string;
   short_description?: string;
   description?: string;
   description_resource_links?: string[];
-  provider?: "our" | "naver" | "kakao";
+  provider?: 'our' | 'naver' | 'kakao';
 };
 export type ModifyUserDetailInfoAuthTokenAndBody = {
   token: string;
@@ -76,7 +78,7 @@ export type ModifyUserDetailInfoAuthTokenAndBody = {
     github_link?: string;
     short_description?: string;
     description?: string;
-    description_resource_links?: string[];
+    description_resource_links?: string;
   };
 };
 export type ModifyUserDetailInfoResponse = OkAndOptionalReason;
@@ -90,8 +92,10 @@ export type GitHubAccountCheckQuery = {
   github_link: string;
 };
 export type GitHubAccountCheckResponse = OkAndOptionalReason;
-type GITHUB_STATUS = "IN_PROGRESS" | "COMPLETE" | "FAIL";
-export type GithubUpdateStatusAuthToken = AuthToken;
+type GITHUB_STATUS = 'IN_PROGRESS' | 'COMPLETE' | 'FAIL';
+export type GithubUpdateStatusAuthToken = {
+  user_id: string;
+};
 export type GithubUpdateStatusResponse = OkAndOptionalReason & {
   status?: GITHUB_STATUS;
   last_update?: string;
@@ -115,16 +119,16 @@ export type AWSResponse = {
   url: string;
   fields: {
     key: string;
-    "x-amz-algorithm": string;
-    "x-amz-credential": string;
-    "x-amz-date": string;
+    'x-amz-algorithm': string;
+    'x-amz-credential': string;
+    'x-amz-date': string;
     policy: string;
-    "x-amz-signature": string;
+    'x-amz-signature': string;
   };
 };
 export type GetPreSignedURLParamAndAuthToken = {
   file_name: string;
-  file_type: string;
+  type: 'resource' | 'profile';
 } & AuthToken;
 export type GetPreSignedURLResponse = OkAndOptionalReason & {
   url?: string;

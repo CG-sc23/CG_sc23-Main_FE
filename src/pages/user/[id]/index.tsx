@@ -10,13 +10,19 @@ import client from '@/api/client';
 
 import useUser from '@/hooks/user/useUser';
 import { assert } from '@/libs/utils/assert';
-import { UserDetailInfoResponse } from '@/libs/type/client';
+import {
+  GithubUpdateStatusResponse,
+  UserDetailInfoResponse,
+} from '@/libs/type/client';
 
 import Keyword from '@/components/Keyword';
 import Stack from '@/components/Stack';
 import { colors } from '@/components/constant/color';
 import ProjectWrapper from '@/components/Projects/ProjectWrapper';
 import ProjectCard from '@/components/Projects/ProjectCard';
+import { safeLocalStorage } from '@toss/storage';
+import { queryKey } from '@/libs/constant';
+import useSnackBar from '@/hooks/useSnackBar';
 
 export const getServerSideProps = (async (ctx) => {
   const id = ctx.params?.id as string;
@@ -27,18 +33,27 @@ export const getServerSideProps = (async (ctx) => {
   });
   assert(user, 'Invalid user.');
 
+  const github_status = await client.gitHubUpdateStatus({
+    user_id: id,
+  });
+  assert(github_status, 'Invalid Github Status.');
+
   return {
-    props: { user, id },
+    props: { user, id, github_status },
   };
 }) satisfies GetServerSideProps<{
   id: string;
   user: UserDetailInfoResponse;
+  github_status: GithubUpdateStatusResponse;
 }>;
 
 export default function Profile({
   id,
   user,
+  github_status,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const token = safeLocalStorage.get(queryKey.USER_ACCESS_TOKEN);
+  const { openSnackBar } = useSnackBar();
   const { user: loggedInUser } = useUser();
   const isOwn = useMemo(() => {
     return loggedInUser && loggedInUser.email === user.email;
@@ -81,9 +96,12 @@ export default function Profile({
           <Image
             width={164}
             height={164}
-            src={user?.profile_image_link ?? '/profile.jpg'}
+            src={
+              user?.profile_image_link && user?.profile_image_updated_at
+                ? `${user?.profile_image_link}?timestamp=${user?.profile_image_updated_at}`
+                : '/profile.jpg'
+            }
             alt="profile"
-            priority
             css={css`
               border-radius: 9999px;
               width: 164px;
@@ -102,27 +120,74 @@ export default function Profile({
               color: ${colors.grey700};
             `}
           >
-            {user?.short_description ?? '아직 한 줄 소개가 비어있어요...!'}
+            {user?.short_description ?? '아직 한 줄 소개가 비어있어요!'}
           </span>
         </div>
         {isOwn ? (
-          <Link
-            href={`/user/Update?id=${id}`}
-            css={css`
-              color: black;
-              outline: none;
-              text-decoration: none;
-              border-radius: 4px;
-              font-weight: 600;
-              border: 1px solid #e0e0e0;
-              padding: 12px 16px;
-              ${bpmax[1]} {
-                padding: 8px 12px;
-              }
-            `}
-          >
-            편집
-          </Link>
+          <div>
+            {user.github_link ? (
+              <button
+                onClick={async () => {
+                  if (!token) return;
+                  const res = await client.gitHubManualUpdate({ token });
+                  if (res?.ok)
+                    return openSnackBar('업데이트가 요청되었습니다.');
+                  return openSnackBar('업데이트를 실패했습니다.');
+                }}
+                css={css`
+                  border: none;
+                  outline: none;
+                  background: none;
+
+                  color: ${colors.white};
+                  font-weight: 600;
+
+                  font-size: 1rem;
+
+                  margin-right: 10px;
+
+                  cursor: pointer;
+
+                  background-color: ${colors.black};
+                  border-radius: 4px;
+                  padding: 12px 16px;
+
+                  transition: background-color 0.2s ease;
+
+                  ${bpmax[1]} {
+                    padding: 8px 12px;
+                  }
+
+                  &:hover {
+                    background-color: ${colors.grey800};
+                  }
+                `}
+                type="button"
+              >
+                GitHub 업데이트
+              </button>
+            ) : null}
+            <Link
+              href={`/user/Update?id=${id}`}
+              css={css`
+                color: black;
+                outline: none;
+                text-decoration: none;
+                border-radius: 4px;
+
+                font-size: 1rem;
+
+                font-weight: 600;
+                border: 1px solid #e0e0e0;
+                padding: 12px 16px;
+                ${bpmax[1]} {
+                  padding: 8px 12px;
+                }
+              `}
+            >
+              편집
+            </Link>
+          </div>
         ) : null}
       </div>
 
@@ -215,15 +280,7 @@ export default function Profile({
         `}
       />
       {/* description */}
-      <h1
-        css={css`
-          font-size: 2rem;
-          font-weight: bold;
-        `}
-      >
-        자기소개
-      </h1>
-      <div>
+      <div data-color-mode="light">
         {user.description ? (
           <MDEditor.Markdown source={user.description} />
         ) : (
@@ -241,8 +298,8 @@ export default function Profile({
 
               gap: 10px;
 
-              background-color: ${colors.green50};
-              border: 1px solid ${colors.green200};
+              background-color: ${colors.grey50};
+              border: 1px solid ${colors.grey200};
             `}
           >
             <h2
@@ -258,22 +315,14 @@ export default function Profile({
           </div>
         )}
       </div>
-      <h1
-        css={css`
-          font-size: 2rem;
-          font-weight: bold;
-        `}
-      >
-        내 기술스택
-      </h1>
       <div
         css={css`
           display: flex;
           flex-direction: column;
         `}
       >
-        <Stack hasGitHub={!!user.github_link} />
-        <Keyword hasGitHub={!!user.github_link} />
+        <Stack status={github_status.status} />
+        <Keyword status={github_status.status} />
       </div>
       <h1
         css={css`

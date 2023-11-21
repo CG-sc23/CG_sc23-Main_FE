@@ -19,6 +19,7 @@ export function preProcessCommonStackName(str: string) {
   if (name === 'vue') return 'vue.js';
   if (name === 'next') return 'nextjs';
   if (name === 'nest') return 'nestjs';
+  if (name === 'electron') return 'electron.js';
   if (name === 'node') return 'nodejs';
   if (name === 'express') return 'express.js';
 

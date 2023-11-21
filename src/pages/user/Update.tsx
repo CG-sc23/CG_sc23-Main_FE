@@ -112,7 +112,7 @@ export const getServerSideProps = (async (ctx) => {
 
 export default function Update({ user, id }: InferGetServerSidePropsType<any>) {
   const token = safeLocalStorage.get(queryKey.USER_ACCESS_TOKEN);
-  const { user: loggedInUser, isLoading } = useUser();
+  const { user: loggedInUser, isLoading, refetch } = useUser();
   const router = useRouter();
   const isOwn = useMemo(() => {
     return loggedInUser && loggedInUser.email === user.email;
@@ -135,6 +135,7 @@ export default function Update({ user, id }: InferGetServerSidePropsType<any>) {
       token,
       file,
       filename: file.name,
+      type: 'profile',
     });
 
     setProfileImageLink(url);
@@ -145,7 +146,7 @@ export default function Update({ user, id }: InferGetServerSidePropsType<any>) {
     const uploadData: FormData = {
       ...data,
       description: markdown,
-      description_resource_links: extractImageLinks(markdown),
+      description_resource_links: JSON.stringify(extractImageLinks(markdown)),
       profile_image_link: profileImageLink,
     };
 
@@ -154,7 +155,10 @@ export default function Update({ user, id }: InferGetServerSidePropsType<any>) {
       body: uploadData,
     });
 
-    if (res?.ok) router.push(`/user/${id}`);
+    if (res?.ok) {
+      refetch();
+      router.replace(`/user/${id}`);
+    }
   };
 
   useEffect(() => {
@@ -211,7 +215,12 @@ export default function Update({ user, id }: InferGetServerSidePropsType<any>) {
             min-height: 300px;
           `}
         >
-          <Editor markdown={markdown} setMarkdown={setMarkdown} />
+          <Editor
+            markdown={markdown}
+            setMarkdown={setMarkdown}
+            maxHeight={500}
+            minHeight={200}
+          />
         </div>
       </List>
       <Submit type="submit">수정 완료</Submit>

@@ -1,15 +1,6 @@
 import server from '@/api/server';
 import type { GithubUpdateStatusResponse } from '@/libs/type/client';
-import { assert } from '@/libs/utils/assert';
 import type { NextApiResponse, NextApiRequest } from 'next';
-
-type AuthHeader = `Token ${string}`;
-function getTokenFromAuthHeader(authHeader: AuthHeader) {
-  const token = authHeader.split(' ').at(1);
-  assert(token, "Can't find token.");
-
-  return token;
-}
 
 export default async function handleUpdateStatus(
   req: NextApiRequest,
@@ -17,11 +8,11 @@ export default async function handleUpdateStatus(
 ) {
   if (req.method !== 'GET') return res.status(405).end();
 
-  if (!req.headers.authorization) return res.status(401).end();
-  const authHeader = req.headers.authorization as AuthHeader;
+  if (!req.query?.user_id) return res.status(404).end();
+  const user_id = req.query.user_id as string;
 
   const result = await server.getGitHubUpdateStatus({
-    token: getTokenFromAuthHeader(authHeader),
+    user_id,
   });
 
   if (result === undefined)

@@ -8,7 +8,6 @@ export default async function handleStack(
 ) {
   if (req.method !== 'GET') return res.status(405).end();
 
-  console.log(req.query);
   if (!req.query?.user_id) return res.status(404).end();
   const user_id = req.query.user_id as string;
 

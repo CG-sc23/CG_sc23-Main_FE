@@ -1,32 +1,32 @@
-import { bpmax } from "@/libs/styles/constants";
-import { css } from "@emotion/react";
-import styled from "@emotion/styled";
-import Link from "next/link";
-import { AiOutlineMenu } from "react-icons/ai";
-import { useState, useEffect, useRef } from "react";
-import Image from "next/image";
-import useUser from "@/hooks/user/useUser";
-import { colors } from "./constant/color";
-import { AnimatePresence, motion } from "framer-motion";
-import useSignOut from "@/hooks/auth/useSignOut";
+import { bpmax } from '@/libs/styles/constants';
+import { css } from '@emotion/react';
+import styled from '@emotion/styled';
+import Link from 'next/link';
+import { AiOutlineMenu } from 'react-icons/ai';
+import { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
+import useUser from '@/hooks/user/useUser';
+import { colors } from './constant/color';
+import { AnimatePresence, motion } from 'framer-motion';
+import useSignOut from '@/hooks/auth/useSignOut';
 
 const logoCss = css({
-  fontSize: "1.5rem",
-  color: "white",
-  textDecoration: "none",
+  fontSize: '1.5rem',
+  color: 'white',
+  textDecoration: 'none',
 });
 
 const submenuCss = css({
-  fontSize: "1rem",
-  color: "white",
-  textDecoration: "none",
+  fontSize: '1rem',
+  color: 'white',
+  textDecoration: 'none',
 });
 
 const submenuMobileCss = css({
-  fontSize: "1rem",
-  color: "black",
-  textDecoration: "none",
-  cursor: "pointer",
+  fontSize: '1rem',
+  color: 'black',
+  textDecoration: 'none',
+  cursor: 'pointer',
 });
 
 export const NavContainer = styled.div`
@@ -55,10 +55,10 @@ export default function MenuBar() {
 
   useEffect(() => {
     if (visibleSubMenu) {
-      document.addEventListener("mousedown", onClickOutSide);
+      document.addEventListener('mousedown', onClickOutSide);
     }
     return () => {
-      document.removeEventListener("mousedown", onClickOutSide);
+      document.removeEventListener('mousedown', onClickOutSide);
     };
   }, [visibleSubMenu, onClickOutSide]);
 
@@ -239,8 +239,11 @@ export default function MenuBar() {
             >
               {isLoading ? null : (
                 <Image
-                  src={user?.profileImageLink ?? ("/profile.jpg" as string)}
-                  alt="profile_image"
+                  src={
+                    `${user?.profileImageLink}?timestamp=${user?.profileImageUpdatedAt}` ??
+                    ('/profile.jpg' as string)
+                  }
+                  alt="menu_bar_profile_image"
                   css={css`
                     border-radius: 9999%;
                     object-fit: cover;
@@ -248,7 +251,6 @@ export default function MenuBar() {
                   `}
                   width={50}
                   height={50}
-                  priority
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
               )}
