@@ -20,16 +20,19 @@ export default async function handlePreSignedURL(
   if (!req.headers.authorization) return res.status(401).end();
   const authHeader = req.headers.authorization as AuthHeader;
 
+  if (!req.query?.type) return res.status(404).end();
+  const type = req.query.type as 'profile' | 'resource';
+  assert(type, 'Bad Request');
+
   if (!req.query?.file) return res.status(404).end();
   const file = req.query.file as string;
 
-  const [file_name, file_type] = file.split('.');
-  assert(!!file_name && !!file_type, 'Bad Request');
+  assert(!!file, 'Bad Request');
 
   const result = await server.getPreSignedURL({
     token: getTokenFromAuthHeader(authHeader),
-    file_name,
-    file_type,
+    file_name: file,
+    type,
   });
 
   if (result === undefined)

@@ -133,12 +133,12 @@ export default function Dropzone({
               overflow: hidden;
             `}
           >
-            <Image
+            <img
               src={thumbnail}
               alt="Thumbnail"
-              fill
-              priority
               css={css`
+                width: 100%;
+                height: 100%;
                 object-fit: contain;
               `}
             />

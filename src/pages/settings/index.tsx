@@ -113,7 +113,7 @@ export default function Settings() {
                 color: #cdcdcd;
               `}
             >
-              {mySignUpStrategy('our')}
+              {mySignUpStrategy(user?.provider as string)}
             </p>
           </div>
         </Block>

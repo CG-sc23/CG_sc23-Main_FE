@@ -21,6 +21,16 @@ const nextConfig = {
       },
       {
         protocol: 'https',
+        hostname: 'domo-s3.s3.amazonaws.com',
+        pathname: '/users/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'domo-s3.s3.amazonaws.com',
+        pathname: '/resources/**',
+      },
+      {
+        protocol: 'https',
         hostname: 'domo-s3.s3.ap-northeast-2.amazonaws.com',
         pathname: '/resources/**',
       },

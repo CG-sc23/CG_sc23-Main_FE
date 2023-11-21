@@ -14,10 +14,14 @@ const ModalBlock = styled(motion.div)`
   padding: 1rem 1.5rem;
   border-radius: 0.5rem;
   color: black;
-  font-weight: 500;
+  font-weight: 900;
   background-color: white;
   box-shadow: 5px 5px 10px ${colors.grey500};
   z-index: 15;
+
+  white-space: pre-line;
+  line-height: 1.5rem;
+  text-align: center;
 
   &:hover {
     cursor: pointer;

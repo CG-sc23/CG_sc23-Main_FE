@@ -1,11 +1,31 @@
 import { css } from '@emotion/react';
 import Image from 'next/image';
 import { colors } from './constant/color';
+import { GithubUpdateStatusResponse } from '@/libs/type/client';
 
 type Props = {
   title: string;
+  status: GithubUpdateStatusResponse['status'];
 };
-export default function GitHubSkeleton({ title }: Props) {
+export default function GitHubSkeleton({ title, status }: Props) {
+  const getStatusText = () => {
+    if (status === 'COMPLETE') return 'GitHub 업데이트 완료!';
+    if (status === 'IN_PROGRESS') return 'GitHub 이력을 불러오는 중 입니다!';
+    return 'GitHub 주소가 없어요...!';
+  };
+
+  const getStatusBackgroundColor = () => {
+    if (status === 'COMPLETE') return colors.green200;
+    if (status === 'IN_PROGRESS') return colors.yellow200;
+    return colors.grey200;
+  };
+
+  const getStatusBorderColor = () => {
+    if (status === 'COMPLETE') return colors.green400;
+    if (status === 'IN_PROGRESS') return colors.yellow400;
+    return colors.grey400;
+  };
+
   return (
     <>
       <h1
@@ -33,8 +53,8 @@ export default function GitHubSkeleton({ title }: Props) {
 
           gap: 10px;
 
-          background-color: ${colors.grey200};
-          border: 1px solid ${colors.grey400};
+          background-color: ${getStatusBackgroundColor()};
+          border: 1px solid ${getStatusBorderColor()};
         `}
       >
         <div
@@ -63,7 +83,7 @@ export default function GitHubSkeleton({ title }: Props) {
             font-weight: bold;
           `}
         >
-          GitHub 주소가 없어요...!
+          {getStatusText()}
         </h2>
       </div>
     </>

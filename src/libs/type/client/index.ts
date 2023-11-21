@@ -50,10 +50,11 @@ export type DeactivateResponse = OkAndOptionalReason;
 export type GetUserInfoAuthToken = AuthToken;
 export type GetUserInfoResponse = OkAndOptionalReason & {
   id?: number;
-  number?: string;
   email?: string;
   name?: string;
   profileImageLink?: string | null;
+  profileImageUpdatedAt?: string | null;
+  provider?: 'our' | 'naver' | 'kakao';
 };
 export type UserDetailInfoQuery = {
   user_id: string;
@@ -62,6 +63,7 @@ export type UserDetailInfoResponse = OkAndOptionalReason & {
   email?: string;
   name?: string;
   profile_image_link?: string | null;
+  profile_image_updated_at?: string | null;
   github_link?: string;
   short_description?: string;
   description?: string;
@@ -76,7 +78,7 @@ export type ModifyUserDetailInfoAuthTokenAndBody = {
     github_link?: string;
     short_description?: string;
     description?: string;
-    description_resource_links?: string[];
+    description_resource_links?: string;
   };
 };
 export type ModifyUserDetailInfoResponse = OkAndOptionalReason;
@@ -91,7 +93,9 @@ export type GitHubAccountCheckQuery = {
 };
 export type GitHubAccountCheckResponse = OkAndOptionalReason;
 type GITHUB_STATUS = 'IN_PROGRESS' | 'COMPLETE' | 'FAIL';
-export type GithubUpdateStatusAuthToken = AuthToken;
+export type GithubUpdateStatusAuthToken = {
+  user_id: string;
+};
 export type GithubUpdateStatusResponse = OkAndOptionalReason & {
   status?: GITHUB_STATUS;
   last_update?: string;
@@ -124,7 +128,7 @@ export type AWSResponse = {
 };
 export type GetPreSignedURLParamAndAuthToken = {
   file_name: string;
-  file_type: string;
+  type: 'resource' | 'profile';
 } & AuthToken;
 export type GetPreSignedURLResponse = OkAndOptionalReason & {
   url?: string;

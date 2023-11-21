@@ -32,6 +32,7 @@ export default async function handleUserDetailInfo(
     email: data.email,
     name: data.name,
     profile_image_link: data.profile_image_link,
+    profile_image_updated_at: data.profile_image_updated_at,
     github_link: data.github_link,
     short_description: data.short_description,
     description: data.description,

@@ -232,8 +232,11 @@ export default function MenuBar() {
             >
               {isLoading ? null : (
                 <Image
-                  src={user?.profileImageLink ?? ('/profile.jpg' as string)}
-                  alt="profile_image"
+                  src={
+                    `${user?.profileImageLink}?timestamp=${user?.profileImageUpdatedAt}` ??
+                    ('/profile.jpg' as string)
+                  }
+                  alt="menu_bar_profile_image"
                   css={css`
                     border-radius: 9999%;
                     object-fit: cover;
@@ -241,7 +244,6 @@ export default function MenuBar() {
                   `}
                   width={50}
                   height={50}
-                  priority
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
               )}

@@ -15,6 +15,7 @@ export default function useUser() {
   const {
     data: user,
     isLoading,
+    refetch,
     error,
   } = useQuery({
     queryKey: ['USER_INFO'],
@@ -48,5 +49,6 @@ export default function useUser() {
     isLoggedIn: !!accessToken,
     user: user?.ok ? user : null,
     isLoading,
+    refetch,
   };
 }
