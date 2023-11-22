@@ -9,6 +9,9 @@ import { format } from "date-fns";
 import { myProjectStatus } from "@/libs/utils/project";
 import { colors } from "@/components/constant/color";
 import { Milestone } from "@/components/Projects/Milestone";
+import Link from "next/link";
+import { FaRegPlusSquare } from "react-icons/fa";
+import { milestoneCreationPermitted } from "@/libs/utils/milestone";
 
 const Container = styled.div`
   width: 896px;
@@ -39,7 +42,6 @@ const Header = styled.h1`
 
 const SubHeader = styled.h2`
   width: 100%;
-  padding-bottom: 1rem;
   font-size: 1.5rem;
   font-weight: 500;
 `;
@@ -207,9 +209,26 @@ export default function ProjectDetail({ project_id }: Props) {
         `}
       >
         <Block>
-          <SubHeader>
-            마일스톤 목록 ({projectDetail?.milestones.length})
-          </SubHeader>
+          <div
+            css={css`
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              width: 100%;
+              padding-bottom: 1rem;
+            `}
+          >
+            <SubHeader>
+              마일스톤 목록 ({projectDetail?.milestones.length})
+            </SubHeader>
+            {milestoneCreationPermitted(projectDetail?.permission) ? (
+              <Link href="/milestones/form">
+                <FaRegPlusSquare size="24" />
+              </Link>
+            ) : (
+              <></>
+            )}
+          </div>
           {projectDetail?.milestones.map((milestone) => (
             <Milestone
               id={milestone.id}
