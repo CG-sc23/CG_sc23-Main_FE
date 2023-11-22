@@ -1,8 +1,8 @@
-import { bpmax, bpmin } from '@/libs/styles/constants';
-import { css } from '@emotion/react';
-import Link from 'next/link';
-import { colors } from '../constant/color';
-import { FaChevronRight } from 'react-icons/fa6';
+import { bpmax, bpmin } from "@/libs/styles/constants";
+import { css } from "@emotion/react";
+import Link from "next/link";
+import { colors } from "../constant/color";
+import { FaChevronRight } from "react-icons/fa6";
 
 type Props = {
   title: string;
@@ -97,7 +97,7 @@ export function Task({
         {/* TODO : link for each must be altered */}
         <Link href={`/projects/${projectId}`}>{projectTitle}</Link>
         <FaChevronRight size={14} />
-        <Link href={`/milestoned/${milestoneId}`}>{milestoneTitle}</Link>
+        <Link href={`/milestones/${milestoneId}`}>{milestoneTitle}</Link>
         <FaChevronRight size={14} />
         <Link href={`/tasks/${taskGroupId}`}>{taskGroupTitle}</Link>
       </div>
