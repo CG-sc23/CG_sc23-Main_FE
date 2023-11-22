@@ -1,12 +1,12 @@
-import { bpmax, bpmin } from "@/libs/styles/constants";
-import styled from "@emotion/styled";
-import Link from "next/link";
-import { colors } from "../constant/color";
-import { MouseEvent, useState } from "react";
-import { css } from "@emotion/react";
-import { FaChevronUp, FaChevronDown } from "react-icons/fa6";
-import { format } from "date-fns";
-import { myProjectStatus } from "@/libs/utils/project";
+import { bpmax, bpmin } from '@/libs/styles/constants';
+import styled from '@emotion/styled';
+import Link from 'next/link';
+import { colors } from '../constant/color';
+import { MouseEvent, useState } from 'react';
+import { css } from '@emotion/react';
+import { FaChevronUp, FaChevronDown } from 'react-icons/fa6';
+import { myProjectStatus } from '@/libs/utils/project';
+import { formatDate } from '@/libs/utils';
 
 // [Layer] Project > Milestone > Task Group > Task
 // TODO : TaskGroup UI
@@ -84,8 +84,6 @@ export function TaskGroup({ id, title, status, created_at, due_date }: Props) {
     setShowTasks((prev) => !prev);
   };
 
-  console.log(status);
-
   return (
     <Container>
       {/* title */}
@@ -110,19 +108,19 @@ export function TaskGroup({ id, title, status, created_at, due_date }: Props) {
             <SubHeader>상태</SubHeader>
             <span
               css={css`
-                color: ${myProjectStatus(status as any, "마일스톤").color};
+                color: ${myProjectStatus(status as any, '마일스톤').color};
               `}
             >
-              {myProjectStatus(status as any, "마일스톤").text}
+              {myProjectStatus(status as any, '마일스톤').text}
             </span>
           </TaskContentBox>
           <TaskContentBox>
             <SubHeader>시작일</SubHeader>
-            <span>{format(new Date(created_at), "yyyy.MM.dd")}</span>
+            <span>{formatDate(created_at)}</span>
           </TaskContentBox>
           <TaskContentBox>
             <SubHeader>종료일</SubHeader>
-            <span>{format(new Date(due_date), "yyyy.MM.dd")}</span>
+            <span>{formatDate(due_date)}</span>
           </TaskContentBox>
           <Button href={`/taskgroups/${id}`}>상세보기</Button>
         </TaskWrapper>

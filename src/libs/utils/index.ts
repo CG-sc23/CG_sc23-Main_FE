@@ -4,6 +4,18 @@ export function toUpperCaseFirstLetter(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
+export function formatDate(isoDateString: string) {
+  const date = new Date(isoDateString);
+  return date
+    .toLocaleDateString('ko-KR', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    })
+    .replace(/\.\s/g, '.')
+    .slice(0, -1);
+}
+
 export function hexToRgba(hex: `#${string}`, opacity: number) {
   const r = parseInt(hex.slice(1, 3), 16);
   const g = parseInt(hex.slice(3, 5), 16);

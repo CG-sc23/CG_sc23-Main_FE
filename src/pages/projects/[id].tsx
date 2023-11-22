@@ -3,7 +3,6 @@ import { bpmax, bpmin } from '@/libs/styles/constants';
 import { css } from '@emotion/react';
 import Card from '@/components/Card';
 import MDEditor from '@uiw/react-md-editor';
-import { format } from 'date-fns';
 import { myProjectStatus } from '@/libs/utils/project';
 import { colors } from '@/components/constant/color';
 import { Milestone } from '@/components/Projects/Milestone';
@@ -24,6 +23,9 @@ import { safeLocalStorage } from '@toss/storage';
 import { queryKey } from '@/libs/constant';
 import { GetProjectInviteForInviterApiResponse } from '@/libs/type/server';
 import useSnackBar from '@/hooks/useSnackBar';
+import ReactDatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { formatDate } from '@/libs/utils';
 
 const Container = styled.div`
   height: 100%;
@@ -141,7 +143,7 @@ export default function ProjectDetail() {
     else openSnackBar('요청이 실패하였습니다.');
   };
 
-  const [newMilestone, setNewMilestone] = useState("");
+  const [newMilestone, setNewMilestone] = useState('');
   const [dueDate, setDueDate] = useState(new Date());
 
   return (
@@ -651,8 +653,7 @@ export default function ProjectDetail() {
                   시작일
                 </h2>
                 <span>
-                  {project?.created_at &&
-                    format(new Date(project.created_at), "yyyy.MM.dd")}
+                  {project?.created_at && formatDate(project.created_at)}
                 </span>
               </div>
               <div
@@ -672,8 +673,7 @@ export default function ProjectDetail() {
                   종료 예정일
                 </h2>
                 <span>
-                  {project?.due_date &&
-                    format(new Date(project?.due_date), "yyyy.MM.dd")}
+                  {project?.due_date && formatDate(project?.due_date)}
                 </span>
               </div>
               <div
@@ -697,11 +697,11 @@ export default function ProjectDetail() {
                     font-size: 1.2rem;
                     font-weight: 500;
                     color: ${project?.status &&
-                    myProjectStatus(project?.status, "프로젝트").color};
+                    myProjectStatus(project?.status, '프로젝트').color};
                   `}
                 >
                   {project?.status &&
-                    myProjectStatus(project?.status, "프로젝트").text}
+                    myProjectStatus(project?.status, '프로젝트').text}
                 </span>
               </div>
             </Block>
@@ -762,7 +762,7 @@ export default function ProjectDetail() {
                   value={newMilestone}
                   onChange={(e) => setNewMilestone(e.target.value)}
                 />
-                <DatePicker
+                <ReactDatePicker
                   dateFormat="yyyy.MM.dd"
                   shouldCloseOnSelect
                   minDate={new Date()}

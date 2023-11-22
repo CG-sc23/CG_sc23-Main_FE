@@ -3,12 +3,12 @@ import useUser from '@/hooks/user/useUser';
 import { useQuery } from '@tanstack/react-query';
 import styled from '@emotion/styled';
 import Link from 'next/link';
-import { format } from 'date-fns';
 import LoadingSpinner from '@/components/Spinner';
 import { bpmax } from '@/libs/styles/constants';
 import { colors } from '@/components/constant/color';
 import { useState } from 'react';
 import useSnackBar from '@/hooks/useSnackBar';
+import { formatDate } from '@/libs/utils';
 
 const Container = styled.div`
   position: relative;
@@ -184,9 +184,7 @@ export default function InviteePage() {
                     프로젝트 보기
                   </ProjectLink>
                   <Inviter>초대인: {d.inviter_email}</Inviter>
-                  <CreatedAt>
-                    {format(new Date(d.created_at), 'yyyy.MM.dd')}
-                  </CreatedAt>
+                  <CreatedAt>{formatDate(d.created_at)}</CreatedAt>
                 </Info>
                 <Reply
                   color="green"

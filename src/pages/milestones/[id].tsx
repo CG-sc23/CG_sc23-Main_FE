@@ -1,16 +1,16 @@
-import styled from "@emotion/styled";
-import { bpmax, bpmin } from "@/libs/styles/constants";
-import Card from "@/components/Card";
-import { MilestoneData } from "@/libs/constant/test";
-import { css } from "@emotion/react";
-import { format } from "date-fns";
-import { colors } from "@/components/constant/color";
-import { TaskGroup } from "@/components/Projects/TaskGroup";
-import { taskgroupCreationPermitted } from "@/libs/utils/taskgroup";
-import { myProjectStatus } from "@/libs/utils/project";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import { KeyboardEvent, MouseEvent, useState } from "react";
+import styled from '@emotion/styled';
+import { bpmax, bpmin } from '@/libs/styles/constants';
+import Card from '@/components/Card';
+import { MilestoneData } from '@/libs/constant/test';
+import { css } from '@emotion/react';
+import { colors } from '@/components/constant/color';
+import { TaskGroup } from '@/components/Projects/TaskGroup';
+import { taskgroupCreationPermitted } from '@/libs/utils/taskgroup';
+import { myProjectStatus } from '@/libs/utils/project';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { KeyboardEvent, MouseEvent, useState } from 'react';
+import { formatDate } from '@/libs/utils';
 
 const Container = styled.div`
   width: 896px;
@@ -81,14 +81,14 @@ type Milestone = {
 const milestone: Milestone = MilestoneData;
 
 export default function MilestoneDetail() {
-  const [title, setTitle] = useState("");
+  const [title, setTitle] = useState('');
   const [dueDate, setDueDate] = useState<Date>(new Date());
   const [tags, setTags] = useState<string[]>([]);
-  const [tag, setTag] = useState<string>("");
+  const [tag, setTag] = useState<string>('');
 
   const handleTagDelete = (e: MouseEvent<HTMLElement>) => {
     const targetIndex = tags.findIndex(
-      (tag) => tag === e.currentTarget.innerHTML
+      (tag) => tag === e.currentTarget.innerHTML,
     );
 
     const updatedList = tags
@@ -113,7 +113,7 @@ export default function MilestoneDetail() {
           `}
         >
           <img
-            src={milestone.project.thumbnail_image ?? "/project.jpg"}
+            src={milestone.project.thumbnail_image ?? '/project.jpg'}
             alt={milestone.subject}
             css={css`
               width: 12rem;
@@ -143,11 +143,11 @@ export default function MilestoneDetail() {
           </span>
           <span
             css={css`
-              color: ${myProjectStatus(milestone?.status as any, "마일스톤")
+              color: ${myProjectStatus(milestone?.status as any, '마일스톤')
                 .color};
             `}
           >
-            {myProjectStatus(milestone?.status as any, "마일스톤").text}
+            {myProjectStatus(milestone?.status as any, '마일스톤').text}
           </span>
         </div>
         {/* created_at */}
@@ -167,7 +167,7 @@ export default function MilestoneDetail() {
           >
             시작일
           </span>
-          <span>{format(new Date(milestone.created_at), "yyyy.MM.dd")}</span>
+          <span>{formatDate(milestone.created_at)}</span>
         </div>
         {/* due_date */}
         <div
@@ -186,7 +186,7 @@ export default function MilestoneDetail() {
           >
             종료일
           </span>
-          <span>{format(new Date(milestone.due_date), "yyyy.MM.dd")}</span>
+          <span>{formatDate(milestone.due_date)}</span>
         </div>
       </Card>
       {/* task create */}
@@ -268,12 +268,12 @@ export default function MilestoneDetail() {
                 setTag(e.target.value);
               }}
               onKeyUp={(e) => {
-                if (e.code !== "Enter") return;
-                if (tag === "") return;
+                if (e.code !== 'Enter') return;
+                if (tag === '') return;
                 e.preventDefault();
                 e.stopPropagation();
 
-                setTag("");
+                setTag('');
                 if (tags.includes(tag)) return;
                 setTags((prev) => [...prev, tag]);
               }}

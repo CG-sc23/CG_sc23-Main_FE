@@ -1,8 +1,8 @@
-import styled from "@emotion/styled";
-import Link from "next/link";
-import { colors } from "../constant/color";
-import { css } from "@emotion/react";
-import { format } from "date-fns";
+import styled from '@emotion/styled';
+import Link from 'next/link';
+import { colors } from '../constant/color';
+import { css } from '@emotion/react';
+import { formatDate } from '@/libs/utils';
 
 // [Layer] Project > Milestone > Task Group > Task
 // TODO : Task UI
@@ -49,7 +49,7 @@ export function Task({ title, id, created_at, tags }: Props) {
           color: ${colors.grey400};
         `}
       >
-        {format(new Date(created_at), "yyyy.MM.dd")}
+        {formatDate(created_at)}
       </span>
       <TagWrapper>
         {tags.map((tag) => (

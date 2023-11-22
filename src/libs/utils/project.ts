@@ -1,5 +1,5 @@
-import { colors } from "@/components/constant/color";
-import { ProjectStatus } from "../type/client";
+import { colors } from '@/components/constant/color';
+import { ProjectStatus } from '../type/client';
 
 type ReturnProjectStatus = {
   text: string;
@@ -11,15 +11,15 @@ type Strategies = {
 export function myProjectStatus(provider: ProjectStatus, name: string) {
   const strategies: Strategies = {
     READY: {
-      text: "시작 대기",
+      text: '시작 대기',
       color: colors.blue500,
     },
     IN_PROGRESS: {
-      text: "진행 중",
+      text: '진행 중',
       color: colors.green500,
     },
     COMPLETED: {
-      text: `${name} 완료`,
+      text: `프로젝트 완료`,
       color: colors.yellow500,
     },
     TERMINATED: {
@@ -31,13 +31,13 @@ export function myProjectStatus(provider: ProjectStatus, name: string) {
 }
 
 type DDayResult = {
-  sign: "PLUS" | "MINUS";
+  sign: 'PLUS' | 'MINUS';
   day: number;
 };
 
 export function calculateDDay(
   created_at: string,
-  ended_at: string
+  ended_at: string,
 ): DDayResult {
   const startDate = new Date(created_at);
   const endDate = new Date(ended_at);
@@ -46,8 +46,8 @@ export function calculateDDay(
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
   if (startDate > endDate) {
-    return { sign: "MINUS", day: diffDays };
+    return { sign: 'MINUS', day: diffDays };
   } else {
-    return { sign: "PLUS", day: diffDays };
+    return { sign: 'PLUS', day: diffDays };
   }
 }
