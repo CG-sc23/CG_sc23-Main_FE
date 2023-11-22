@@ -32,13 +32,13 @@ export default function useSignIn() {
 
   const naver = () => {
     const CLIENT_ID = '6fRIFafpI7oj_rMCEl1w';
-    const NAVER_AUTH_URL = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${CLIENT_ID}&state=domomainweb!@&redirect_uri=http://localhost:3000/auth/Loading`;
+    const NAVER_AUTH_URL = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${CLIENT_ID}&state=domomainweb!@&redirect_uri=https://www.domowebest.com/auth/Loading`;
     window.location.href = NAVER_AUTH_URL;
   };
 
   const kakao = () => {
     const CLIENT_ID = '692654ded92217544ec272739b534375';
-    const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${CLIENT_ID}&redirect_uri=http://localhost:3000/auth/Loading`;
+    const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${CLIENT_ID}&redirect_uri=https://www.domowebest.com/auth/Loading`;
     window.location.href = KAKAO_AUTH_URL;
   };
 

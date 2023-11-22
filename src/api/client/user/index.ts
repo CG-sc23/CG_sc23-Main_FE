@@ -56,7 +56,7 @@ export const UserInfo = {
   async userDetail(query: UserDetailInfoQuery) {
     try {
       const { data } = await http.get<UserDetailInfoResponse>(
-        `http://localhost:3000/api/user/detail/${query.user_id}`,
+        `/api/user/detail/${query.user_id}`,
       );
 
       return data;
