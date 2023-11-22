@@ -352,3 +352,48 @@ export const MilestoneData = {
   ],
   permission: "OWNER",
 };
+
+// Test Data for TaskGroupData
+export const TaskGroupData = {
+  task_group_id: 1234,
+  project: {
+    id: 123,
+    title: "우리의 프로젝트",
+  },
+  milestone: {
+    id: 1234,
+    subject: "첫 번째 마일스톤",
+  },
+  created_by: { id: 12345, name: "임준혁" },
+  title: "태스크 그룹 1",
+  status: "IN_PROGRESS",
+  due_date: "2023-11-29 15:35:42.230977 +00:00",
+  created_at: "2023-11-22 15:35:42.230977 +00:00",
+  permission: "OWNER",
+  tasks: [
+    {
+      id: 12,
+      title: "태스크 1",
+      created_at: "2023-11-23 15:35:42.230977 +00:00",
+      tags: ["배고픔", "식곤증", "졸림", "이슈화"],
+    },
+    {
+      id: 11,
+      title: "배고픔",
+      created_at: "2023-11-23 15:35:42.230977 +00:00",
+      tags: ["배고픔", "식곤증", "졸림", "이슈화"],
+    },
+    {
+      id: 13,
+      title: "인증/인가",
+      created_at: "2023-11-23 15:35:42.230977 +00:00",
+      tags: ["배고픔", "식곤증", "졸림", "이슈화"],
+    },
+    {
+      id: 12345,
+      title: "회원가입",
+      created_at: "2023-11-23 15:35:42.230977 +00:00",
+      tags: ["배고픔", "식곤증", "졸림", "이슈화"],
+    },
+  ],
+};
