@@ -9,12 +9,12 @@ import { colors } from '@/components/constant/color';
 import { Milestone } from '@/components/Projects/Milestone';
 import useGetProject from '@/hooks/project/useGetProject';
 import LoadingSpinner from '@/components/Spinner';
-import { ProjectData } from '@/libs/constant/test';
 import Link from 'next/link';
 import { FaRegPlusSquare } from 'react-icons/fa';
 import { milestoneCreationPermitted } from '@/libs/utils/milestone';
 
 const Container = styled.div`
+  height: 100%;
   width: 896px;
   padding: 1rem;
   display: flex;
@@ -56,8 +56,8 @@ export default function ProjectDetail() {
       {isLoading ? (
         <div
           css={css`
-            width: 100vw;
-            height: 100vh;
+            width: 100%;
+            height: 100%;
 
             display: flex;
             justify-content: center;

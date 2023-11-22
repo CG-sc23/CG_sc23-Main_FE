@@ -13,16 +13,16 @@ import { css } from '@emotion/react';
 // Container for projects page
 const Container = styled.div`
   width: 896px;
+  height: 100%;
   margin: 0 auto;
   padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   gap: 24px;
 
-  ${bpmax[0]} {
+  ${bpmax[3]} {
     box-sizing: border-box;
     width: 100%;
+  }
+  ${bpmax[0]} {
     padding: 0 0.5rem;
   }
 `;
@@ -63,26 +63,26 @@ export default function Projects() {
 
   return (
     <Container>
-      <ProjectWrapper>
-        {isLoading ? (
-          <div
-            css={css`
-              width: 100vw;
-              height: 100vh;
+      {isLoading ? (
+        <div
+          css={css`
+            width: 100%;
+            height: 100%;
 
-              display: flex;
-              justify-content: center;
-              align-items: center;
-            `}
-          >
-            <LoadingSpinner />
-          </div>
-        ) : (
-          projects?.map((project) => (
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          `}
+        >
+          <LoadingSpinner />
+        </div>
+      ) : (
+        <ProjectWrapper>
+          {projects?.map((project) => (
             <ProjectCard key={`PROJECT_${project.id}`} project={project} />
-          ))
-        )}
-      </ProjectWrapper>
+          ))}
+        </ProjectWrapper>
+      )}
       {user ? (
         <Button href="/projects/form">
           <GoPlus size="36" />

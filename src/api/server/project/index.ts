@@ -39,7 +39,7 @@ export const Projects = {
         `/project/v1/info/${params.project_id}`,
         {
           headers: {
-            Authorization: `Token ${params.token ?? ''}`,
+            Authorization: params.token ? `Token ${params.token}` : null,
           },
         },
       );

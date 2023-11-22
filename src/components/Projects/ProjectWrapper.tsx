@@ -1,8 +1,9 @@
-import { PropsWithChildren } from "react";
-import styled from "@emotion/styled";
-import { bpmax } from "@/libs/styles/constants";
+import { PropsWithChildren } from 'react';
+import styled from '@emotion/styled';
+import { bpmax } from '@/libs/styles/constants';
 
 const Wrapper = styled.section`
+  position: relative;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   justify-content: center;

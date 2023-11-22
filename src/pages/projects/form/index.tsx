@@ -129,6 +129,7 @@ export default function ProjectForm({}: InferGetServerSidePropsType<any>) {
   const [markdown, setMarkdown] = useState('');
   const [thumbnail, setThumbnail] = useState<string | undefined>();
   const [dueDate, setDueDate] = useState<Date | null>(new Date());
+  const [isLoading, setIsLoading] = useState(false);
   const { register, handleSubmit, getValues } = useForm<FormData>({
     defaultValues: {
       title: '',
@@ -153,6 +154,8 @@ export default function ProjectForm({}: InferGetServerSidePropsType<any>) {
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     if (!token) return;
+    if (isLoading) return;
+    setIsLoading(true);
 
     const uploadData: FormData = {
       ...data,
@@ -163,10 +166,12 @@ export default function ProjectForm({}: InferGetServerSidePropsType<any>) {
       due_date: dueDate?.toISOString(),
     };
 
-    const res = await client.createProject({
-      token,
-      body: uploadData,
-    });
+    const res = await client
+      .createProject({
+        token,
+        body: uploadData,
+      })
+      .finally(() => setIsLoading(false));
 
     if (res?.ok) return router.push(`/projects/${res.project_id}`);
     openSnackBar(`입력이 잘못되었습니다.\n다시 입력해주세요.`);
