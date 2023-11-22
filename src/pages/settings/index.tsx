@@ -37,6 +37,11 @@ const Linker = styled(Link)`
   padding: 1rem 0;
   text-decoration: none;
   color: black;
+
+  transition: background-color 0.2s ease;
+  &:hover {
+    background-color: ${colors.grey100};
+  }
 `;
 
 const Button = styled.button`
@@ -52,6 +57,11 @@ const Button = styled.button`
   color: black;
   font-size: 1rem;
   cursor: pointer;
+
+  transition: background-color 0.2s ease;
+  &:hover {
+    background-color: ${colors.grey100};
+  }
 `;
 
 export default function Settings() {
@@ -127,6 +137,16 @@ export default function Settings() {
               `}
             >
               비밀번호 변경
+            </span>
+            <AiOutlineRight />
+          </Linker>
+          <Linker href="/user/Invitee">
+            <span
+              css={css`
+                font-weight: 500;
+              `}
+            >
+              받은 초대 목록
             </span>
             <AiOutlineRight />
           </Linker>

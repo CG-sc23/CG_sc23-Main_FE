@@ -6,7 +6,11 @@ import { useRouter } from 'next/router';
 
 export default function useGetProject() {
   const router = useRouter();
-  const { data: project, isLoading } = useQuery({
+  const {
+    data: project,
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ['PROJECT', router.query.id],
     queryFn: async () => {
       const token = safeLocalStorage.get(queryKey.USER_ACCESS_TOKEN);
@@ -27,5 +31,6 @@ export default function useGetProject() {
   return {
     project,
     isLoading,
+    refetch,
   };
 }

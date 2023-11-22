@@ -23,8 +23,8 @@ export function myProjectStatus(provider: ProjectStatus, name: string) {
       color: colors.yellow500,
     },
     TERMINATED: {
-      text: `${name} 포기`,
-      color: colors.grey500,
+      text: '프로젝트 포기',
+      color: colors.red500,
     },
   } as const;
   return strategies[provider as keyof typeof strategies];

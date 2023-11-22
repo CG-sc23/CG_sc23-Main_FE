@@ -201,10 +201,10 @@ export default function Keyword({ status }: Props) {
                         return context.chart.data.labels?.at(context.dataIndex);
                       },
                       color: colors.black,
-                      textShadowColor: colors.black,
-                      textStrokeColor: colors.white,
-                      textStrokeWidth: 1.5,
-                      textShadowBlur: 10,
+                      // textStrokeColor: colors.white,
+                      // textShadowColor: colors.black,
+                      // textStrokeWidth: 1.5,
+                      // textShadowBlur: 10,
                       font: {
                         weight: 'bold',
                         size: 20,

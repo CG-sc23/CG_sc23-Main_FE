@@ -50,5 +50,6 @@ export default function useUser() {
     user: user?.ok ? user : null,
     isLoading,
     refetch,
+    accessToken,
   };
 }

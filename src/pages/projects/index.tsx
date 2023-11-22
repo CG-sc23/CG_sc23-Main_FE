@@ -78,9 +78,11 @@ export default function Projects() {
         </div>
       ) : (
         <ProjectWrapper>
-          {projects?.map((project) => (
-            <ProjectCard key={`PROJECT_${project.id}`} project={project} />
-          ))}
+          {projects
+            ?.toReversed()
+            ?.map((project) => (
+              <ProjectCard key={`PROJECT_${project.id}`} project={project} />
+            ))}
         </ProjectWrapper>
       )}
       {user ? (
