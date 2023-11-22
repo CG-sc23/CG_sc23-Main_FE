@@ -208,7 +208,7 @@ export default function ProjectDetail() {
                 }
               `}
             >
-              <SubHeader>태스크 그룹 생성</SubHeader>
+              <SubHeader>마일스톤 생성</SubHeader>
               <form
                 css={css`
                   display: flex;
@@ -306,13 +306,6 @@ export default function ProjectDetail() {
                 <SubHeader>
                   마일스톤 목록 ({project?.milestone?.length})
                 </SubHeader>
-                {milestoneCreationPermitted(project?.permission) ? (
-                  <Link href="/milestones/form">
-                    <FaRegPlusSquare size="24" />
-                  </Link>
-                ) : (
-                  <></>
-                )}
               </div>
               {project?.milestone?.map((milestone) => (
                 <Milestone
