@@ -141,12 +141,18 @@ export type ProjectStatus =
   | 'IN_PROGRESS'
   | 'COMPLETED'
   | 'TERMINATED';
+type ProjectPermission = 'OWNER' | 'MANAGER' | 'MEMBER' | 'NOTHING';
 export type Member = {
   id: number;
   name: string;
   email: string;
   profile_image_link: string | null;
   profile_image_updated_at: string | null;
+};
+type Milestone = {
+  id: number;
+  subject: string;
+  tags: string[];
 };
 export type Project = {
   id: number;
@@ -157,6 +163,11 @@ export type Project = {
   thumbnail_image: string;
   short_description: string;
   members: Member[];
+  description?: string;
+  description_resource_links?: string;
+  permission?: ProjectPermission;
+  owner?: Member;
+  milestone?: Milestone[];
 };
 export type CreateProjectAuthTokenAndBody = AuthToken & {
   body: {
@@ -179,6 +190,10 @@ export type CreateProjectResponse = OkAndOptionalReason & {
   due_date?: string;
   thumbnail_image?: string;
 };
+export type GetProjectInfoPartialAuthTokenAndBody = Partial<AuthToken> & {
+  project_id: string;
+};
+export type GetProjectInfoResponse = OkAndOptionalReason & Partial<Project>;
 export type GetAllProjectInfoResponse = OkAndOptionalReason & {
   count?: number;
   projects?: Project[];

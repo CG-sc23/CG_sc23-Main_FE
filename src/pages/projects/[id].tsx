@@ -1,3 +1,14 @@
+import styled from '@emotion/styled';
+import { bpmax, bpmin } from '@/libs/styles/constants';
+import { css } from '@emotion/react';
+import Card from '@/components/Card';
+import MDEditor from '@uiw/react-md-editor';
+import { format } from 'date-fns';
+import { myProjectStatus } from '@/libs/utils/project';
+import { colors } from '@/components/constant/color';
+import { Milestone } from '@/components/Projects/Milestone';
+import useGetProject from '@/hooks/project/useGetProject';
+import LoadingSpinner from '@/components/Spinner';
 import { useEffect, useState } from "react";
 import { ProjectData } from "@/libs/constant/test";
 import styled from "@emotion/styled";
@@ -46,117 +57,155 @@ const SubHeader = styled.h2`
   font-weight: 500;
 `;
 
-type ProjectDetail = {
-  project_id: number;
-  owner: {
-    id: number;
-    name: string;
-    profile_image_link: string;
-  };
-  status: string;
-  title: string;
-  short_description: string;
-  description: string;
-  description_resource_links?: string[];
-  created_at: string;
-  due_date: string;
-  thumbnail_image: string;
-  milestones: {
-    id: number;
-    subject: string;
-    tags: string[];
-  }[];
-  permission: string;
-} | null;
-
-type Props = {
-  project_id: number;
-};
-
-export default function ProjectDetail({ project_id }: Props) {
-  const [projectDetail, setProjectDetail] = useState<ProjectDetail>();
-
-  useEffect(() => {
-    setProjectDetail(ProjectData);
-  });
+export default function ProjectDetail() {
+  const { project, isLoading } = useGetProject();
 
   return (
     <Container>
       {/* title, thumbnail_image, short_description */}
-      <Card>
-        <Block>
-          <Header>{projectDetail?.title}</Header>
-          <img
-            src={projectDetail?.thumbnail_image}
-            alt={projectDetail?.title}
-            css={css`
-              width: 12rem;
-              height: 12rem;
-              object-fit: contain;
-            `}
-          />
-          <p>{projectDetail?.short_description}</p>
-        </Block>
-      </Card>
-      {/* status, created_at, due_date */}
-      <Card
-        css={css`
-          gap: 1.5rem;
-          ${bpmax[0]} {
-            padding-top: 2rem;
-            border-top: 0.3rem solid ${colors.grey300};
-          }
-        `}
-      >
-        <Block
+      {isLoading ? (
+        <div
           css={css`
-            gap: 1rem;
+            width: 100vw;
+            height: 100vh;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
           `}
         >
-          <div
+          <LoadingSpinner />
+        </div>
+      ) : (
+        <>
+          <Card>
+            <Block>
+              <Header>{project?.title}</Header>
+              <img
+                src={project?.thumbnail_image}
+                alt={project?.title}
+                css={css`
+                  width: 12rem;
+                  height: 12rem;
+                  object-fit: contain;
+                `}
+              />
+              <p>{project?.short_description}</p>
+            </Block>
+          </Card>
+          {/* status, created_at, due_date */}
+          <Card
             css={css`
-              display: flex;
-              align-items: center;
-              justify-content: space-between;
-              width: 100%;
+              gap: 1.5rem;
+              ${bpmax[0]} {
+                padding-top: 2rem;
+                border-top: 0.3rem solid ${colors.grey300};
+              }
             `}
           >
-            <h2
+            <Block
               css={css`
-                font-size: 1.2rem;
-                font-weight: 500;
+                gap: 1rem;
               `}
             >
-              시작일
-            </h2>
-            <span>
-              {format(new Date(ProjectData.created_at), "yyyy.MM.dd")}
-            </span>
-          </div>
-          <div
+              <div
+                css={css`
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                  width: 100%;
+                `}
+              >
+                <h2
+                  css={css`
+                    font-size: 1.2rem;
+                    font-weight: 500;
+                  `}
+                >
+                  시작일
+                </h2>
+                <span>
+                  {project?.created_at &&
+                    format(new Date(project.created_at), 'yyyy.MM.dd')}
+                </span>
+              </div>
+              <div
+                css={css`
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                  width: 100%;
+                `}
+              >
+                <h2
+                  css={css`
+                    font-size: 1.2rem;
+                    font-weight: 500;
+                  `}
+                >
+                  종료 예정일
+                </h2>
+                <span>
+                  {project?.due_date &&
+                    format(new Date(project?.due_date), 'yyyy.MM.dd')}
+                </span>
+              </div>
+              <div
+                css={css`
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                  width: 100%;
+                `}
+              >
+                <h2
+                  css={css`
+                    font-size: 1.2rem;
+                    font-weight: 500;
+                  `}
+                >
+                  프로젝트 상태
+                </h2>
+                <span
+                  css={css`
+                    font-size: 1.2rem;
+                    font-weight: 500;
+                    color: ${project?.status &&
+                    myProjectStatus(project?.status).color};
+                  `}
+                >
+                  {project?.status && myProjectStatus(project?.status).text}
+                </span>
+              </div>
+            </Block>
+          </Card>
+          {/* description */}
+          <Card
             css={css`
-              display: flex;
-              align-items: center;
-              justify-content: space-between;
-              width: 100%;
+              ${bpmax[0]} {
+                padding-top: 2rem;
+                border-top: 0.3rem solid ${colors.grey300};
+              }
             `}
           >
-            <h2
-              css={css`
-                font-size: 1.2rem;
-                font-weight: 500;
-              `}
-            >
-              종료 예정일
-            </h2>
-            <span>{format(new Date(ProjectData.due_date), "yyyy.MM.dd")}</span>
-          </div>
-          <div
+            <Block data-color-mode="light">
+              <MDEditor.Markdown
+                source={project?.description}
+                css={css`
+                  width: 100%;
+                `}
+              />
+            </Block>
+          </Card>
+          <Card
             css={css`
-              display: flex;
-              align-items: center;
-              justify-content: space-between;
-              width: 100%;
+              ${bpmin[0]} {
+                padding-bottom: 0;
+              }
+              ${bpmax[0]} {
+                padding-top: 2rem;
+                border-top: 0.3rem solid ${colors.grey300};
+              }
             `}
           >
             <h2

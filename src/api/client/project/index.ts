@@ -4,6 +4,8 @@ import {
   CreateProjectAuthTokenAndBody,
   CreateProjectResponse,
   GetAllProjectInfoResponse,
+  GetProjectInfoPartialAuthTokenAndBody,
+  GetProjectInfoResponse,
 } from '@/libs/type/client';
 
 export const Projects = {
@@ -33,6 +35,22 @@ export const Projects = {
       return data;
     } catch (e) {
       return handleClientError<GetAllProjectInfoResponse>(e);
+    }
+  },
+  async projectInfo(params: GetProjectInfoPartialAuthTokenAndBody) {
+    try {
+      const { data } = await http.get<GetProjectInfoResponse>(
+        `/api/project/info/${params.project_id}`,
+        {
+          headers: {
+            Authorization: `Token ${params.token ?? ''}`,
+          },
+        },
+      );
+
+      return data;
+    } catch (e) {
+      return handleClientError<GetProjectInfoResponse>(e);
     }
   },
 };

@@ -11,7 +11,7 @@ function getTokenFromAuthHeader(authHeader: AuthHeader) {
   return token;
 }
 
-export default async function handleCreateProject(
+export default async function handleAllProjectInfo(
   req: NextApiRequest,
   res: NextApiResponse<GetAllProjectInfoResponse>,
 ) {
