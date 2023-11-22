@@ -9,6 +9,20 @@ import { colors } from '@/components/constant/color';
 import { Milestone } from '@/components/Projects/Milestone';
 import useGetProject from '@/hooks/project/useGetProject';
 import LoadingSpinner from '@/components/Spinner';
+import { useEffect, useState } from "react";
+import { ProjectData } from "@/libs/constant/test";
+import styled from "@emotion/styled";
+import { bpmax, bpmin } from "@/libs/styles/constants";
+import { css } from "@emotion/react";
+import Card from "@/components/Card";
+import MDEditor from "@uiw/react-md-editor";
+import { format } from "date-fns";
+import { myProjectStatus } from "@/libs/utils/project";
+import { colors } from "@/components/constant/color";
+import { Milestone } from "@/components/Projects/Milestone";
+import Link from "next/link";
+import { FaRegPlusSquare } from "react-icons/fa";
+import { milestoneCreationPermitted } from "@/libs/utils/milestone";
 
 const Container = styled.div`
   width: 896px;
@@ -39,7 +53,6 @@ const Header = styled.h1`
 
 const SubHeader = styled.h2`
   width: 100%;
-  padding-bottom: 1rem;
   font-size: 1.5rem;
   font-weight: 500;
 `;
@@ -195,22 +208,85 @@ export default function ProjectDetail() {
               }
             `}
           >
-            <Block>
-              <SubHeader>
-                마일스톤 목록 ({project?.milestone?.length})
-              </SubHeader>
-              {project?.milestone?.map((milestone) => (
-                <Milestone
-                  key={milestone.id}
-                  id={milestone.id}
-                  subject={milestone.subject}
-                  tags={milestone.tags}
-                />
-              ))}
-            </Block>
-          </Card>
-        </>
-      )}
+            <h2
+              css={css`
+                font-size: 1.2rem;
+                font-weight: 500;
+              `}
+            >
+              프로젝트 상태
+            </h2>
+            <span
+              css={css`
+                font-size: 1.2rem;
+                font-weight: 500;
+                color: ${myProjectStatus(ProjectData.status).color};
+              `}
+            >
+              {myProjectStatus(ProjectData.status).text}
+            </span>
+          </div>
+        </Block>
+      </Card>
+      {/* description */}
+      <Card
+        css={css`
+          ${bpmax[0]} {
+            padding-top: 2rem;
+            border-top: 0.3rem solid ${colors.grey300};
+          }
+        `}
+      >
+        <Block data-color-mode="light">
+          <MDEditor.Markdown
+            source={projectDetail?.description}
+            css={css`
+              width: 100%;
+            `}
+          />
+        </Block>
+      </Card>
+      <Card
+        css={css`
+          ${bpmin[0]} {
+            padding-bottom: 0;
+          }
+          ${bpmax[0]} {
+            padding-top: 2rem;
+            border-top: 0.3rem solid ${colors.grey300};
+          }
+        `}
+      >
+        <Block>
+          <div
+            css={css`
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              width: 100%;
+              padding-bottom: 1rem;
+            `}
+          >
+            <SubHeader>
+              마일스톤 목록 ({projectDetail?.milestones.length})
+            </SubHeader>
+            {milestoneCreationPermitted(projectDetail?.permission) ? (
+              <Link href="/milestones/form">
+                <FaRegPlusSquare size="24" />
+              </Link>
+            ) : (
+              <></>
+            )}
+          </div>
+          {projectDetail?.milestones.map((milestone) => (
+            <Milestone
+              id={milestone.id}
+              subject={milestone.subject}
+              tags={milestone.tags}
+            />
+          ))}
+        </Block>
+      </Card>
     </Container>
   );
 }
