@@ -136,6 +136,28 @@ export type GetPreSignedURLResponse = OkAndOptionalReason & {
 };
 
 // ! PROJECT
+export type ProjectStatus =
+  | 'READY'
+  | 'IN_PROGRESS'
+  | 'COMPLETED'
+  | 'TERMINATED';
+export type Member = {
+  id: number;
+  name: string;
+  email: string;
+  profile_image_link: string | null;
+  profile_image_updated_at: string | null;
+};
+export type Project = {
+  id: number;
+  title: string;
+  status: ProjectStatus;
+  created_at: string;
+  due_date: string;
+  thumbnail_image: string;
+  short_description: string;
+  members: Member[];
+};
 export type CreateProjectAuthTokenAndBody = AuthToken & {
   body: {
     title?: string;
@@ -156,4 +178,8 @@ export type CreateProjectResponse = OkAndOptionalReason & {
   description_resource_links?: string;
   due_date?: string;
   thumbnail_image?: string;
+};
+export type GetAllProjectInfoResponse = OkAndOptionalReason & {
+  count?: number;
+  projects?: Project[];
 };

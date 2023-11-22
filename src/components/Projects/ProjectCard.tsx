@@ -1,13 +1,17 @@
 // [Layer] Project > Milestone > Task Group > Task
 
-import styled from "@emotion/styled";
-import { colors } from "../constant/color";
-import Link from "next/link";
-import { bpmax, bpmin } from "@/libs/styles/constants";
-import { useState } from "react";
-import { css } from "@emotion/react";
-import { myProjectStatus } from "@/libs/utils/project";
-import Image from "next/image";
+import styled from '@emotion/styled';
+import { colors } from '../constant/color';
+import Link from 'next/link';
+import { bpmax, bpmin } from '@/libs/styles/constants';
+import { useState } from 'react';
+import { css } from '@emotion/react';
+import { calculateDDay, myProjectStatus } from '@/libs/utils/project';
+import Image from 'next/image';
+import { Project } from '@/libs/type/client';
+
+const MEMBER_LIMIT = 5;
+const OVERLAP_NUMBER = 25;
 
 const Card = styled(Link)`
   display: flex;
@@ -39,36 +43,58 @@ const Card = styled(Link)`
   }
 `;
 
-type Props = { id: number };
+const ThumbnailGroup = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+`;
+const MemberThumbnailWrapper = styled.div<{ index: number; length: number }>`
+  position: relative;
 
-type Project = {
-  title: string;
-  owner: string;
-  short_description: string;
-  status: string;
-  due_date: string;
-  thumbnail: string | null;
-  meta_tag: string[];
-} | null;
+  width: 3rem;
+  height: 3rem;
 
-// TODO : Erase this object as soon as implementation is finished
-const initialProject = {
-  title: "무제",
-  owner: "임준혁",
-  short_description:
-    "프로젝트 테스트 문구입니다. 확인부탁드립니다. 간단한 설명을 담고 있는 short - description 문장입니다.",
-  status: "in_progress",
-  due_date: "2023.11.18",
-  thumbnail: null,
-  meta_tag: ["figma", "react", "svelte"],
-};
+  border-radius: 9999px;
+  overflow: hidden;
 
-export default function Project({ id }: Props) {
-  // TODO : project ID를 통해 Project data fetching 해와 보여주기
-  const [project, setProject] = useState(initialProject);
+  display: flex;
+  display: ${(props) => (props.index < MEMBER_LIMIT + 1 ? 'flex' : 'none')};
+  justify-content: center;
+  align-items: center;
+
+  right: ${(props) => {
+    const LIMIT = Math.min(props.length, MEMBER_LIMIT);
+    const isMore = props.index === MEMBER_LIMIT;
+    const isLast = props.length - 1 === props.index;
+
+    return isMore || isLast
+      ? '0px'
+      : `${-OVERLAP_NUMBER * (LIMIT - props.index) + OVERLAP_NUMBER}px`;
+  }};
+  z-index: ${(props) => `${props.length - props.index}`};
+`;
+const More = styled.div`
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-weight: bold;
+
+  border-radius: 9999px;
+  background-color: ${colors.white};
+  border: 1px solid ${colors.grey300};
+`;
+
+type Props = { project: Project };
+export default function Project({ project }: Props) {
+  const dDay = calculateDDay(project.created_at, project.due_date);
+  const projectStatus = myProjectStatus(project.status);
 
   return (
-    <Card key={id} href={`/projects/${id}`}>
+    <Card key={`PROJECT_${project.id}`} href={`/Projects/${project.id}`}>
       {/* title */}
       <h1
         css={css`
@@ -88,11 +114,11 @@ export default function Project({ id }: Props) {
       >
         <span
           css={css`
-            color: ${myProjectStatus(project.status).color};
+            color: ${projectStatus.color};
             font-weight: 500;
           `}
         >
-          {myProjectStatus(project.status).text}
+          {projectStatus.text}
         </span>
         <span
           css={css`
@@ -104,10 +130,11 @@ export default function Project({ id }: Props) {
         />
         <span
           css={css`
-            color: ${colors.grey500};
+            color: ${dDay.sign === 'PLUS' ? colors.yellow500 : colors.green500};
           `}
         >
-          {project.due_date}
+          D{dDay.sign === 'PLUS' ? '+' : '-'}
+          {dDay.day}
         </span>
       </div>
       {/* thumbnail image - only for mobile */}
@@ -122,10 +149,11 @@ export default function Project({ id }: Props) {
         `}
       >
         <Image
-          src={project.thumbnail ?? "/project.jpg"}
+          src={project.thumbnail_image ?? '/project.jpg'}
           alt={project.title}
           width={192}
           height={192}
+          priority
           css={css`
             border-radius: 1rem;
           `}
@@ -139,27 +167,31 @@ export default function Project({ id }: Props) {
       >
         {project.short_description}
       </p>
-      {/* owner, meta tag */}
-      {/* TODO : fetch each tag image */}
-      <div
-        css={css`
-          display: flex;
-          align-items: center;
-          flex-wrap: wrap;
-          gap: 1rem;
-          width: 100%;
-        `}
-      >
-        {project.meta_tag.map((tag) => (
-          <img
-            src={"/github.png"}
-            alt={tag}
-            css={css`
-              width: 2rem;
-            `}
-          />
+      {/* member's profiles */}
+      <ThumbnailGroup>
+        {project.members.map((member, idx, origin) => (
+          <MemberThumbnailWrapper
+            key={`${project.id}_${member.email}`}
+            index={idx}
+            length={origin.length}
+          >
+            {idx < MEMBER_LIMIT ? (
+              <Image
+                src={
+                  member?.profile_image_link && member?.profile_image_updated_at
+                    ? `${member?.profile_image_link}?timestamp=${member?.profile_image_updated_at}`
+                    : '/profile.jpg'
+                }
+                alt={member.name}
+                fill
+                sizes="(max-width: 768px) 100px, (max-width: 1200px) 50vw, 33vw"
+              />
+            ) : (
+              <More>+ {origin.length - MEMBER_LIMIT}</More>
+            )}
+          </MemberThumbnailWrapper>
         ))}
-      </div>
+      </ThumbnailGroup>
     </Card>
   );
 }
