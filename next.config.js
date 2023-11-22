@@ -55,9 +55,10 @@ const nextConfig = {
   swcMinify: true,
 };
 
-module.exports = removeImports({
-  ...nextConfig,
-  webpack(config, options) {
-    return config;
-  },
-});
+// module.exports = removeImports({
+//   ...nextConfig,
+//   webpack(config, options) {
+//     return config;
+//   },
+// });
+module.exports = nextConfig;
