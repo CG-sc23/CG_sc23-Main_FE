@@ -335,11 +335,11 @@ export default function Profile({
       >
         프로젝트
       </h1>
-      <ProjectWrapper>
+      {/* <ProjectWrapper>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((el) => (
           <ProjectCard id={el} />
         ))}
-      </ProjectWrapper>
+      </ProjectWrapper> */}
     </div>
   );
 }

@@ -3,6 +3,7 @@ import { server as http } from '@/api/instance';
 import {
   CreateProjectApiAuthTokenAndBody,
   CreateProjectApiResponse,
+  GetAllProjectInfoApiResponse,
 } from '@/libs/type/server';
 
 export const Projects = {
@@ -19,6 +20,15 @@ export const Projects = {
       );
     } catch (e) {
       return handleApiError<CreateProjectApiResponse>(e);
+    }
+  },
+  async getAllProjectInfo() {
+    try {
+      return await http.get<GetAllProjectInfoApiResponse>(
+        `/project/v1/info/all`,
+      );
+    } catch (e) {
+      return handleApiError<GetAllProjectInfoApiResponse>(e);
     }
   },
 };

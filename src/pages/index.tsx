@@ -1,15 +1,15 @@
-import { queryKey } from "@/libs/constant";
-import styled from "@emotion/styled";
-import { safeLocalStorage } from "@toss/storage";
-import { bpmax } from "@/libs/styles/constants";
-import { Block } from "@/components/Feed/Block";
-import { Commerce } from "@/components/Feed/Commerce";
-import { Carousel } from "@/components/Feed/Carousel";
-import { Project } from "@/components/Feed/Project";
-import { User } from "@/components/Feed/User";
-import { Task } from "@/components/Feed/Task";
+import { queryKey } from '@/libs/constant';
+import styled from '@emotion/styled';
+import { safeLocalStorage } from '@toss/storage';
+import { bpmax } from '@/libs/styles/constants';
+import { Block } from '@/components/Feed/Block';
+import { Commerce } from '@/components/Feed/Commerce';
+import { Carousel } from '@/components/Feed/Carousel';
+import { Project } from '@/components/Feed/Project';
+import { User } from '@/components/Feed/User';
+import { Task } from '@/components/Feed/Task';
 
-import { UserDatas, ProjectDatas, TaskDatas } from "@/libs/constant/test";
+import { UserDatas, ProjectDatas, TaskDatas } from '@/libs/constant/test';
 
 // Container for main page
 const Container = styled.div`
@@ -61,7 +61,7 @@ export default function Home() {
         href="/projects"
       >
         <Carousel>
-          {ProjectDatas.map((project) => (
+          {/* {ProjectDatas.map((project) => (
             <Project
               key={project.projectId}
               projectTitle={project.projectTitle}
@@ -71,7 +71,7 @@ export default function Home() {
               thumbnail={project.thumbnail}
               short_description={project.short_description}
             />
-          ))}
+          ))} */}
         </Carousel>
       </Block>
       {/* users */}
