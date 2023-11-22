@@ -134,6 +134,24 @@ export type GetPreSignedURLApiResponse = {
 };
 
 // ! PROJECT
+type ProjectStatus = 'READY' | 'IN_PROGRESS' | 'COMPLETED' | 'TERMINATED';
+type Member = {
+  id: number;
+  name: string;
+  email: string;
+  profile_image_link: string | null;
+  profile_image_updated_at: string | null;
+};
+type Project = {
+  id: number;
+  title: string;
+  status: ProjectStatus;
+  created_at: string;
+  due_date: string;
+  thumbnail_image: string;
+  short_description: string;
+  members: Member[];
+};
 export type CreateProjectApiAuthTokenAndBody = AuthToken & {
   body: {
     title: string;
@@ -147,11 +165,15 @@ export type CreateProjectApiAuthTokenAndBody = AuthToken & {
 export type CreateProjectApiResponse = SuccessAndOptionalReason & {
   created_at?: string;
   project_id?: number;
-  status?: string;
+  status?: ProjectStatus;
   title: string;
   short_description?: string;
   description?: string;
   description_resource_links?: string;
   due_date?: string;
   thumbnail_image?: string;
+};
+export type GetAllProjectInfoApiResponse = SuccessAndOptionalReason & {
+  count?: number;
+  projects?: Project[];
 };

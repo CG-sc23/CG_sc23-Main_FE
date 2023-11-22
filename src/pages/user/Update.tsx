@@ -1,27 +1,27 @@
-import { useEffect, useMemo, useState } from "react";
-import styled from "@emotion/styled";
-import { css } from "@emotion/react";
-import { bpmax } from "@/libs/styles/constants";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import dynamic from "next/dynamic";
-import { assert } from "@/libs/utils/assert";
-import client from "@/api/client";
+import { useEffect, useMemo, useState } from 'react';
+import styled from '@emotion/styled';
+import { css } from '@emotion/react';
+import { bpmax } from '@/libs/styles/constants';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import dynamic from 'next/dynamic';
+import { assert } from '@/libs/utils/assert';
+import client from '@/api/client';
 import {
   ModifyUserDetailInfoAuthTokenAndBody,
   UserDetailInfoResponse,
-} from "@/libs/type/client";
-import useUser from "@/hooks/user/useUser";
-import { useRouter } from "next/router";
-import { extractImageLinks } from "@/libs/utils/editor";
-import Dropzone from "@/components/Dropzone";
-import { DropZoneWrapper } from "@/components/Auth/StepSignUp/common";
-import { uploadImg } from "@/libs/utils/s3";
-import { safeLocalStorage } from "@toss/storage";
-import { queryKey } from "@/libs/constant";
-import { colors } from "@/components/constant/color";
+} from '@/libs/type/client';
+import useUser from '@/hooks/user/useUser';
+import { useRouter } from 'next/router';
+import { extractImageLinks } from '@/libs/utils/editor';
+import Dropzone from '@/components/Dropzone';
+import { DropZoneWrapper } from '@/components/Auth/StepSignUp/common';
+import { uploadImg } from '@/libs/utils/s3';
+import { safeLocalStorage } from '@toss/storage';
+import { queryKey } from '@/libs/constant';
+import { colors } from '@/components/constant/color';
 
-const Editor = dynamic(() => import("@/components/Editor"), { ssr: false });
+const Editor = dynamic(() => import('@/components/Editor'), { ssr: false });
 
 const Form = styled.form`
   background-color: ${colors.white};
@@ -90,7 +90,7 @@ const Submit = styled.button`
   }
 `;
 
-type FormData = Partial<ModifyUserDetailInfoAuthTokenAndBody["body"]>;
+type FormData = Partial<ModifyUserDetailInfoAuthTokenAndBody['body']>;
 
 export const getServerSideProps = (async (ctx) => {
   const id = ctx.query?.id as string;
@@ -100,7 +100,7 @@ export const getServerSideProps = (async (ctx) => {
     user_id: id,
   });
 
-  assert(user, "Invalid user.");
+  assert(user, 'Invalid user.');
 
   return {
     props: { user, id },
@@ -117,9 +117,9 @@ export default function Update({ user, id }: InferGetServerSidePropsType<any>) {
   const isOwn = useMemo(() => {
     return loggedInUser && loggedInUser.email === user.email;
   }, [loggedInUser, user]);
-  const [markdown, setMarkdown] = useState(user?.description ?? "");
+  const [markdown, setMarkdown] = useState(user?.description ?? '');
   const [profileImageLink, setProfileImageLink] = useState(
-    user?.profile_image_link
+    user?.profile_image_link,
   );
   const { register, handleSubmit } = useForm<FormData>({
     defaultValues: {
@@ -162,7 +162,7 @@ export default function Update({ user, id }: InferGetServerSidePropsType<any>) {
   };
 
   useEffect(() => {
-    if (!isLoading && !isOwn) router.replace("/");
+    if (!isLoading && !isOwn) router.replace('/');
   }, [isOwn]);
 
   return (
@@ -170,7 +170,11 @@ export default function Update({ user, id }: InferGetServerSidePropsType<any>) {
       <DropZoneWrapper>
         <Dropzone
           onFileAdded={onUploadProfileImage}
-          defaultThumbnail={profileImageLink ?? "/profile.jpg"}
+          defaultThumbnail={
+            user?.profile_image_link && user?.profile_image_updated_at
+              ? `${user?.profile_image_link}?timestamp=${user?.profile_image_updated_at}`
+              : '/profile.jpg'
+          }
         />
       </DropZoneWrapper>
       {/* email */}
@@ -188,13 +192,13 @@ export default function Update({ user, id }: InferGetServerSidePropsType<any>) {
         <Label htmlFor="name">
           <Stressed>* </Stressed>닉네임
         </Label>
-        <Input id="name" type="text" {...register("name")} />
+        <Input id="name" type="text" {...register('name')} />
       </List>
       <List>
         <Label htmlFor="github_link">
           <Stressed>* </Stressed>깃허브 주소
         </Label>
-        <Input id="github_link" type="text" {...register("github_link")} />
+        <Input id="github_link" type="text" {...register('github_link')} />
       </List>
       <List>
         <Label htmlFor="short_description">
@@ -203,7 +207,7 @@ export default function Update({ user, id }: InferGetServerSidePropsType<any>) {
         <Input
           id="short_description"
           type="text"
-          {...register("short_description")}
+          {...register('short_description')}
         />
       </List>
       <List>

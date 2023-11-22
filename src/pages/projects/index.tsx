@@ -6,6 +6,9 @@ import ProjectWrapper from '@/components/Projects/ProjectWrapper';
 import { GoPlus } from 'react-icons/go';
 import { colors } from '@/components/constant/color';
 import Link from 'next/link';
+import useGetAllProject from '@/hooks/project/useGetAllProject';
+import LoadingSpinner from '@/components/Spinner';
+import { css } from '@emotion/react';
 
 // Container for projects page
 const Container = styled.div`
@@ -56,13 +59,29 @@ const Button = styled(Link)`
 
 export default function Projects() {
   const { user } = useUser();
+  const { projects, isLoading } = useGetAllProject();
 
   return (
     <Container>
       <ProjectWrapper>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((el) => (
-          <ProjectCard id={el} />
-        ))}
+        {isLoading ? (
+          <div
+            css={css`
+              width: 100vw;
+              height: 100vh;
+
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            `}
+          >
+            <LoadingSpinner />
+          </div>
+        ) : (
+          projects?.map((project) => (
+            <ProjectCard key={`PROJECT_${project.id}`} project={project} />
+          ))
+        )}
       </ProjectWrapper>
       {user ? (
         <Button href="/projects/form">

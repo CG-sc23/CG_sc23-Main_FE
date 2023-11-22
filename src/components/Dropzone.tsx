@@ -1,7 +1,7 @@
-import React, { useState, DragEvent } from "react";
-import { css } from "@emotion/react";
-import Image from "next/image";
-import { colors } from "./constant/color";
+import React, { useState, DragEvent } from 'react';
+import { css } from '@emotion/react';
+import Image from 'next/image';
+import { colors } from './constant/color';
 
 interface DropzoneProps {
   onFileAdded: (file: File) => void;
@@ -27,7 +27,7 @@ export default function Dropzone({
 
   const openFileDialog = () => {
     if (isDisabled) return;
-    const fileInput = document.getElementById("fileInput") as HTMLInputElement;
+    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
     fileInput?.click();
   };
 
@@ -94,9 +94,9 @@ export default function Dropzone({
           background-color: ${highlight ? colors.blue300 : colors.white};
           color: ${colors.grey600};
           font-size: 1rem;
-          cursor: ${isDisabled ? "default" : "pointer"};
+          cursor: ${isDisabled ? 'default' : 'pointer'};
           &:hover {
-            border: ${isDisabled ? "" : `2px solid ${colors.grey600}`};
+            border: ${isDisabled ? '' : `2px solid ${colors.grey600}`};
           }
         `}
         role="button"
@@ -107,7 +107,7 @@ export default function Dropzone({
         onDrop={onDrop}
         onKeyDown={(e) => {
           e.preventDefault();
-          if (e.key === "Enter") {
+          if (e.key === 'Enter') {
             openFileDialog();
           }
         }}
@@ -128,7 +128,8 @@ export default function Dropzone({
               display: flex;
               justify-content: center;
               width: 100%;
-              aspect-ratio: 1;
+              height: 100%;
+
               border-radius: 50%;
               overflow: hidden;
             `}
@@ -139,7 +140,7 @@ export default function Dropzone({
               css={css`
                 width: 100%;
                 height: 100%;
-                object-fit: contain;
+                object-fit: cover;
               `}
             />
           </div>
@@ -150,8 +151,8 @@ export default function Dropzone({
             `}
           >
             {highlight
-              ? "여기다가 끌어주세요!"
-              : "파일을 드래그하거나 입력해주세요."}
+              ? '여기다가 끌어주세요!'
+              : '파일을 드래그하거나 입력해주세요.'}
           </div>
         )}
       </div>
