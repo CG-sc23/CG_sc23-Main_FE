@@ -10,7 +10,7 @@ import { taskgroupCreationPermitted } from "@/libs/utils/taskgroup";
 import { myProjectStatus } from "@/libs/utils/project";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { useState } from "react";
+import { KeyboardEvent, MouseEvent, useState } from "react";
 
 const Container = styled.div`
   width: 896px;
@@ -36,6 +36,18 @@ const SubHeader = styled.h2`
   font-weight: 600;
 `;
 
+const TagWrapper = styled.div`
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+`;
+
+const Tag = styled.div`
+  padding: 0.5rem 1rem;
+  border-radius: 0.2rem;
+  background-color: ${colors.grey300};
+  color: black;
+`;
 type Milestone = {
   milestone_id: number;
   project: {
@@ -71,6 +83,20 @@ const milestone: Milestone = MilestoneData;
 export default function MilestoneDetail() {
   const [title, setTitle] = useState("");
   const [dueDate, setDueDate] = useState<Date>(new Date());
+  const [tags, setTags] = useState<string[]>([]);
+  const [tag, setTag] = useState<string>("");
+
+  const handleTagDelete = (e: MouseEvent<HTMLElement>) => {
+    const targetIndex = tags.findIndex(
+      (tag) => tag === e.currentTarget.innerHTML
+    );
+
+    const updatedList = tags
+      .slice(0, targetIndex)
+      .concat(tags.slice(targetIndex + 1));
+
+    setTags(updatedList);
+  };
 
   return (
     <Container>
@@ -174,7 +200,7 @@ export default function MilestoneDetail() {
           `}
         >
           <SubHeader>태스크 그룹 생성</SubHeader>
-          <form
+          <div
             css={css`
               display: flex;
               flex-direction: column;
@@ -222,8 +248,51 @@ export default function MilestoneDetail() {
                 }
               `}
             />
+            <input
+              css={css`
+                width: 100%;
+                padding: 0.8rem;
+                border: 1px solid ${colors.grey200};
+                border-radius: 0.2rem;
+                font-size: 1.2rem;
+                box-sizing: border-box;
+                &:focus {
+                  outline: none;
+                  border: 1px solid black;
+                }
+              `}
+              required
+              placeholder="새로 태그 추가"
+              value={tag}
+              onChange={(e) => {
+                setTag(e.target.value);
+              }}
+              onKeyUp={(e) => {
+                if (e.code !== "Enter") return;
+                if (tag === "") return;
+                e.preventDefault();
+                e.stopPropagation();
+
+                setTag("");
+                if (tags.includes(tag)) return;
+                setTags((prev) => [...prev, tag]);
+              }}
+            />
+            <TagWrapper>
+              {tags.map((tag) => (
+                <Tag
+                  onClick={handleTagDelete}
+                  css={css`
+                    &:hover {
+                      cursor: pointer;
+                    }
+                  `}
+                >
+                  {tag}
+                </Tag>
+              ))}
+            </TagWrapper>
             <button
-              type="submit"
               css={css`
                 width: 100%;
                 font-size: 1.2rem;
@@ -241,7 +310,7 @@ export default function MilestoneDetail() {
             >
               생성
             </button>
-          </form>
+          </div>
         </Card>
       ) : (
         <></>
