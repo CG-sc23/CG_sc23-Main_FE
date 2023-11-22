@@ -141,6 +141,9 @@ export default function ProjectDetail() {
     else openSnackBar('요청이 실패하였습니다.');
   };
 
+  const [newMilestone, setNewMilestone] = useState("");
+  const [dueDate, setDueDate] = useState(new Date());
+
   return (
     <Container>
       {/* title, thumbnail_image, short_description */}
@@ -649,7 +652,7 @@ export default function ProjectDetail() {
                 </h2>
                 <span>
                   {project?.created_at &&
-                    format(new Date(project.created_at), 'yyyy.MM.dd')}
+                    format(new Date(project.created_at), "yyyy.MM.dd")}
                 </span>
               </div>
               <div
@@ -670,7 +673,7 @@ export default function ProjectDetail() {
                 </h2>
                 <span>
                   {project?.due_date &&
-                    format(new Date(project?.due_date), 'yyyy.MM.dd')}
+                    format(new Date(project?.due_date), "yyyy.MM.dd")}
                 </span>
               </div>
               <div
@@ -694,10 +697,11 @@ export default function ProjectDetail() {
                     font-size: 1.2rem;
                     font-weight: 500;
                     color: ${project?.status &&
-                    myProjectStatus(project?.status).color};
+                    myProjectStatus(project?.status, "프로젝트").color};
                   `}
                 >
-                  {project?.status && myProjectStatus(project?.status).text}
+                  {project?.status &&
+                    myProjectStatus(project?.status, "프로젝트").text}
                 </span>
               </div>
             </Block>
@@ -720,6 +724,90 @@ export default function ProjectDetail() {
               />
             </Block>
           </Card>
+          {/* Create Milestones */}
+          {milestoneCreationPermitted(project?.permission) ? (
+            <Card
+              css={css`
+                ${bpmax[0]} {
+                  padding-top: 2rem;
+                  border-top: 0.3rem solid ${colors.grey300};
+                }
+              `}
+            >
+              <SubHeader>마일스톤 생성</SubHeader>
+              <form
+                css={css`
+                  display: flex;
+                  flex-direction: column;
+                  gap: 1rem;
+                  margin-top: 1rem;
+                `}
+              >
+                <input
+                  id="title"
+                  css={css`
+                    width: 100%;
+                    padding: 0.8rem;
+                    border: 1px solid ${colors.grey200};
+                    border-radius: 0.2rem;
+                    font-size: 1.2rem;
+                    box-sizing: border-box;
+                    &:focus {
+                      outline: none;
+                      border: 1px solid black;
+                    }
+                  `}
+                  required
+                  placeholder="새로운 마일스톤명 입력"
+                  value={newMilestone}
+                  onChange={(e) => setNewMilestone(e.target.value)}
+                />
+                <DatePicker
+                  dateFormat="yyyy.MM.dd"
+                  shouldCloseOnSelect
+                  minDate={new Date()}
+                  selected={dueDate}
+                  onChange={(date) => {
+                    setDueDate(date ?? new Date());
+                  }}
+                  css={css`
+                    width: 100%;
+                    padding: 0.8rem;
+                    box-sizing: border-box;
+                    outline: none;
+                    border: 1px solid ${colors.grey200};
+                    font-size: 1.2rem;
+                    border-radius: 0.2rem;
+                    &:focus {
+                      border: 1px solid black;
+                    }
+                  `}
+                />
+                <button
+                  type="submit"
+                  css={css`
+                    width: 100%;
+                    font-size: 1.2rem;
+                    padding: 0.6rem;
+                    border-radius: 0.2rem;
+                    background-color: ${colors.grey400};
+                    color: white;
+                    ${bpmin[0]} {
+                      &:hover {
+                        background-color: black;
+                        cursor: pointer;
+                      }
+                    }
+                  `}
+                >
+                  생성
+                </button>
+              </form>
+            </Card>
+          ) : (
+            <></>
+          )}
+          {/* Milestones */}
           <Card
             css={css`
               ${bpmin[0]} {
