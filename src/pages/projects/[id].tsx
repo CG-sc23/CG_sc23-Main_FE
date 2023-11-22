@@ -9,8 +9,6 @@ import { colors } from "@/components/constant/color";
 import { Milestone } from "@/components/Projects/Milestone";
 import useGetProject from "@/hooks/project/useGetProject";
 import LoadingSpinner from "@/components/Spinner";
-import Link from "next/link";
-import { FaRegPlusSquare } from "react-icons/fa";
 import { milestoneCreationPermitted } from "@/libs/utils/milestone";
 import { useState } from "react";
 import DatePicker from "react-datepicker";
