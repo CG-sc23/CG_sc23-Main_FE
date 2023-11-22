@@ -135,12 +135,18 @@ export type GetPreSignedURLApiResponse = {
 
 // ! PROJECT
 type ProjectStatus = 'READY' | 'IN_PROGRESS' | 'COMPLETED' | 'TERMINATED';
+type ProjectPermission = 'OWNER' | 'MANAGER' | 'MEMBER' | 'NOTHING';
 type Member = {
   id: number;
   name: string;
   email: string;
   profile_image_link: string | null;
   profile_image_updated_at: string | null;
+};
+type Milestone = {
+  id: number;
+  subject: string;
+  tags: string[];
 };
 type Project = {
   id: number;
@@ -151,6 +157,11 @@ type Project = {
   thumbnail_image: string;
   short_description: string;
   members: Member[];
+  description?: string;
+  description_resource_links?: string;
+  permission?: ProjectPermission;
+  owner?: Member;
+  milestone?: Milestone[];
 };
 export type CreateProjectApiAuthTokenAndBody = AuthToken & {
   body: {
@@ -173,6 +184,10 @@ export type CreateProjectApiResponse = SuccessAndOptionalReason & {
   due_date?: string;
   thumbnail_image?: string;
 };
+export type GetProjectInfoApiPartialAuthTokenAndBody = Partial<AuthToken> & {
+  project_id: string;
+};
+export type GetProjectInfoApiResponse = SuccessAndOptionalReason & Project;
 export type GetAllProjectInfoApiResponse = SuccessAndOptionalReason & {
   count?: number;
   projects?: Project[];

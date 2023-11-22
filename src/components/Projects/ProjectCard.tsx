@@ -94,7 +94,7 @@ export default function Project({ project }: Props) {
   const projectStatus = myProjectStatus(project.status);
 
   return (
-    <Card key={`PROJECT_${project.id}`} href={`/Projects/${project.id}`}>
+    <Card key={`PROJECT_${project.id}`} href={`/projects/${project.id}`}>
       {/* title */}
       <h1
         css={css`
