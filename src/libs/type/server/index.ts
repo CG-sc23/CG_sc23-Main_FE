@@ -1,4 +1,4 @@
-/** Base */
+// ! Base
 export type BaseApiResponse = {
   success: boolean;
 };
@@ -8,7 +8,7 @@ type SuccessAndOptionalReason = BaseApiResponse & {
 };
 type AuthToken = { token: string };
 
-/** Auth */
+// ! Auth
 export type SignUpApiResponse = SuccessAndOptionalReason;
 export type SignInApiResponse = SuccessAndOptionalReason & Partial<AuthToken>;
 export type SignOutApiResponse = { success?: boolean; detail?: string };
@@ -32,7 +32,7 @@ export type SignInApiPayload = { email: string; password: string };
 export type SignOutApiAuthToken = AuthToken;
 export type SocialAuthApiPayload = { code: string };
 
-/** USER */
+// ! USER
 export type DeactivateApiAuthToken = AuthToken;
 export type DeactivateApiResponse = { success?: boolean; detail?: string };
 export type GetUserInfoApiAuthToken = AuthToken;
@@ -75,7 +75,7 @@ export type ModifyUserDetailInfoApiAuthTokenAndBody = {
 };
 export type ModifyUserDetailInfoApiResponse = SuccessAndOptionalReason;
 
-/** ExternalHistory */
+// ! ExternalHistory
 export type CommonStackApiQuery = { stack: string };
 export type CommonStackApiResponse = SuccessAndOptionalReason & {
   id?: string;
@@ -109,7 +109,7 @@ export type GitHubKeywordApiResponse = SuccessAndOptionalReason & {
 export type GitHubManualUpdateApiAuthToken = AuthToken;
 export type GitHubManualUpdateApiResponse = SuccessAndOptionalReason;
 
-/** RESOURCE */
+// ! RESOURCE
 type AWSResponse = {
   url: string;
   fields: {
@@ -131,4 +131,27 @@ export type GetPreSignedURLApiResponse = {
   reason?: string;
   url?: string;
   aws_response?: AWSResponse;
+};
+
+// ! PROJECT
+export type CreateProjectApiAuthTokenAndBody = AuthToken & {
+  body: {
+    title: string;
+    short_description?: string;
+    description?: string;
+    description_resource_links?: string;
+    due_date?: string;
+    thumbnail_image?: string;
+  };
+};
+export type CreateProjectApiResponse = SuccessAndOptionalReason & {
+  created_at?: string;
+  project_id?: number;
+  status?: string;
+  title: string;
+  short_description?: string;
+  description?: string;
+  description_resource_links?: string;
+  due_date?: string;
+  thumbnail_image?: string;
 };

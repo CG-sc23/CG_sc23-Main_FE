@@ -1,24 +1,26 @@
-import { useEffect, useState } from "react";
-import styled from "@emotion/styled";
-import { css } from "@emotion/react";
-import { bpmax } from "@/libs/styles/constants";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { InferGetServerSidePropsType } from "next";
-import dynamic from "next/dynamic";
-import useUser from "@/hooks/user/useUser";
-import { useRouter } from "next/router";
-import Dropzone from "@/components/Dropzone";
-import { extractImageLinks } from "@/libs/utils/editor";
-import { safeLocalStorage } from "@toss/storage";
-import { uploadImg } from "@/libs/utils/s3";
-import { queryKey } from "@/libs/constant";
-import { colors } from "@/components/constant/color";
-import Card from "@/components/Card";
-import useSnackBar from "@/hooks/useSnackBar";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+import { useEffect, useMemo, useState } from 'react';
+import styled from '@emotion/styled';
+import { css } from '@emotion/react';
+import { bpmax } from '@/libs/styles/constants';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { InferGetServerSidePropsType } from 'next';
+import dynamic from 'next/dynamic';
+import useUser from '@/hooks/user/useUser';
+import { useRouter } from 'next/router';
+import Dropzone from '@/components/Dropzone';
+import { extractImageLinks } from '@/libs/utils/editor';
+import { safeLocalStorage } from '@toss/storage';
+import { uploadImg } from '@/libs/utils/s3';
+import { queryKey } from '@/libs/constant';
+import { colors } from '@/components/constant/color';
+import Card from '@/components/Card';
+import useSnackBar from '@/hooks/useSnackBar';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import client from '@/api/client';
+import { CreateProjectAuthTokenAndBody } from '@/libs/type/client';
 
-const Editor = dynamic(() => import("@/components/Editor"), { ssr: false });
+const Editor = dynamic(() => import('@/components/Editor'), { ssr: false });
 
 const Container = styled.div`
   width: 896px;
@@ -97,40 +99,46 @@ const Submit = styled.button`
   width: 100%;
   padding: 1rem;
   border: none;
-  background-color: #cdcdcd;
+  background-color: ${(props) =>
+    props.disabled ? colors.grey300 : colors.black};
   border-radius: 0.5rem;
   color: white;
-  font-size: 1rem;
-  cursor: pointer;
+  font-size: 1.3rem;
+
+  transition: background-color 0.2s ease;
+  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
   &:hover {
-    background-color: black;
-  }
-  ${bpmax[0]} {
-    background-color: black;
+    background-color: ${(props) =>
+      props.disabled ? colors.grey200 : colors.grey500};
   }
 `;
 
-// TODO : need to define Network Request type for typescript
-type FormData = Partial<any>;
+const titlePlaceholder = '프로젝트 제목을 작성해주세요';
+const shortDescriptionPlaceholder =
+  '프로젝트에 대한 간단한 설명을 작성해주세요';
+const descriptionPlaceholder = '프로젝트 설명을 작성해주세요';
 
+type FormData = Partial<CreateProjectAuthTokenAndBody['body']>;
 export default function ProjectForm({}: InferGetServerSidePropsType<any>) {
   const token = safeLocalStorage.get(queryKey.USER_ACCESS_TOKEN);
+
   const { user: loggedInUser, isLoggedIn } = useUser();
   const { openSnackBar } = useSnackBar();
   const router = useRouter();
-
-  const [shortDescription, setShortDescription] = useState(
-    "프로젝트에 대한 간단한 설명을 작성해주세요"
-  );
-  const [markdown, setMarkdown] = useState("프로젝트 설명을 작성해주세요");
+  const [shortDescription, setShortDescription] = useState('');
+  const [markdown, setMarkdown] = useState('');
   const [thumbnail, setThumbnail] = useState<string | undefined>();
   const [dueDate, setDueDate] = useState<Date | null>(new Date());
-
-  const { register, handleSubmit } = useForm<FormData>({
+  const { register, handleSubmit, getValues } = useForm<FormData>({
     defaultValues: {
-      title: "프로젝트 제목" as string,
+      title: '',
     },
   });
+
+  const isDisabled = useMemo(
+    () => !(getValues('title') && shortDescription && markdown && thumbnail),
+    [getValues, shortDescription, markdown, thumbnail],
+  );
 
   const onUploadThumbnailImage = async (file: File) => {
     if (!token) return;
@@ -139,29 +147,36 @@ export default function ProjectForm({}: InferGetServerSidePropsType<any>) {
       file,
       filename: file.name,
     });
+
     setThumbnail(url);
   };
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     if (!token) return;
 
-    // TODO : key name for uploadData object might be revisioned
     const uploadData: FormData = {
       ...data,
       short_description: shortDescription,
       description: markdown,
       description_resource_links: JSON.stringify(extractImageLinks(markdown)),
-      thumbnail: thumbnail,
-      dueDate: dueDate,
+      thumbnail_image: thumbnail,
+      due_date: dueDate?.toISOString(),
     };
-    return;
+
+    const res = await client.createProject({
+      token,
+      body: uploadData,
+    });
+
+    if (res?.ok) return router.push(`/projects/${res.project_id}`);
+    openSnackBar(`입력이 잘못되었습니다.\n다시 입력해주세요.`);
   };
 
   useEffect(() => {
-    if (!isLoggedIn) {
-      router.replace("/");
-      openSnackBar("로그인 먼저 해주세요!");
-    }
+    if (isLoggedIn) return;
+
+    openSnackBar('로그인 먼저 해주세요!');
+    router.replace('/');
   }, [isLoggedIn]);
 
   return (
@@ -179,23 +194,30 @@ export default function ProjectForm({}: InferGetServerSidePropsType<any>) {
           >
             <Dropzone
               onFileAdded={onUploadThumbnailImage}
-              defaultThumbnail={"/project.jpg"}
+              defaultThumbnail={'/project.jpg'}
             />
           </div>
           {/* 프로젝트 제목 */}
           <Block>
             <SubHeader>프로젝트 제목</SubHeader>
-            <Input id="title" type="text" {...register("title")} />
+            <Input
+              id="title"
+              type="text"
+              {...register('title')}
+              placeholder={titlePlaceholder}
+            />
           </Block>
           {/* 프로젝트 종료 일자 */}
           <Block>
             <SubHeader>종료 예정 일자</SubHeader>
             <DatePicker
-              dateFormat="yyyy.MM.dd"
+              dateFormat="yyyy-MM-dd"
               shouldCloseOnSelect
               minDate={new Date()}
               selected={dueDate}
-              onChange={(date) => setDueDate(date)}
+              onChange={(date) => {
+                setDueDate(date);
+              }}
               css={css`
                 width: 100%;
                 padding: 0.5rem;
@@ -217,7 +239,11 @@ export default function ProjectForm({}: InferGetServerSidePropsType<any>) {
               id="short_description"
               rows={3}
               value={shortDescription}
-              onChange={(e) => setShortDescription(e.target.value)}
+              placeholder={shortDescriptionPlaceholder}
+              onChange={(e) => {
+                if (e.target.value.length > 50) return;
+                setShortDescription(e.target.value);
+              }}
             />
             <div
               css={css`
@@ -234,9 +260,15 @@ export default function ProjectForm({}: InferGetServerSidePropsType<any>) {
           {/* 프로젝트 구체 설명 */}
           <Block>
             <SubHeader>구체적인 설명</SubHeader>
-            <Editor markdown={markdown} setMarkdown={setMarkdown} />
+            <Editor
+              markdown={markdown}
+              setMarkdown={setMarkdown}
+              placeholder={descriptionPlaceholder}
+            />
           </Block>
-          <Submit type="submit">프로젝트 만들기</Submit>
+          <Submit disabled={isDisabled} type="submit">
+            프로젝트 만들기
+          </Submit>
         </Form>
       </Card>
     </Container>

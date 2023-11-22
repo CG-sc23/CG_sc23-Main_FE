@@ -1,6 +1,6 @@
-import styled from "@emotion/styled";
-import { colors } from "@/components/constant/color";
-import { bpmax, bpmin } from "@/libs/styles/constants";
+import styled from '@emotion/styled';
+import { colors } from '@/components/constant/color';
+import { bpmax, bpmin } from '@/libs/styles/constants';
 
 const Card = styled.div`
   display: flex;

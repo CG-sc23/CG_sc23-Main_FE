@@ -1,13 +1,11 @@
-import useUser from "@/hooks/user/useUser";
-import styled from "@emotion/styled";
-import { bpmax } from "@/libs/styles/constants";
-import ProjectCard from "@/components/Projects/ProjectCard";
-import ProjectWrapper from "@/components/Projects/ProjectWrapper";
-import { GoPlus } from "react-icons/go";
-import { colors } from "@/components/constant/color";
-import Link from "next/link";
-import { safeLocalStorage } from "@toss/storage";
-import { queryKey } from "@/libs/constant";
+import useUser from '@/hooks/user/useUser';
+import styled from '@emotion/styled';
+import { bpmax } from '@/libs/styles/constants';
+import ProjectCard from '@/components/Projects/ProjectCard';
+import ProjectWrapper from '@/components/Projects/ProjectWrapper';
+import { GoPlus } from 'react-icons/go';
+import { colors } from '@/components/constant/color';
+import Link from 'next/link';
 
 // Container for projects page
 const Container = styled.div`
@@ -39,7 +37,7 @@ const Button = styled(Link)`
   border-radius: 4rem;
   font-size: 1.5rem;
   font-weight: 500;
-  background-color: black;
+  background-color: ${colors.black};
   color: white;
   box-shadow: 5px 5px 10px ${colors.grey500};
 
@@ -47,9 +45,12 @@ const Button = styled(Link)`
     right: 2rem;
     bottom: 2rem;
   }
+  cursor: pointer;
+
+  transition: background-color 0.2s ease;
 
   &:hover {
-    cursor: pointer;
+    background-color: ${colors.grey800};
   }
 `;
 

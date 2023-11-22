@@ -6,7 +6,7 @@
     "build": "next build",
     "dev": "next dev --turbo",
     "start": "next start",
-    "clean": "rimraf ./.next ./.swc ./coverage ./.reports ./.results ./node_modules/.cache",
+    "clean": "rimraf ./.next ./.swc ./coverage ./.reports ./.results ./node_modules ./.cache",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
     "test": "jest --coverage",

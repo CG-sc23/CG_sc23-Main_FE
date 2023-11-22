@@ -1,8 +1,8 @@
-import { bpmax, bpmin } from "@/libs/styles/constants";
-import { css } from "@emotion/react";
-import Link from "next/link";
-import { colors } from "../constant/color";
-import { FaChevronRight } from "react-icons/fa6";
+import { bpmax, bpmin } from '@/libs/styles/constants';
+import { css } from '@emotion/react';
+import Link from 'next/link';
+import { colors } from '../constant/color';
+import { FaChevronRight } from 'react-icons/fa6';
 
 type Props = {
   title: string;
