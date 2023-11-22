@@ -1,8 +1,10 @@
-import { colors } from "@/components/constant/color";
-import { bpmax, breakpoints } from "@/libs/styles/constants";
-import { css } from "@emotion/react";
-import styled from "@emotion/styled";
-import MDEditor from "@uiw/react-md-editor";
+import { colors } from '@/components/constant/color';
+import { bpmax, breakpoints } from '@/libs/styles/constants';
+import { css } from '@emotion/react';
+import styled from '@emotion/styled';
+import dynamic from 'next/dynamic';
+import MDEditor from '@uiw/react-md-editor';
+// const MDEditor = dynamic(() => import('@uiw/react-md-editor'));
 
 const MEMBER_LIMIT = 5;
 const OVERLAP_NUMBER = 25;
@@ -125,7 +127,7 @@ const MarkdownWrapper = styled.div`
   padding: 1rem 0.5rem;
 `;
 const Markdown = css({
-  height: "100%",
+  height: '100%',
 });
 const Detail = styled.div`
   position: relative;
@@ -227,7 +229,7 @@ const MemberThumbnailWrapper = styled.div<{ index: number; length: number }>`
   height: 3rem;
 
   display: flex;
-  display: ${(props) => (props.index < MEMBER_LIMIT + 1 ? "flex" : "none")};
+  display: ${(props) => (props.index < MEMBER_LIMIT + 1 ? 'flex' : 'none')};
   justify-content: center;
   align-items: center;
 
@@ -240,7 +242,7 @@ const MemberThumbnailWrapper = styled.div<{ index: number; length: number }>`
     const isLast = props.length - 1 === props.index;
 
     return isMore || isLast
-      ? "0px"
+      ? '0px'
       : `${-OVERLAP_NUMBER * (LIMIT - props.index) + OVERLAP_NUMBER}px`;
   }};
   z-index: ${(props) => `${props.length - props.index}`};
@@ -266,7 +268,7 @@ const DummyProfileThumbnail = styled.div`
   height: 100%;
 
   border-radius: 9999px;
-  background-color: ${(props) => (props.color ? props.color : "aqua")};
+  background-color: ${(props) => (props.color ? props.color : 'aqua')};
 `;
 const DummyProjectThumbnail = styled.div`
   width: 8rem;
@@ -275,21 +277,21 @@ const DummyProjectThumbnail = styled.div`
   border-radius: 9999px;
   background-color: aqua;
 `;
-const dummyTag = ["234", "sdg", "wergt", "dsfhdf", "cvbvcxb"];
+const dummyTag = ['234', 'sdg', 'wergt', 'dsfhdf', 'cvbvcxb'];
 const dummyMember = [
-  "red",
-  "black",
-  "grey",
-  "blue",
-  "green",
-  "tomato",
-  "purple",
-  "yellow",
-  "brown",
-  "aqua",
-  "yellowgreen",
-  "violet",
-  "pink",
+  'red',
+  'black',
+  'grey',
+  'blue',
+  'green',
+  'tomato',
+  'purple',
+  'yellow',
+  'brown',
+  'aqua',
+  'yellowgreen',
+  'violet',
+  'pink',
 ];
 const dummyMD = `
   # Header 1

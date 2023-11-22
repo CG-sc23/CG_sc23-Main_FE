@@ -22,6 +22,15 @@ const MenuBar = dynamic(() => import('@/components/MenuBar'), {
 
 const roboto = Roboto({
   weight: ['100', '300', '400', '500', '700', '900'],
+  subsets: [
+    'cyrillic',
+    'cyrillic-ext',
+    'greek',
+    'greek-ext',
+    'latin',
+    'latin-ext',
+    'vietnamese',
+  ],
 });
 
 // if (process.env.NEXT_PUBLIC_API_MOCKING === 'enabled') {

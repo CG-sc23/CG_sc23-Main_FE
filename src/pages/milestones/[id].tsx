@@ -143,11 +143,10 @@ export default function MilestoneDetail() {
           </span>
           <span
             css={css`
-              color: ${myProjectStatus(milestone?.status as any, '마일스톤')
-                .color};
+              color: ${myProjectStatus(milestone?.status as any).color};
             `}
           >
-            {myProjectStatus(milestone?.status as any, '마일스톤').text}
+            {myProjectStatus(milestone?.status as any).text}
           </span>
         </div>
         {/* created_at */}

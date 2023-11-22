@@ -6,6 +6,8 @@ import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 
 import { bpmax } from '@/libs/styles/constants';
 import MDEditor from '@uiw/react-md-editor';
+// const MDEditor = dynamic(() => import('@uiw/react-md-editor'));
+
 import client from '@/api/client';
 
 import useUser from '@/hooks/user/useUser';
@@ -23,6 +25,7 @@ import ProjectCard from '@/components/Projects/ProjectCard';
 import { safeLocalStorage } from '@toss/storage';
 import { queryKey } from '@/libs/constant';
 import useSnackBar from '@/hooks/useSnackBar';
+import dynamic from 'next/dynamic';
 
 export const getServerSideProps = (async (ctx) => {
   const id = ctx.params?.id as string;

@@ -1,10 +1,10 @@
-import { css } from "@emotion/react";
-import styled from "@emotion/styled";
-import { colors } from "../constant/color";
-import { bpmax, bpmin } from "@/libs/styles/constants";
-import Link from "next/link";
-import { myProjectStatus } from "@/libs/utils/project";
-import { IoIosHeartEmpty } from "react-icons/io";
+import { css } from '@emotion/react';
+import styled from '@emotion/styled';
+import { colors } from '../constant/color';
+import { bpmax, bpmin } from '@/libs/styles/constants';
+import Link from 'next/link';
+import { myProjectStatus } from '@/libs/utils/project';
+import { IoIosHeartEmpty } from 'react-icons/io';
 
 type Props = {
   projectTitle: string;
@@ -78,10 +78,10 @@ export function Project({
           css={css`
             font-size: 1.2rem;
             font-weight: 500;
-            word-break: ${projectTitle.indexOf(" ") > 12 ||
-            projectTitle.indexOf(" ") == -1
-              ? "break-all"
-              : "keep-all"};
+            word-break: ${projectTitle.indexOf(' ') > 12 ||
+            projectTitle.indexOf(' ') == -1
+              ? 'break-all'
+              : 'keep-all'};
             text-align: center;
             line-height: 1.4;
           `}
@@ -112,10 +112,10 @@ export function Project({
           <span
             css={css`
               font-weight: 500;
-              color: ${myProjectStatus(status).color};
+              color: ${myProjectStatus(status as any).color};
             `}
           >
-            {myProjectStatus(status).text}
+            {myProjectStatus(status as any).text}
           </span>
           <button
             onClick={(e) => e.preventDefault()}

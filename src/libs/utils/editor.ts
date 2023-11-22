@@ -1,4 +1,4 @@
-import { RefMDEditor, TextAreaTextApi } from '@uiw/react-md-editor';
+import type { RefMDEditor, TextAreaTextApi } from '@uiw/react-md-editor';
 import { assert } from './assert';
 import { uploadImg } from './s3';
 

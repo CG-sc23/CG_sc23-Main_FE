@@ -108,10 +108,10 @@ export function TaskGroup({ id, title, status, created_at, due_date }: Props) {
             <SubHeader>상태</SubHeader>
             <span
               css={css`
-                color: ${myProjectStatus(status as any, '마일스톤').color};
+                color: ${myProjectStatus(status as any).color};
               `}
             >
-              {myProjectStatus(status as any, '마일스톤').text}
+              {myProjectStatus(status as any).text}
             </span>
           </TaskContentBox>
           <TaskContentBox>

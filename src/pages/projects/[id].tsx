@@ -3,6 +3,8 @@ import { bpmax, bpmin } from '@/libs/styles/constants';
 import { css } from '@emotion/react';
 import Card from '@/components/Card';
 import MDEditor from '@uiw/react-md-editor';
+// const MDEditor = dynamic(() => import('@uiw/react-md-editor'), {ssr:false});
+
 import { myProjectStatus } from '@/libs/utils/project';
 import { colors } from '@/components/constant/color';
 import { Milestone } from '@/components/Projects/Milestone';
@@ -26,6 +28,7 @@ import useSnackBar from '@/hooks/useSnackBar';
 import ReactDatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { formatDate } from '@/libs/utils';
+import dynamic from 'next/dynamic';
 
 const Container = styled.div`
   height: 100%;
@@ -697,11 +700,10 @@ export default function ProjectDetail() {
                     font-size: 1.2rem;
                     font-weight: 500;
                     color: ${project?.status &&
-                    myProjectStatus(project?.status, '프로젝트').color};
+                    myProjectStatus(project?.status).color};
                   `}
                 >
-                  {project?.status &&
-                    myProjectStatus(project?.status, '프로젝트').text}
+                  {project?.status && myProjectStatus(project?.status).text}
                 </span>
               </div>
             </Block>

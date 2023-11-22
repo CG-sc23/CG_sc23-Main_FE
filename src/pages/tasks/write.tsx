@@ -1,12 +1,15 @@
-import { FocusEvent, KeyboardEvent, MouseEvent, useRef, useState } from "react";
-import MDEditor, { RefMDEditor } from "@uiw/react-md-editor";
-import styled from "@emotion/styled";
-import { css } from "@emotion/react";
+import { FocusEvent, KeyboardEvent, MouseEvent, useRef, useState } from 'react';
+import MDEditor from '@uiw/react-md-editor';
+// const MDEditor = dynamic(() => import('@uiw/react-md-editor'));
 
-import { colors } from "@/components/constant/color";
-import { bpmax } from "@/libs/styles/constants";
-import useSnackBar from "@/hooks/useSnackBar";
-import Editor from "@/components/Editor";
+import styled from '@emotion/styled';
+import { css } from '@emotion/react';
+
+import { colors } from '@/components/constant/color';
+import { bpmax } from '@/libs/styles/constants';
+import useSnackBar from '@/hooks/useSnackBar';
+import Editor from '@/components/Editor';
+import dynamic from 'next/dynamic';
 
 const Container = styled.div`
   position: relative;
@@ -131,21 +134,21 @@ const Title = styled.h1`
 `;
 const PreviewWrapper = styled.div``;
 
-const titlePlaceholder = "제목을 입력해주세요";
-const tagPlaceholder = "태그를 입력해주세요";
+const titlePlaceholder = '제목을 입력해주세요';
+const tagPlaceholder = '태그를 입력해주세요';
 export default function Write() {
   const { openSnackBar } = useSnackBar();
-  const [title, setTitle] = useState("");
-  const [tag, setTag] = useState("");
+  const [title, setTitle] = useState('');
+  const [tag, setTag] = useState('');
   const [tagList, setTagList] = useState<string[]>([]);
-  const [markdown, setMarkdown] = useState("");
+  const [markdown, setMarkdown] = useState('');
 
   const onTagSubmit = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.code !== "Enter") return;
-    if (tag === "") return;
+    if (e.code !== 'Enter') return;
+    if (tag === '') return;
     e.preventDefault();
 
-    setTag("");
+    setTag('');
     if (tagList.includes(tag)) return;
     setTagList((prev) => [...prev, tag]);
   };
@@ -153,13 +156,13 @@ export default function Write() {
   const onTagFocus = (e: FocusEvent<HTMLInputElement>) => {
     openSnackBar(
       `엔터를 입력하여 태그를 등록할 수 있습니다.
-      등록된 태그를 클릭하면 삭제됩니다.`
+      등록된 태그를 클릭하면 삭제됩니다.`,
     );
   };
 
   const onTagDelete = (e: MouseEvent<HTMLSpanElement>) => {
     const targetIndex = tagList.findIndex(
-      (tag) => tag === e.currentTarget.innerHTML
+      (tag) => tag === e.currentTarget.innerHTML,
     );
 
     const updatedList = tagList

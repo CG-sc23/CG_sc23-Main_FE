@@ -8,7 +8,7 @@ type ReturnProjectStatus = {
 type Strategies = {
   [key in ProjectStatus]: ReturnProjectStatus;
 };
-export function myProjectStatus(provider: ProjectStatus, name: string) {
+export function myProjectStatus(provider: ProjectStatus) {
   const strategies: Strategies = {
     READY: {
       text: '시작 대기',

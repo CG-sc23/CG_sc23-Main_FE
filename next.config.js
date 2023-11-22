@@ -1,8 +1,10 @@
 const path = require('path');
+const removeImports = require('next-remove-imports')();
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  transpilePackages: ['react-markdown', '@uiw'],
   sassOptions: {
     includePaths: [path.join(__dirname, 'styles')],
   },
@@ -53,4 +55,9 @@ const nextConfig = {
   swcMinify: true,
 };
 
-module.exports = nextConfig;
+module.exports = removeImports({
+  ...nextConfig,
+  webpack(config, options) {
+    return config;
+  },
+});

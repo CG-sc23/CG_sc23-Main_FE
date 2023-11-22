@@ -17,12 +17,14 @@ import MDEditor, {
   RefMDEditor,
   TextAreaTextApi,
 } from '@uiw/react-md-editor';
+// const MDEditor = dynamic(() => import('@uiw/react-md-editor'));
 
 import { safeLocalStorage } from '@toss/storage';
 import { queryKey } from '@/libs/constant';
 
 import { colors } from '@/components/constant/color';
 import { dropFileUpload, inputChangeUpload } from '@/libs/utils/editor';
+import dynamic from 'next/dynamic';
 
 const imgUpload = (
   inputRef: RefObject<HTMLInputElement>,
