@@ -191,12 +191,19 @@ const MemberThumbnailWrapper = styled.div<{ index: number; length: number }>`
   width: 28px;
   height: 28px;
 
-  display: flex;
+  display: 'flex';
+  /* display: ${(props) =>
+    props.index < 6 || props.className?.includes('more') ? 'flex' : 'none'}; */
   justify-content: center;
   align-items: center;
 
   left: ${(props) => `${-15 * props.index}px`};
   z-index: ${(props) => `${props.length - props.index}`};
+
+  &.more {
+    display: flex;
+    z-index: 0;
+  }
 `;
 
 // ! DUMMY
@@ -218,7 +225,7 @@ const dummyTag = ['234', 'sdg', 'wergt', 'dsfhdf', 'cvbvcxb'];
 const dummyMember = [
   'red',
   'black',
-  'white',
+  'grey',
   'blue',
   'green',
   'tomato',
@@ -316,7 +323,13 @@ export default function TaskPage() {
                     index={idx}
                     length={origin.length}
                   >
-                    <DummyProfileThumbnail color={val} />
+                    {idx !== 6 ? (
+                      <DummyProfileThumbnail color={val} />
+                    ) : (
+                      <DummyProfileThumbnail color={'white'} className="more">
+                        + {origin.length - 6}
+                      </DummyProfileThumbnail>
+                    )}
                   </MemberThumbnailWrapper>
                 ))}
               </ThumbnailGroup>

@@ -240,8 +240,9 @@ export default function MenuBar() {
               {isLoading ? null : (
                 <Image
                   src={
-                    `${user?.profileImageLink}?timestamp=${user?.profileImageUpdatedAt}` ??
-                    ('/profile.jpg' as string)
+                    user?.profileImageLink && user?.profileImageUpdatedAt
+                      ? `${user?.profileImageLink}?timestamp=${user?.profileImageUpdatedAt}`
+                      : ('/profile.jpg' as string)
                   }
                   alt="menu_bar_profile_image"
                   css={css`
