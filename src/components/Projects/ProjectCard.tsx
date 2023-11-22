@@ -1,13 +1,13 @@
 // [Layer] Project > Milestone > Task Group > Task
 
-import styled from '@emotion/styled';
-import { colors } from '../constant/color';
-import Link from 'next/link';
-import { bpmax, bpmin } from '@/libs/styles/constants';
-import { useState } from 'react';
-import { css } from '@emotion/react';
-import { myProjectStatus } from '@/libs/utils/project';
-import Image from 'next/image';
+import styled from "@emotion/styled";
+import { colors } from "../constant/color";
+import Link from "next/link";
+import { bpmax, bpmin } from "@/libs/styles/constants";
+import { useState } from "react";
+import { css } from "@emotion/react";
+import { myProjectStatus } from "@/libs/utils/project";
+import Image from "next/image";
 
 const Card = styled(Link)`
   display: flex;
@@ -53,14 +53,14 @@ type Project = {
 
 // TODO : Erase this object as soon as implementation is finished
 const initialProject = {
-  title: '무제',
-  owner: '임준혁',
+  title: "무제",
+  owner: "임준혁",
   short_description:
-    '프로젝트 테스트 문구입니다. 확인부탁드립니다. 간단한 설명을 담고 있는 short - description 문장입니다.',
-  status: 'in_progress',
-  due_date: '2023.11.18',
+    "프로젝트 테스트 문구입니다. 확인부탁드립니다. 간단한 설명을 담고 있는 short - description 문장입니다.",
+  status: "in_progress",
+  due_date: "2023.11.18",
   thumbnail: null,
-  meta_tag: ['figma', 'react', 'svelte'],
+  meta_tag: ["figma", "react", "svelte"],
 };
 
 export default function Project({ id }: Props) {
@@ -68,7 +68,7 @@ export default function Project({ id }: Props) {
   const [project, setProject] = useState(initialProject);
 
   return (
-    <Card key={id} href={`/Projects/${id}`}>
+    <Card key={id} href={`/projects/${id}`}>
       {/* title */}
       <h1
         css={css`
@@ -122,7 +122,7 @@ export default function Project({ id }: Props) {
         `}
       >
         <Image
-          src={project.thumbnail ?? '/project.jpg'}
+          src={project.thumbnail ?? "/project.jpg"}
           alt={project.title}
           width={192}
           height={192}
@@ -152,7 +152,7 @@ export default function Project({ id }: Props) {
       >
         {project.meta_tag.map((tag) => (
           <img
-            src={'/github.png'}
+            src={"/github.png"}
             alt={tag}
             css={css`
               width: 2rem;
