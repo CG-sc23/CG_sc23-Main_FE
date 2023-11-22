@@ -1,3 +1,4 @@
+// 마일스톤 생성 권한
 export const milestoneCreationPermitted = (permission: string | undefined) => {
   const strategies = {
     OWNER: {
