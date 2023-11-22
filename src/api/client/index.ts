@@ -3,6 +3,7 @@ import { SignUp, SignIn, SignOut, Password } from '@/api/client/auth';
 import { Deactivate, UserInfo } from '@/api/client/user';
 import { Resources } from '@/api/client/resource';
 import { GitHub } from '@/api/client/externalHistory';
+import { Projects } from '@/api/client/project';
 import { handleClientError } from '@/api/handleError';
 
 const client = {
@@ -27,6 +28,7 @@ const client = {
   ...UserInfo,
   ...Resources,
   ...GitHub,
+  ...Projects,
 };
 
 export default client;

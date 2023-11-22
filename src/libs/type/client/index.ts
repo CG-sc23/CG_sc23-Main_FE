@@ -1,4 +1,4 @@
-/** Base */
+// ! Base
 export type HealthCheckResponse = {
   end_point_ok: boolean;
   api_ok: boolean;
@@ -11,7 +11,7 @@ type OkAndOptionalReason = {
 
 type AuthToken = { token: string };
 
-/** Auth */
+// ! Auth
 export type SignUpResponse = OkAndOptionalReason;
 export type SignInResponse = OkAndOptionalReason & Partial<AuthToken>;
 export type SignInPayload = { email: string; password: string };
@@ -34,7 +34,7 @@ export type SocialAuthResponse = {
 export type SignUpEmailVerifyPayload = { email: string };
 export type SignUpEmailVerifyConfirmQuery = { email: string } & AuthToken;
 
-/** PASSWORD */
+// ! PASSWORD
 export type PasswordResetResponse = OkAndOptionalReason;
 export type PasswordResetPayload = { email: string };
 export type PasswordResetCheckResponse = OkAndOptionalReason;
@@ -44,7 +44,7 @@ export type PasswordResetConfirmPayload = PasswordResetCheckQueries & {
   new_password: string;
 };
 
-/** USER */
+// ! USER
 export type DeactivateAuthToken = AuthToken;
 export type DeactivateResponse = OkAndOptionalReason;
 export type GetUserInfoAuthToken = AuthToken;
@@ -83,7 +83,7 @@ export type ModifyUserDetailInfoAuthTokenAndBody = {
 };
 export type ModifyUserDetailInfoResponse = OkAndOptionalReason;
 
-/** ExternalHistory */
+// ! ExternalHistory
 export type CommonStackQuery = { stack: string };
 export type CommonStackResponse = OkAndOptionalReason & {
   url?: string;
@@ -114,7 +114,7 @@ export type GitHubKeywordResponse = OkAndOptionalReason & {
 export type GitHubManualUpdateAuthToken = AuthToken;
 export type GitHubManualUpdateResponse = OkAndOptionalReason;
 
-/** RESOURCE */
+// ! RESOURCE
 export type AWSResponse = {
   url: string;
   fields: {
@@ -135,4 +135,25 @@ export type GetPreSignedURLResponse = OkAndOptionalReason & {
   aws_response?: AWSResponse;
 };
 
-/** PROJECT **/
+// ! PROJECT
+export type CreateProjectAuthTokenAndBody = AuthToken & {
+  body: {
+    title?: string;
+    short_description?: string;
+    description?: string;
+    description_resource_links?: string;
+    due_date?: string;
+    thumbnail_image?: string;
+  };
+};
+export type CreateProjectResponse = OkAndOptionalReason & {
+  project_id?: number;
+  status?: string;
+  created_at?: string;
+  title?: string;
+  short_description?: string;
+  description?: string;
+  description_resource_links?: string;
+  due_date?: string;
+  thumbnail_image?: string;
+};

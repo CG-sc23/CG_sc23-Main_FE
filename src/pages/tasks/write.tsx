@@ -205,19 +205,6 @@ export default function Write() {
             visibleDragbar={false}
             hiddenPreviewButton
           />
-          {/* <MDEditor
-            ref={ref}
-            value={markdown}
-            onChange={(value) => setMarkdown(value as string)}
-            visibleDragbar={false}
-            preview="edit"
-            commandsFilter={(command, isExtra) => {
-              return false;
-            }}
-            extraCommands={[]}
-            height="100%"
-            minHeight={300}
-          /> */}
         </EditorWrapper>
       </EditorSection>
       <PreviewSection>

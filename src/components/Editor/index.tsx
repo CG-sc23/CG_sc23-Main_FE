@@ -73,6 +73,7 @@ type EditorProps = {
   hiddenPreviewButton?: boolean;
   maxHeight?: number;
   minHeight?: number;
+  placeholder?: string;
 };
 export default function Editor({
   markdown,
@@ -82,6 +83,7 @@ export default function Editor({
   visibleDragbar = true,
   maxHeight,
   minHeight,
+  placeholder = '',
 }: EditorProps) {
   const token = safeLocalStorage.get(queryKey.USER_ACCESS_TOKEN) || '';
   const [preview, setPreview] = useState(false);
@@ -172,13 +174,16 @@ export default function Editor({
           ref={editorRef}
           value={markdown}
           onChange={onChange}
-          // hideToolbar
           visibleDragbar={visibleDragbar}
           height={height}
           minHeight={minHeight}
           maxHeight={maxHeight}
           preview={preview ? 'preview' : 'edit'}
           commands={editorCommands(inputRef, textRef)}
+          extraCommands={[]}
+          textareaProps={{
+            placeholder: placeholder,
+          }}
           css={css`
             border-radius: 5px;
             transition: border 0.1s ease;
@@ -207,21 +212,38 @@ export default function Editor({
             onDrop={onDrop(editorRef)}
           />
         ) : null}
-        <button
-          type="button"
-          onClick={() => setPreview((prev) => !prev)}
-          css={css`
-            position: absolute;
-            right: 0;
-            top: 0;
-            &:hover {
-              color: ${colors.grey500};
+        {hiddenPreviewButton ? null : (
+          <button
+            type="button"
+            onClick={() => setPreview((prev) => !prev)}
+            css={css`
+              position: absolute;
+              right: 0px;
+              top: 0px;
+
+              width: 80px;
+              height: 30px;
+              padding: 5px;
+
+              background-color: white;
+              border: 1px solid ${colors.black};
+              border-radius: 5px;
+
+              text-align: center;
+              font-weight: bold;
+              color: ${colors.black};
+
+              transition: color 0.2s ease;
               cursor: pointer;
-            }
-          `}
-        >
-          preview
-        </button>
+
+              &:hover {
+                color: ${colors.grey500};
+              }
+            `}
+          >
+            {preview ? 'Edit' : 'Preview'}
+          </button>
+        )}
       </div>
     </>
   );
