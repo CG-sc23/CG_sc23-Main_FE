@@ -10,6 +10,14 @@ import {
   UserDetailInfoResponse,
   ModifyUserDetailInfoAuthTokenAndBody,
   ModifyUserDetailInfoResponse,
+  SearchParams,
+  SearchResponse,
+  GetProjectInviteForInviterAuthToken,
+  GetProjectInviteForInviterResponse,
+  GetProjectInviteForInviteeAuthToken,
+  GetProjectInviteForInviteeResponse,
+  ReplyProjectInviteAuthToken,
+  ReplyProjectInviteResponse,
 } from '@/libs/type/client';
 
 export const Deactivate = {
@@ -71,6 +79,66 @@ export const UserInfo = {
       return data;
     } catch (e) {
       return handleClientError<ModifyUserDetailInfoResponse>(e);
+    }
+  },
+  async searchUser(query: SearchParams) {
+    try {
+      const { data } = await http.get<SearchResponse>(
+        `/api/user/search?email=${query.email}`,
+      );
+
+      return data;
+    } catch (e) {
+      return handleClientError<SearchResponse>(e);
+    }
+  },
+  async projectInviter(queries: GetProjectInviteForInviterAuthToken) {
+    try {
+      const { data } = await http.get<GetProjectInviteForInviterResponse>(
+        '/api/user/inviter',
+        {
+          headers: {
+            Authorization: `Token ${queries.token}`,
+          },
+        },
+      );
+
+      return data;
+    } catch (e) {
+      return handleClientError<GetProjectInviteForInviterResponse>(e);
+    }
+  },
+  async projectInvitee(queries: GetProjectInviteForInviteeAuthToken) {
+    try {
+      const { data } = await http.get<GetProjectInviteForInviteeResponse>(
+        '/api/user/invitee',
+        {
+          headers: {
+            Authorization: `Token ${queries.token}`,
+          },
+        },
+      );
+
+      return data;
+    } catch (e) {
+      return handleClientError<GetProjectInviteForInviteeResponse>(e);
+    }
+  },
+  async replyInvitee(queries: ReplyProjectInviteAuthToken) {
+    try {
+      const { data } = await http.post<ReplyProjectInviteResponse>(
+        '/api/user/reply',
+        queries.body,
+        {
+          headers: {
+            Authorization: `Token ${queries.token}`,
+          },
+        },
+      );
+
+      return data;
+    } catch (e) {
+      return handleClientError<ReplyProjectInviteResponse>(e);
     }
   },
 };

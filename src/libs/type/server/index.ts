@@ -74,6 +74,42 @@ export type ModifyUserDetailInfoApiAuthTokenAndBody = {
   };
 };
 export type ModifyUserDetailInfoApiResponse = SuccessAndOptionalReason;
+type SearchUser = {
+  id: number;
+  email: string;
+  profile_image_link: string | null;
+  profile_image_updated_at: string | null;
+};
+export type SearchApiParams = {
+  email: string;
+};
+export type SearchApiResponse = SuccessAndOptionalReason & {
+  result?: SearchUser[];
+};
+export type GetProjectInviteForInviterApiAuthToken = AuthToken;
+export type GetProjectInviteForInviterApiResponse = SuccessAndOptionalReason & {
+  result?: {
+    project_id: number;
+    invitee_email: string;
+  }[];
+};
+export type GetProjectInviterForInviteeApiAuthToken = AuthToken;
+export type GetProjectInviterForInviteeApiResponse =
+  SuccessAndOptionalReason & {
+    result?: {
+      project_id: number;
+      inviter_email: string;
+      created_at: string;
+    }[];
+  };
+export type ReplyProjectInviteApiAuthToken = AuthToken & {
+  body: {
+    project_id: number;
+    inviter_email: string;
+    accept: boolean;
+  };
+};
+export type ReplyProjectInviteApiResponse = SuccessAndOptionalReason;
 
 // ! ExternalHistory
 export type CommonStackApiQuery = { stack: string };
@@ -192,3 +228,21 @@ export type GetAllProjectInfoApiResponse = SuccessAndOptionalReason & {
   count?: number;
   projects?: Project[];
 };
+export type MakeInviteApiAuthTokenAndBody = AuthToken & {
+  body: {
+    project_id: string;
+    invitee_emails: string[];
+  };
+};
+export type MakeInviteApiResponse = SuccessAndOptionalReason & {
+  result?: {
+    invitee_email: string;
+    success: boolean;
+    reason: string | null;
+  }[];
+};
+export type ModifyProjectAuthApiTokenAndBody = AuthToken & {
+  project_id: string;
+  body: Project;
+};
+export type ModifyProjectAuthApiResponse = SuccessAndOptionalReason;

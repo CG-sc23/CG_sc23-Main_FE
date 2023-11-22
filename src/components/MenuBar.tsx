@@ -8,7 +8,6 @@ import Image from 'next/image';
 import useUser from '@/hooks/user/useUser';
 import { colors } from './constant/color';
 import { AnimatePresence, motion } from 'framer-motion';
-import useSignOut from '@/hooks/auth/useSignOut';
 
 const logoCss = css({
   fontSize: '1.5rem',
@@ -37,7 +36,6 @@ export const NavContainer = styled.div`
 
 export default function MenuBar() {
   const { user, isLoading, isLoggedIn } = useUser();
-  const { signOut } = useSignOut();
   const [visibleSubMenu, setVisibleSubMenu] = useState(false);
 
   const subMenuRef = useRef<HTMLDivElement>(null);
@@ -224,37 +222,39 @@ export default function MenuBar() {
           `}
         >
           {isLoggedIn ? (
-            <button
-              css={css`
-                position: relative;
-                background-color: transparent;
+            <>
+              <button
+                css={css`
+                  position: relative;
+                  background-color: transparent;
 
-                user-select: none;
-                border: none;
-                color: white;
+                  user-select: none;
+                  border: none;
+                  color: white;
 
-                cursor: pointer;
-              `}
-              onClick={toggleVisibleSubmenu}
-            >
-              {isLoading ? null : (
-                <Image
-                  src={
-                    user?.profileImageLink && user?.profileImageUpdatedAt
-                      ? `${user?.profileImageLink}?timestamp=${user?.profileImageUpdatedAt}`
-                      : ('/profile.jpg' as string)
-                  }
-                  alt="menu_bar_profile_image"
-                  css={css`
-                    border-radius: 9999%;
-                    object-fit: cover;
-                    cursor: pointer;
-                  `}
-                  width={50}
-                  height={50}
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                />
-              )}
+                  cursor: pointer;
+                `}
+                onClick={toggleVisibleSubmenu}
+              >
+                {isLoading ? null : (
+                  <Image
+                    src={
+                      user?.profileImageLink && user?.profileImageUpdatedAt
+                        ? `${user?.profileImageLink}?timestamp=${user?.profileImageUpdatedAt}`
+                        : ('/profile.jpg' as string)
+                    }
+                    alt="menu_bar_profile_image"
+                    css={css`
+                      border-radius: 9999%;
+                      object-fit: cover;
+                      cursor: pointer;
+                    `}
+                    width={50}
+                    height={50}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  />
+                )}
+              </button>
               <AnimatePresence mode="wait">
                 {visibleSubMenu && (
                   <motion.div
@@ -270,7 +270,9 @@ export default function MenuBar() {
                       display: flex;
                       flex-direction: column;
 
-                      width: 100%;
+                      /* width: 100%; */
+                      align-items: start;
+                      justify-content: flex-start;
 
                       gap: 1rem;
                       right: 1rem;
@@ -290,21 +292,10 @@ export default function MenuBar() {
                     <Link href="/settings" css={submenuMobileCss}>
                       설정
                     </Link>
-                    <button
-                      css={css`
-                        font-size: 1rem;
-                        white-space: nowrap;
-                        cursor: pointer;
-                      `}
-                      onClick={() => signOut()}
-                      type="button"
-                    >
-                      로그아웃
-                    </button>
                   </motion.div>
                 )}
               </AnimatePresence>
-            </button>
+            </>
           ) : (
             <Link
               href="/auth/SignIn"

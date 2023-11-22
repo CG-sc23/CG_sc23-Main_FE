@@ -24,7 +24,7 @@ export function myProjectStatus(provider: ProjectStatus) {
     },
     TERMINATED: {
       text: '프로젝트 포기',
-      color: colors.grey500,
+      color: colors.red500,
     },
   } as const;
   return strategies[provider as keyof typeof strategies];
