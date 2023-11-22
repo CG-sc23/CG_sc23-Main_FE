@@ -1,5 +1,5 @@
-// 마일스톤 생성 권한
-export const milestoneCreationPermitted = (permission: string | undefined) => {
+// 태스크그룹 생성 권한
+export const taskgroupCreationPermitted = (permission: string | undefined) => {
   const strategies = {
     OWNER: {
       permit: true,
