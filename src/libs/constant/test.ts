@@ -177,6 +177,7 @@ export const TaskDatas = [
   },
 ];
 
+// Test Data for Project
 export const ProjectData = {
   project_id: 1234,
   owner: {
@@ -273,6 +274,80 @@ export function Lego() {
       id: 14,
       subject: "마일스톤 3",
       tags: ["인증/인가", "로그인", "회원가입"],
+    },
+  ],
+  permission: "OWNER",
+};
+
+// Test Data for Milestone
+export const MilestoneData = {
+  milestone_id: 1234,
+  project: {
+    id: 1234,
+    title: "삼성전자 채용 면접 준비",
+    thumbnail_image: "/project.jpg",
+  },
+  created_by: {
+    id: 1234,
+    name: "임준혁",
+  },
+  subject: "삼성전자에 대해 배워봅시다",
+  tags: ["배고픔", "취업", "들어가고 싶다", "취뽀"],
+  status: "IN_PROGRESS",
+  created_at: "2023-11-21 15:35:42.230977 +00:00",
+  due_date: "2023-11-24 15:35:42.230977 +00:00",
+  task_groups: [
+    {
+      id: 1234,
+      title: "테스크 그룹 1",
+      status: "IN_PROGRESS",
+      created_at: "2023-11-21 15:35:42.230977 +00:00",
+      due_date: "2023-11-22 15:35:42.230977 +00:00",
+      tasks: [
+        { id: 123, title: "테스크1" },
+        { id: 124, title: "테스크2" },
+        { id: 125, title: "테스크3" },
+        { id: 126, title: "테스크4" },
+      ],
+    },
+    {
+      id: 1234,
+      title: "테스크 그룹 1",
+      status: "COMPLETED",
+      created_at: "2023-11-21 15:35:42.230977 +00:00",
+      due_date: "2023-11-22 15:35:42.230977 +00:00",
+      tasks: [
+        { id: 123, title: "테스크1" },
+        { id: 124, title: "테스크2" },
+        { id: 125, title: "테스크3" },
+        { id: 126, title: "테스크4" },
+      ],
+    },
+    {
+      id: 1234,
+      title: "테스크 그룹 1",
+      status: "TERMINATED",
+      created_at: "2023-11-21 15:35:42.230977 +00:00",
+      due_date: "2023-11-22 15:35:42.230977 +00:00",
+      tasks: [
+        { id: 123, title: "테스크1" },
+        { id: 124, title: "테스크2" },
+        { id: 125, title: "테스크3" },
+        { id: 126, title: "테스크4" },
+      ],
+    },
+    {
+      id: 1234,
+      title: "테스크 그룹 1",
+      status: "IN_PROGRESS",
+      created_at: "2023-11-21 15:35:42.230977 +00:00",
+      due_date: "2023-11-22 15:35:42.230977 +00:00",
+      tasks: [
+        { id: 123, title: "테스크1" },
+        { id: 124, title: "테스크2" },
+        { id: 125, title: "테스크3" },
+        { id: 126, title: "테스크4" },
+      ],
     },
   ],
   permission: "OWNER",
