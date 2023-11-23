@@ -25,6 +25,8 @@ import { colors } from './constant/color';
 import { bpmax } from '@/libs/styles/constants';
 import GitHubSkeleton from './GitHubSkeleton';
 
+import { roboto } from '@/pages/_app';
+
 const flipAnimation = {
   hidden: { rotateY: 0 },
   visible: { rotateY: 180 },
@@ -62,7 +64,9 @@ export default function Keyword({ status }: Props) {
         if (idx < threshold) return acc;
         return acc + cur[1];
       }, 0);
-      return [...sorted.slice(0, threshold), ['Etc', etc]];
+      return etc
+        ? [...sorted.slice(0, threshold), ['Etc', etc]]
+        : sorted.slice(0, threshold);
     },
     enabled: !!id,
     retry: 0,
@@ -208,7 +212,7 @@ export default function Keyword({ status }: Props) {
                       font: {
                         weight: 'bold',
                         size: 20,
-                        family: 'Roboto',
+                        family: roboto.style.fontFamily,
                       },
                     },
                   },
@@ -318,7 +322,9 @@ export default function Keyword({ status }: Props) {
                         justify-content: center;
                       `}
                     >
-                      ETC
+                      {stackList?.at(idx)?.at(0) === 'Etc'
+                        ? 'ETC'
+                        : stackList?.at(idx)?.at(0)?.toString().toUpperCase()}
                     </div>
                   )}
                 </motion.div>

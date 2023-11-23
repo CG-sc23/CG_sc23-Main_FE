@@ -64,7 +64,9 @@ export default function Stack({ status }: Props) {
         if (idx < threshold) return acc;
         return acc + cur[1];
       }, 0);
-      return [...sorted.slice(0, threshold), ['Etc', etc]];
+      return etc
+        ? [...sorted.slice(0, threshold), ['Etc', etc]]
+        : sorted.slice(0, threshold);
     },
     enabled: !!id,
     retry: 0,
@@ -319,7 +321,9 @@ export default function Stack({ status }: Props) {
                         justify-content: center;
                       `}
                     >
-                      ETC
+                      {stackList?.at(idx)?.at(0) === 'Etc'
+                        ? 'ETC'
+                        : stackList?.at(idx)?.at(0)?.toString().toUpperCase()}
                     </div>
                   )}
                 </motion.div>
