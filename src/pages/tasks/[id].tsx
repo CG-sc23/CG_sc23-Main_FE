@@ -1,16 +1,13 @@
 import { colors } from '@/components/constant/color';
-import { bpmax, breakpoints } from '@/libs/styles/constants';
+import { bpmax } from '@/libs/styles/constants';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import dynamic from 'next/dynamic';
 import MDEditor from '@uiw/react-md-editor';
 import useGetTask from '@/hooks/task/useGetTask';
 import LoadingSpinner from '@/components/Spinner';
-import { calculateDDay } from '@/libs/utils/project';
 import Image from 'next/image';
 import { formatDate } from '@/libs/utils';
 import { useMemo } from 'react';
-// const MDEditor = dynamic(() => import('@uiw/react-md-editor'));
 
 const MEMBER_LIMIT = 5;
 const OVERLAP_NUMBER = 25;
@@ -282,85 +279,6 @@ const LoadingWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-`;
-
-// ! DUMMY
-const DummyProfileThumbnail = styled.div`
-  width: 100%;
-  height: 100%;
-
-  border-radius: 9999px;
-  background-color: ${(props) => (props.color ? props.color : 'aqua')};
-`;
-const DummyProjectThumbnail = styled.div`
-  width: 8rem;
-  height: 8rem;
-
-  border-radius: 9999px;
-  background-color: aqua;
-`;
-const dummyTag = ['234', 'sdg', 'wergt', 'dsfhdf', 'cvbvcxb'];
-const dummyMember = [
-  'red',
-  'black',
-  'grey',
-  'blue',
-  'green',
-  'tomato',
-  'purple',
-  'yellow',
-  'brown',
-  'aqua',
-  'yellowgreen',
-  'violet',
-  'pink',
-];
-const dummyMD = `
-  # Header 1
-  
-  ## Header 2
-
-  ### Header 3
-
-  #### Header 4
-
-  body
-  # Header 1
-  
-  ## Header 2
-
-  ### Header 3
-
-  #### Header 4
-
-  body
-  # Header 1
-  
-  ## Header 2
-
-  ### Header 3
-
-  #### Header 4
-
-  body
-  # Header 1
-  
-  ## Header 2
-
-  ### Header 3
-
-  #### Header 4
-
-  body
-  # Header 1
-  
-  ## Header 2
-
-  ### Header 3
-
-  #### Header 4
-
-  body
 `;
 
 export default function TaskPage() {

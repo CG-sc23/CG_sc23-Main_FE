@@ -20,7 +20,7 @@ const MenuBar = dynamic(() => import('@/components/MenuBar'), {
   loading: () => <NavContainer />,
 });
 
-const roboto = Roboto({
+export const roboto = Roboto({
   weight: ['100', '300', '400', '500', '700', '900'],
   subsets: [
     'cyrillic',

@@ -17,7 +17,6 @@ import type {
 
 export const GitHub = {
   async getCommonStack(queries: CommonStackApiQuery) {
-    console.log(queries.stack);
     try {
       return await http.get<CommonStackApiResponse>(
         `/external-history/v1/common/stack/${queries.stack}`,

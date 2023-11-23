@@ -25,6 +25,7 @@ import { bpmax } from '@/libs/styles/constants';
 import GitHubSkeleton from './GitHubSkeleton';
 
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { roboto } from '@/pages/_app';
 
 const flipAnimation = {
   hidden: { rotateY: 0 },
@@ -209,7 +210,7 @@ export default function Stack({ status }: Props) {
                       font: {
                         weight: 'bold',
                         size: 20,
-                        family: 'Roboto',
+                        family: roboto.style.fontFamily,
                       },
                     },
                   },
