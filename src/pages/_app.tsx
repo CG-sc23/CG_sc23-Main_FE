@@ -55,6 +55,17 @@ export default function App({ Component, pageProps }: AppProps) {
         html {
           font-family: ${roboto.style.fontFamily};
         }
+        .w-md-editor {
+          --md-editor-font-family: ${roboto.style.fontFamily} !important;
+        }
+        .w-md-editor-text-input,
+        .w-md-editor-text-pre > code,
+        .w-md-editor-text-pre > code > span,
+        .w-md-editor-text-pre {
+          font-family: ${roboto.style.fontFamily} !important;
+          font-size: 1.2rem !important;
+          line-height: 1.5rem !important;
+        }
       `}</style>
       <QueryClientProvider client={queryClient}>
         <HydrationBoundary state={pageProps.dehydratedState}>
