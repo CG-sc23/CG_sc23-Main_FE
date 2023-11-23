@@ -259,7 +259,7 @@ export type CreateProjectApiAuthTokenAndBody = AuthToken & {
 };
 export type CreateProjectApiResponse = SuccessAndOptionalReason & {
   created_at?: string;
-  project_id?: number;
+  id?: number;
   status?: ProjectStatus;
   title: string;
   short_description?: string;

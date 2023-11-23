@@ -263,7 +263,7 @@ export type CreateProjectAuthTokenAndBody = AuthToken & {
   };
 };
 export type CreateProjectResponse = OkAndOptionalReason & {
-  project_id?: number;
+  id?: number;
   status?: string;
   created_at?: string;
   title?: string;

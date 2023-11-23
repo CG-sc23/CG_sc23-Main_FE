@@ -1,26 +1,26 @@
-import { useEffect, useMemo, useState } from "react";
-import styled from "@emotion/styled";
-import { css } from "@emotion/react";
-import { bpmax } from "@/libs/styles/constants";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { InferGetServerSidePropsType } from "next";
-import dynamic from "next/dynamic";
-import useUser from "@/hooks/user/useUser";
-import { useRouter } from "next/router";
-import Dropzone from "@/components/Dropzone";
-import { extractImageLinks } from "@/libs/utils/editor";
-import { safeLocalStorage } from "@toss/storage";
-import { uploadImg } from "@/libs/utils/s3";
-import { queryKey } from "@/libs/constant";
-import { colors } from "@/components/constant/color";
-import Card from "@/components/Card";
-import useSnackBar from "@/hooks/useSnackBar";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import client from "@/api/client";
-import { CreateProjectAuthTokenAndBody } from "@/libs/type/client";
+import { useEffect, useMemo, useState } from 'react';
+import styled from '@emotion/styled';
+import { css } from '@emotion/react';
+import { bpmax } from '@/libs/styles/constants';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { InferGetServerSidePropsType } from 'next';
+import dynamic from 'next/dynamic';
+import useUser from '@/hooks/user/useUser';
+import { useRouter } from 'next/router';
+import Dropzone from '@/components/Dropzone';
+import { extractImageLinks } from '@/libs/utils/editor';
+import { safeLocalStorage } from '@toss/storage';
+import { uploadImg } from '@/libs/utils/s3';
+import { queryKey } from '@/libs/constant';
+import { colors } from '@/components/constant/color';
+import Card from '@/components/Card';
+import useSnackBar from '@/hooks/useSnackBar';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import client from '@/api/client';
+import { CreateProjectAuthTokenAndBody } from '@/libs/type/client';
 
-const Editor = dynamic(() => import("@/components/Editor"), { ssr: false });
+const Editor = dynamic(() => import('@/components/Editor'), { ssr: false });
 
 const Container = styled.div`
   width: 896px;
@@ -106,39 +106,39 @@ const Submit = styled.button`
   font-size: 1.3rem;
 
   transition: background-color 0.2s ease;
-  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
+  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
   &:hover {
     background-color: ${(props) =>
       props.disabled ? colors.grey200 : colors.grey500};
   }
 `;
 
-const titlePlaceholder = "프로젝트 제목을 작성해주세요";
+const titlePlaceholder = '프로젝트 제목을 작성해주세요';
 const shortDescriptionPlaceholder =
-  "프로젝트에 대한 간단한 설명을 작성해주세요";
-const descriptionPlaceholder = "프로젝트 설명을 작성해주세요";
+  '프로젝트에 대한 간단한 설명을 작성해주세요';
+const descriptionPlaceholder = '프로젝트 설명을 작성해주세요';
 
-type FormData = Partial<CreateProjectAuthTokenAndBody["body"]>;
+type FormData = Partial<CreateProjectAuthTokenAndBody['body']>;
 export default function ProjectForm({}: InferGetServerSidePropsType<any>) {
   const token = safeLocalStorage.get(queryKey.USER_ACCESS_TOKEN);
 
   const { user: loggedInUser, isLoggedIn } = useUser();
   const { openSnackBar } = useSnackBar();
   const router = useRouter();
-  const [shortDescription, setShortDescription] = useState("");
-  const [markdown, setMarkdown] = useState("");
+  const [shortDescription, setShortDescription] = useState('');
+  const [markdown, setMarkdown] = useState('');
   const [thumbnail, setThumbnail] = useState<string | undefined>();
   const [dueDate, setDueDate] = useState<Date | null>(new Date());
   const [isLoading, setIsLoading] = useState(false);
   const { register, handleSubmit, getValues } = useForm<FormData>({
     defaultValues: {
-      title: "",
+      title: '',
     },
   });
 
   const isDisabled = useMemo(
-    () => !(getValues("title") && shortDescription && markdown && thumbnail),
-    [getValues, shortDescription, markdown, thumbnail]
+    () => !(getValues('title') && shortDescription && markdown && thumbnail),
+    [getValues, shortDescription, markdown, thumbnail],
   );
 
   const onUploadThumbnailImage = async (file: File) => {
@@ -173,15 +173,15 @@ export default function ProjectForm({}: InferGetServerSidePropsType<any>) {
       })
       .finally(() => setIsLoading(false));
 
-    if (res?.ok) return router.push(`/projects/${res.project_id}`);
+    if (res?.ok) return router.push(`/projects/${res.id}`);
     openSnackBar(`입력이 잘못되었습니다.\n다시 입력해주세요.`);
   };
 
   useEffect(() => {
     if (isLoggedIn) return;
 
-    openSnackBar("로그인 먼저 해주세요!");
-    router.replace("/");
+    openSnackBar('로그인 먼저 해주세요!');
+    router.replace('/');
   }, [isLoggedIn]);
 
   return (
@@ -199,7 +199,7 @@ export default function ProjectForm({}: InferGetServerSidePropsType<any>) {
           >
             <Dropzone
               onFileAdded={onUploadThumbnailImage}
-              defaultThumbnail={"/project.jpg"}
+              defaultThumbnail={'/project.jpg'}
             />
           </div>
           {/* 프로젝트 제목 */}
@@ -208,7 +208,7 @@ export default function ProjectForm({}: InferGetServerSidePropsType<any>) {
             <Input
               id="title"
               type="text"
-              {...register("title")}
+              {...register('title')}
               placeholder={titlePlaceholder}
             />
           </Block>

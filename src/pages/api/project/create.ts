@@ -60,7 +60,7 @@ export default async function handleCreateProject(
     description: data?.description,
     description_resource_links: data?.description_resource_links,
     created_at: data?.created_at,
-    project_id: data?.project_id,
+    id: data?.id,
     status: data?.status,
   });
 }
