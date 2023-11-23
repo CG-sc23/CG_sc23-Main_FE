@@ -9,7 +9,11 @@ import { colors } from '@/components/constant/color';
 import { bpmax } from '@/libs/styles/constants';
 import useSnackBar from '@/hooks/useSnackBar';
 import Editor from '@/components/Editor';
-import dynamic from 'next/dynamic';
+import useUser from '@/hooks/user/useUser';
+import client from '@/api/client';
+import { extractImageLinks } from '@/libs/utils/editor';
+import { useRouter } from 'next/router';
+import Switch from 'react-switch';
 
 const Container = styled.div`
   position: relative;
@@ -133,15 +137,66 @@ const Title = styled.h1`
   font-weight: bold;
 `;
 const PreviewWrapper = styled.div``;
+const SubmitBar = styled.div`
+  box-sizing: border-box;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+
+  background-color: ${colors.grey50};
+
+  box-shadow: 1px -4px 18px -3px rgba(56, 56, 56, 0.75);
+  -webkit-box-shadow: 1px -4px 18px -3px rgba(56, 56, 56, 0.75);
+  -moz-box-shadow: 1px -4px 18px -3px rgba(56, 56, 56, 0.75);
+
+  width: 100%;
+  padding: 1rem 1.5rem;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+`;
+const PublicToggle = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  font-size: 1.3rem;
+  font-weight: bold;
+`;
+const SubmitButton = styled.button`
+  background-color: ${colors.green400};
+
+  font-size: 1.3rem;
+  font-weight: bold;
+
+  border-radius: 5px;
+  text-align: center;
+
+  padding: 10px 15px;
+
+  color: ${colors.white};
+
+  cursor: pointer;
+
+  transition: background-color 0.2s ease;
+  &:hover {
+    background-color: ${colors.green200};
+  }
+`;
 
 const titlePlaceholder = '제목을 입력해주세요';
 const tagPlaceholder = '태그를 입력해주세요';
 export default function Write() {
+  const router = useRouter();
+  const { accessToken } = useUser();
   const { openSnackBar } = useSnackBar();
   const [title, setTitle] = useState('');
   const [tag, setTag] = useState('');
   const [tagList, setTagList] = useState<string[]>([]);
   const [markdown, setMarkdown] = useState('');
+  const [isPublic, setIsPublic] = useState(true);
 
   const onTagSubmit = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.code !== 'Enter') return;
@@ -170,6 +225,30 @@ export default function Write() {
       .concat(tagList.slice(targetIndex + 1));
 
     setTagList(updatedList);
+  };
+
+  const onSubmit = async () => {
+    if (!accessToken) return;
+    if (!router.query?.id) return;
+    if (!title) return openSnackBar('제목을 입력해주세요.');
+    if (!tagList.length) return openSnackBar('태그를 입력해주세요.');
+    if (!markdown) return openSnackBar('내용을 입력해주세요.');
+
+    const res = await client.createTask({
+      token: accessToken,
+      body: {
+        title,
+        tags: JSON.stringify(tagList),
+        description: markdown,
+        description_resource_links: JSON.stringify(extractImageLinks(markdown)),
+        is_public: isPublic,
+      },
+      task_group_id: router.query?.id as string,
+    });
+
+    if (res?.ok) {
+      router.replace(`/tasks/${res.task_id}`);
+    } else openSnackBar('요청에 실패하였습니다.');
   };
 
   return (
@@ -211,7 +290,7 @@ export default function Write() {
         </EditorWrapper>
       </EditorSection>
       <PreviewSection>
-        <Title>{title ?? titlePlaceholder}</Title>
+        <Title>{title || titlePlaceholder}</Title>
         <PreviewWrapper data-color-mode="light">
           <MDEditor.Markdown
             source={markdown}
@@ -221,6 +300,20 @@ export default function Write() {
           />
         </PreviewWrapper>
       </PreviewSection>
+      <SubmitBar>
+        <PublicToggle>
+          공개
+          <Switch
+            checked={isPublic}
+            onChange={(checked) => setIsPublic(checked)}
+            checkedIcon={false}
+            uncheckedIcon={false}
+          />
+        </PublicToggle>
+        <SubmitButton type="button" onClick={onSubmit}>
+          작성
+        </SubmitButton>
+      </SubmitBar>
     </Container>
   );
 }

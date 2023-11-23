@@ -38,6 +38,7 @@ const Button = styled(Link)`
   width: 3.5rem;
   height: 3.5rem;
   border-radius: 4rem;
+  z-index: 9999;
   font-size: 1.5rem;
   font-weight: 500;
   background-color: ${colors.black};

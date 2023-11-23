@@ -238,6 +238,7 @@ export default function MenuBar() {
               >
                 {isLoading ? null : (
                   <Image
+                    priority
                     src={
                       user?.profileImageLink && user?.profileImageUpdatedAt
                         ? `${user?.profileImageLink}?timestamp=${user?.profileImageUpdatedAt}`

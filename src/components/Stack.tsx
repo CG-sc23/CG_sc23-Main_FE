@@ -282,7 +282,7 @@ export default function Stack({ status }: Props) {
                         color: ${colors.white};
                       `}
                     >
-                      {stackList?.at(idx)?.at(1)?.toLocaleString()} Uses
+                      {stackList?.at(idx)?.at(1)?.toLocaleString()} Lines
                     </div>
                   ) : logo.url ? (
                     <div

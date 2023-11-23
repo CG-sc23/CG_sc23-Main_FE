@@ -10,6 +10,24 @@ import {
   MakeInviteResponse,
   ModifyProjectAuthTokenAndBody,
   ModifyProjectAuthResponse,
+  CreateMileStoneAuthTokenAndBody,
+  CreateMilestoneAuthResponse,
+  CreateTaskAuthResponse,
+  CreateTaskAuthTokenAndBody,
+  CreateTaskGroupAuthResponse,
+  CreateTaskGroupAuthTokenAndBody,
+  ModifyMileStoneAuthTokenAndBody,
+  ModifyMilestoneAuthResponse,
+  ModifyTaskAuthResponse,
+  ModifyTaskAuthTokenAndBody,
+  ModifyTaskGroupAuthResponse,
+  ModifyTaskGroupAuthTokenAndBody,
+  GetMileStoneAuthTokenAndBody,
+  GetMilestoneAuthResponse,
+  GetTaskAuthResponse,
+  GetTaskAuthTokenAndBody,
+  GetTaskGroupAuthResponse,
+  GetTaskGroupAuthTokenAndBody,
 } from '@/libs/type/client';
 
 export const Projects = {
@@ -89,6 +107,165 @@ export const Projects = {
       return data;
     } catch (e) {
       return handleClientError<ModifyProjectAuthResponse>(e);
+    }
+  },
+};
+
+export const Milestone = {
+  async createMileStone(payload: CreateMileStoneAuthTokenAndBody) {
+    try {
+      const { data } = await http.post<CreateMilestoneAuthResponse>(
+        `/api/milestone/create/${payload.project_id}`,
+        payload.body,
+        {
+          headers: {
+            Authorization: `Token ${payload.token}`,
+          },
+        },
+      );
+
+      return data;
+    } catch (e) {
+      return handleClientError<CreateMilestoneAuthResponse>(e);
+    }
+  },
+  async modifyMilestone(payload: ModifyMileStoneAuthTokenAndBody) {
+    try {
+      const { data } = await http.put<ModifyMilestoneAuthResponse>(
+        `/api/milestone/modify/${payload.milestone_id}`,
+        payload.body,
+        {
+          headers: {
+            Authorization: `Token ${payload.token}`,
+          },
+        },
+      );
+
+      return data;
+    } catch (e) {
+      return handleClientError<ModifyMilestoneAuthResponse>(e);
+    }
+  },
+  async milestoneInfo(params: GetMileStoneAuthTokenAndBody) {
+    try {
+      const { data } = await http.get<GetMilestoneAuthResponse>(
+        `/api/milestone/info/${params.milestone_id}`,
+        {
+          headers: {
+            Authorization: params.token ? `Token ${params.token}` : null,
+          },
+        },
+      );
+
+      return data;
+    } catch (e) {
+      return handleClientError<GetMilestoneAuthResponse>(e);
+    }
+  },
+};
+
+export const TaskGroup = {
+  async createTaskGroup(payload: CreateTaskGroupAuthTokenAndBody) {
+    try {
+      const { data } = await http.post<CreateTaskGroupAuthResponse>(
+        `/api/task-group/create/${payload.milestone_id}`,
+        payload.body,
+        {
+          headers: {
+            Authorization: `Token ${payload.token}`,
+          },
+        },
+      );
+
+      return data;
+    } catch (e) {
+      return handleClientError<CreateTaskGroupAuthResponse>(e);
+    }
+  },
+  async modifyTaskGroup(payload: ModifyTaskGroupAuthTokenAndBody) {
+    try {
+      const { data } = await http.put<ModifyTaskGroupAuthResponse>(
+        `/api/task-group/modify/${payload.task_group_id}`,
+        payload.body,
+        {
+          headers: {
+            Authorization: `Token ${payload.token}`,
+          },
+        },
+      );
+
+      return data;
+    } catch (e) {
+      return handleClientError<ModifyTaskGroupAuthResponse>(e);
+    }
+  },
+  async TaskGroupInfo(params: GetTaskGroupAuthTokenAndBody) {
+    try {
+      const { data } = await http.get<GetTaskGroupAuthResponse>(
+        `/api/task-group/info/${params.task_group_id}`,
+        {
+          headers: {
+            Authorization: params.token ? `Token ${params.token}` : null,
+          },
+        },
+      );
+
+      return data;
+    } catch (e) {
+      return handleClientError<GetTaskGroupAuthResponse>(e);
+    }
+  },
+};
+
+export const Task = {
+  async createTask(payload: CreateTaskAuthTokenAndBody) {
+    try {
+      const { data } = await http.post<CreateTaskAuthResponse>(
+        `/api/task/create/${payload.task_group_id}`,
+        payload.body,
+        {
+          headers: {
+            Authorization: `Token ${payload.token}`,
+          },
+        },
+      );
+
+      return data;
+    } catch (e) {
+      return handleClientError<CreateTaskAuthResponse>(e);
+    }
+  },
+  async modifyTask(payload: ModifyTaskAuthTokenAndBody) {
+    try {
+      const { data } = await http.put<ModifyTaskAuthResponse>(
+        `/api/task/modify/${payload.task_id}`,
+        payload.body,
+        {
+          headers: {
+            Authorization: `Token ${payload.token}`,
+          },
+        },
+      );
+
+      return data;
+    } catch (e) {
+      return handleClientError<ModifyTaskAuthResponse>(e);
+    }
+  },
+  async TaskInfo(params: GetTaskAuthTokenAndBody) {
+    try {
+      const { data } = await http.get<GetTaskAuthResponse>(
+        `/api/task/info/${params.task_id}`,
+        {
+          headers: {
+            Authorization: params.token ? `Token ${params.token}` : null,
+          },
+        },
+      );
+
+      return data;
+    } catch (e) {
+      return handleClientError<GetTaskAuthResponse>(e);
     }
   },
 };

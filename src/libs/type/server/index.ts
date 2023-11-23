@@ -170,7 +170,12 @@ export type GetPreSignedURLApiResponse = {
 };
 
 // ! PROJECT
+type TaskGroupStatus = 'READY_PROGRESSING' | 'COMPLETED';
+type MilestoneStatus = 'IN_PROGRESS' | 'COMPLETED';
 type ProjectStatus = 'READY' | 'IN_PROGRESS' | 'COMPLETED' | 'TERMINATED';
+type TaskPermission = 'OWNER' | 'MANAGER' | 'MEMBER' | 'NOTHING';
+type TaskGroupPermission = 'OWNER' | 'MANAGER' | 'MEMBER' | 'NOTHING';
+type MilestonePermission = 'OWNER' | 'MANAGER' | 'MEMBER' | 'NOTHING';
 type ProjectPermission = 'OWNER' | 'MANAGER' | 'MEMBER' | 'NOTHING';
 type Member = {
   id: number;
@@ -179,10 +184,53 @@ type Member = {
   profile_image_link: string | null;
   profile_image_updated_at: string | null;
 };
+type Task = {
+  id: number;
+  project?: { id: number; title: string; thumbnail_image: string };
+  milestone?: { id: number; subject: string };
+  task_group?: { id: number; title: string };
+  owner?: {
+    id: number;
+    name: string;
+  };
+  title: string;
+  description?: string;
+  description_resource_links?: string[] | string;
+  created_at?: string;
+  tags?: string[];
+  members?: Member[];
+  is_public?: boolean;
+  permission?: TaskPermission;
+};
+type TaskGroup = {
+  id: number;
+  project?: { id: number; title: string; thumbnail_image: string };
+  milestone?: { id: number; subject: string };
+  tasks?: Task[];
+  created_by?: {
+    id: number;
+    name: string;
+  };
+  status?: TaskGroupStatus;
+  title: string;
+  created_at?: string;
+  due_date?: string;
+  permission?: TaskGroupPermission;
+};
 type Milestone = {
   id: number;
+  project?: { id: number; title: string; thumbnail_image: string };
+  created_by?: {
+    id: number;
+    name: string;
+  };
+  status?: MilestoneStatus;
   subject: string;
-  tags: string[];
+  tags?: string[];
+  created_at?: string;
+  due_date?: string;
+  task_groups?: TaskGroup[];
+  permission?: MilestonePermission;
 };
 type Project = {
   id: number;
@@ -197,7 +245,7 @@ type Project = {
   description_resource_links?: string;
   permission?: ProjectPermission;
   owner?: Member;
-  milestone?: Milestone[];
+  milestones?: Milestone[];
 };
 export type CreateProjectApiAuthTokenAndBody = AuthToken & {
   body: {
@@ -243,6 +291,56 @@ export type MakeInviteApiResponse = SuccessAndOptionalReason & {
 };
 export type ModifyProjectAuthApiTokenAndBody = AuthToken & {
   project_id: string;
-  body: Project;
+  body: Partial<Project>;
 };
 export type ModifyProjectAuthApiResponse = SuccessAndOptionalReason;
+
+// ! MILESTONE
+export type CreateMileStoneAuthApiTokenAndBody = AuthToken & {
+  project_id: string;
+  body: Project;
+};
+export type CreateMilestoneAuthApiResponse = SuccessAndOptionalReason;
+export type ModifyMileStoneAuthApiTokenAndBody = AuthToken & {
+  milestone_id: string;
+  body: Partial<Project>;
+};
+export type ModifyMilestoneAuthApiResponse = SuccessAndOptionalReason;
+export type GetMileStoneAuthApiTokenAndBody = Partial<AuthToken> & {
+  milestone_id: string;
+};
+export type GetMilestoneAuthApiResponse = SuccessAndOptionalReason & Milestone;
+
+// ! TASK GROUP
+export type CreateTaskGroupAuthApiTokenAndBody = AuthToken & {
+  milestone_id: string;
+  body: Project;
+};
+export type CreateTaskGroupAuthApiResponse = SuccessAndOptionalReason;
+export type ModifyTaskGroupAuthApiTokenAndBody = AuthToken & {
+  task_group_id: string;
+  body: Partial<Project>;
+};
+export type ModifyTaskGroupAuthApiResponse = SuccessAndOptionalReason;
+export type GetTaskGroupAuthApiTokenAndBody = Partial<AuthToken> & {
+  task_group_id: string;
+};
+export type GetTaskGroupAuthApiResponse = SuccessAndOptionalReason & TaskGroup;
+
+// ! TASK
+export type CreateTaskAuthApiTokenAndBody = AuthToken & {
+  task_group_id: string;
+  body: Project;
+};
+export type CreateTaskAuthApiResponse = SuccessAndOptionalReason & {
+  task_id?: number;
+};
+export type ModifyTaskAuthApiTokenAndBody = AuthToken & {
+  task_id: string;
+  body: Partial<Project>;
+};
+export type ModifyTaskAuthApiResponse = SuccessAndOptionalReason;
+export type GetTaskAuthApiTokenAndBody = Partial<AuthToken> & {
+  task_id: string;
+};
+export type GetTaskAuthApiResponse = SuccessAndOptionalReason & Task;

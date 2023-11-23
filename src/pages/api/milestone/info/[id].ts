@@ -1,5 +1,6 @@
 import server from '@/api/server';
-import type { GetProjectInfoResponse } from '@/libs/type/client';
+import type { GetMilestoneAuthResponse } from '@/libs/type/client';
+import { assert } from '@/libs/utils/assert';
 import type { NextApiResponse, NextApiRequest } from 'next';
 
 type AuthHeader = `Token ${string}`;
@@ -9,20 +10,21 @@ function getTokenFromAuthHeader(authHeader: AuthHeader) {
 
   return token;
 }
-export default async function handleProjectInfo(
+
+export default async function handleMileStoneInfo(
   req: NextApiRequest,
-  res: NextApiResponse<GetProjectInfoResponse>,
+  res: NextApiResponse<GetMilestoneAuthResponse>,
 ) {
   if (req.method !== 'GET') return res.status(405).end();
+
+  const authHeader = req.headers.authorization as AuthHeader;
 
   if (!req.query?.id) return res.status(404).end();
   const id = req.query.id as string;
 
-  const authHeader = req.headers.authorization as AuthHeader;
-
-  const result = await server.getProjectInfo({
-    project_id: id,
+  const result = await server.getMilestoneInfo({
     token: getTokenFromAuthHeader(authHeader),
+    milestone_id: id,
   });
 
   if (result === undefined)
@@ -33,24 +35,24 @@ export default async function handleProjectInfo(
 
   const { data } = result;
 
-  if (!data.success) {
+  if (data.detail) {
     return res.status(401).json({ ok: false, reason: data.detail });
+  }
+  if (!data.success) {
+    return res.status(400).json({ ok: false, reason: data.reason });
   }
 
   return res.status(200).json({
     ok: true,
     id: data?.id,
-    title: data.title,
-    thumbnail_image: data.thumbnail_image,
-    short_description: data.short_description,
-    due_date: data.due_date,
-    description: data?.description,
-    description_resource_links: data?.description_resource_links,
-    created_at: data?.created_at,
+    project: data?.project,
+    created_by: data?.created_by,
     status: data?.status,
+    subject: data?.subject,
+    tags: data?.tags,
+    created_at: data?.created_at,
+    due_date: data?.due_date,
+    task_groups: data?.task_groups,
     permission: data?.permission,
-    members: data?.members,
-    owner: data?.owner,
-    milestone: data?.milestones ?? [],
   });
 }

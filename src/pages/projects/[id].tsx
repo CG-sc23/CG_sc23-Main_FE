@@ -13,7 +13,7 @@ import LoadingSpinner from '@/components/Spinner';
 import Link from 'next/link';
 import { FaRegPlusSquare } from 'react-icons/fa';
 import { milestoneCreationPermitted } from '@/libs/utils/milestone';
-import { useState } from 'react';
+import { MouseEvent, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import client from '@/api/client';
 import {
@@ -85,9 +85,22 @@ const Button = styled.button`
   }
 `;
 
+const TagWrapper = styled.div`
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+`;
+
+const Tag = styled.div`
+  padding: 0.5rem 1rem;
+  border-radius: 0.2rem;
+  background-color: ${colors.grey300};
+  color: black;
+`;
+
 export default function ProjectDetail() {
-  const token = safeLocalStorage.get(queryKey.USER_ACCESS_TOKEN);
   const { project, isLoading, refetch } = useGetProject();
+  const token = safeLocalStorage.get(queryKey.USER_ACCESS_TOKEN);
   const { openSnackBar } = useSnackBar();
   const [toggle, setToggle] = useState('000');
 
@@ -108,6 +121,24 @@ export default function ProjectDetail() {
   const [projectInviteeLoading, setProjectInviteeLoading] = useState(false);
 
   const [projectStatusLoading, setProjectStatusLoading] = useState(false);
+
+  const [newMilestone, setNewMilestone] = useState('');
+  const [dueDate, setDueDate] = useState(new Date());
+  const [tags, setTags] = useState<string[]>([]);
+  const [tag, setTag] = useState<string>('');
+
+  const handleTagDelete = (e: MouseEvent<HTMLElement>) => {
+    const targetIndex = tags.findIndex(
+      (tag) => tag === e.currentTarget.innerHTML,
+    );
+
+    const updatedList = tags
+      .slice(0, targetIndex)
+      .concat(tags.slice(targetIndex + 1));
+
+    setTags(updatedList);
+  };
+  const [createMileStoneLoading, setCreateMileStoneLoading] = useState(false);
 
   const getToggleState = (idx: number) => {
     return toggle.at(idx) === '1';
@@ -145,9 +176,6 @@ export default function ProjectDetail() {
     if (res?.ok) refetch();
     else openSnackBar('요청이 실패하였습니다.');
   };
-
-  const [newMilestone, setNewMilestone] = useState('');
-  const [dueDate, setDueDate] = useState(new Date());
 
   return (
     <Container>
@@ -737,7 +765,7 @@ export default function ProjectDetail() {
               `}
             >
               <SubHeader>마일스톤 생성</SubHeader>
-              <form
+              <div
                 css={css`
                   display: flex;
                   flex-direction: column;
@@ -759,7 +787,6 @@ export default function ProjectDetail() {
                       border: 1px solid black;
                     }
                   `}
-                  required
                   placeholder="새로운 마일스톤명 입력"
                   value={newMilestone}
                   onChange={(e) => setNewMilestone(e.target.value)}
@@ -785,8 +812,77 @@ export default function ProjectDetail() {
                     }
                   `}
                 />
+                <input
+                  css={css`
+                    width: 100%;
+                    padding: 0.8rem;
+                    border: 1px solid ${colors.grey200};
+                    border-radius: 0.2rem;
+                    font-size: 1.2rem;
+                    box-sizing: border-box;
+                    &:focus {
+                      outline: none;
+                      border: 1px solid black;
+                    }
+                  `}
+                  placeholder="새로 태그 추가"
+                  value={tag}
+                  onChange={(e) => {
+                    setTag(e.target.value);
+                  }}
+                  onKeyUp={(e) => {
+                    if (e.code !== 'Enter') return;
+                    if (tag === '') return;
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    setTag('');
+                    if (tags.includes(tag)) return;
+                    setTags((prev) => [...prev, tag]);
+                  }}
+                />
+                <TagWrapper>
+                  {tags.map((tag) => (
+                    <Tag
+                      onClick={handleTagDelete}
+                      css={css`
+                        &:hover {
+                          cursor: pointer;
+                        }
+                      `}
+                    >
+                      {tag}
+                    </Tag>
+                  ))}
+                </TagWrapper>
                 <button
-                  type="submit"
+                  type="button"
+                  onClick={async () => {
+                    if (createMileStoneLoading) return;
+                    if (!token) return;
+                    if (!project?.id) return;
+
+                    setCreateMileStoneLoading(true);
+
+                    const res = await client
+                      .createMileStone({
+                        token,
+                        project_id: project?.id + '',
+                        body: {
+                          due_date: dueDate.toISOString(),
+                          subject: newMilestone,
+                          tags: JSON.stringify(tags),
+                        },
+                      })
+                      .finally(() => setCreateMileStoneLoading(false));
+
+                    if (res?.ok) {
+                      refetch();
+                    } else openSnackBar('요청에 실패하였습니다.');
+                    setNewMilestone('');
+                    setTag('');
+                    setTags([]);
+                  }}
                   css={css`
                     width: 100%;
                     font-size: 1.2rem;
@@ -801,10 +897,11 @@ export default function ProjectDetail() {
                       }
                     }
                   `}
+                  disabled={createMileStoneLoading}
                 >
-                  생성
+                  {createMileStoneLoading ? '로딩 중' : '생성'}
                 </button>
-              </form>
+              </div>
             </Card>
           ) : (
             <></>
@@ -844,7 +941,7 @@ export default function ProjectDetail() {
                 <Milestone
                   id={milestone.id}
                   subject={milestone.subject}
-                  tags={milestone.tags}
+                  tags={(milestone.tags as string[]) || []}
                 />
               ))}
             </Block>

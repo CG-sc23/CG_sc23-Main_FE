@@ -1,5 +1,4 @@
 const path = require('path');
-const removeImports = require('next-remove-imports')();
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -55,10 +54,4 @@ const nextConfig = {
   swcMinify: true,
 };
 
-// module.exports = removeImports({
-//   ...nextConfig,
-//   webpack(config, options) {
-//     return config;
-//   },
-// });
 module.exports = nextConfig;

@@ -1,15 +1,17 @@
-import styled from "@emotion/styled";
-import { bpmax } from "@/libs/styles/constants";
-import Card from "@/components/Card";
-import { TaskGroupData } from "@/libs/constant/test";
-import { colors } from "@/components/constant/color";
-import { css } from "@emotion/react";
-import { FaPlus } from "react-icons/fa6";
-import Link from "next/link";
-import { Task } from "@/components/Projects/Task";
-import { FaChevronRight } from "react-icons/fa6";
+import styled from '@emotion/styled';
+import { bpmax } from '@/libs/styles/constants';
+import Card from '@/components/Card';
+import { colors } from '@/components/constant/color';
+import { css } from '@emotion/react';
+import { FaPlus } from 'react-icons/fa6';
+import Link from 'next/link';
+import { Task } from '@/components/Projects/Task';
+import { FaChevronRight } from 'react-icons/fa6';
+import useGetTaskGroup from '@/hooks/taskGroup/useGetTaskGroup';
+import LoadingSpinner from '@/components/Spinner';
 
 const Container = styled.div`
+  position: relative;
   height: 100%;
   width: 896px;
   padding: 1rem;
@@ -49,98 +51,88 @@ const TaskWrapper = styled.div`
   }
 `;
 
-type TaskGroup = {
-  task_group_id: number;
-  project: {
-    id: number;
-    title: string;
-  };
-  milestone: {
-    id: number;
-    subject: string;
-  };
-  created_by: {
-    id: number;
-    name: string;
-  };
-  title: string;
-  status: string;
-  due_date: string;
-  created_at: string;
-  permission: string;
-  tasks: {
-    id: number;
-    title: string;
-    created_at: string;
-    tags: string[];
-  }[];
-};
-
-const taskGroup: TaskGroup = TaskGroupData;
-
 export default function TaskGroup() {
+  const { taskGroup, isLoading } = useGetTaskGroup();
+
   return (
     <Container>
-      <Card>
+      {isLoading ? (
         <div
           css={css`
+            width: 100%;
+            height: 100%;
+
             display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
+            justify-content: center;
+            align-items: center;
           `}
         >
-          <div
-            css={css`
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
-              width: 100%;
-            `}
-          >
-            <Header>{taskGroup.title}</Header>
-            <Link
-              href="/tasks/write"
+          <LoadingSpinner />
+        </div>
+      ) : (
+        <>
+          <Card>
+            <div
               css={css`
-                padding: 0.5rem;
-                border: 2px solid black;
-                border-radius: 0.2rem;
-                &:hover {
-                  background-color: black;
-                  color: white;
-                }
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
               `}
             >
-              <FaPlus size="20" />
-            </Link>
-          </div>
-          <div
-            css={css`
-              display: flex;
-              gap: 0.5rem;
-            `}
-          >
-            <Link href={`/projects/${taskGroup.project.id}`}>
-              {taskGroup.project.title}
-            </Link>
-            <FaChevronRight />
-            <Link href={`/milestones/${taskGroup.milestone.id}`}>
-              {taskGroup.milestone.subject}
-            </Link>
-          </div>
-        </div>
+              <div
+                css={css`
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  width: 100%;
+                `}
+              >
+                <Header>{taskGroup?.title}</Header>
+                <Link
+                  href={`/tasks/write/${taskGroup?.id}`}
+                  css={css`
+                    padding: 0.5rem;
+                    border: 2px solid black;
+                    border-radius: 0.2rem;
+                    &:hover {
+                      background-color: black;
+                      color: white;
+                    }
+                  `}
+                >
+                  <FaPlus size="20" />
+                </Link>
+              </div>
+              <div
+                css={css`
+                  display: flex;
+                  gap: 0.5rem;
+                `}
+              >
+                <Link href={`/projects/${taskGroup?.project?.id}`}>
+                  {taskGroup?.project?.title}
+                </Link>
+                <FaChevronRight />
+                <Link href={`/milestones/${taskGroup?.milestone?.id}`}>
+                  {taskGroup?.milestone?.subject}
+                </Link>
+              </div>
+            </div>
 
-        <HR />
-        <TaskWrapper>
-          {taskGroup.tasks.map((task) => (
-            <Task
-              title={task.title}
-              id={task.id}
-              created_at={task.created_at}
-              tags={task.tags}
-            />
-          ))}
-        </TaskWrapper>
-      </Card>
+            <HR />
+            <TaskWrapper>
+              {taskGroup?.tasks?.map((task) => (
+                <Task
+                  title={task.title}
+                  id={task.id}
+                  created_at={task.created_at!}
+                  tags={task.tags as string[]}
+                />
+              ))}
+            </TaskWrapper>
+          </Card>
+        </>
+      )}
     </Container>
   );
 }

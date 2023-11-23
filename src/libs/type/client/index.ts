@@ -20,7 +20,7 @@ export type SignOutAuthToken = { token: string };
 export type SignUpEmailVerifyResponse = OkAndOptionalReason;
 export type SignUpEmailVerifyConfirmResponse = OkAndOptionalReason;
 
-export type Provider = "KAKAO" | "NAVER";
+export type Provider = 'KAKAO' | 'NAVER';
 export type SocialAuthPayload = {
   code: string;
   provider: Provider;
@@ -54,7 +54,7 @@ export type GetUserInfoResponse = OkAndOptionalReason & {
   name?: string;
   profileImageLink?: string | null;
   profileImageUpdatedAt?: string | null;
-  provider?: "our" | "naver" | "kakao";
+  provider?: 'our' | 'naver' | 'kakao';
 };
 export type UserDetailInfoQuery = {
   user_id: string;
@@ -68,7 +68,7 @@ export type UserDetailInfoResponse = OkAndOptionalReason & {
   short_description?: string;
   description?: string;
   description_resource_links?: string[];
-  provider?: "our" | "naver" | "kakao";
+  provider?: 'our' | 'naver' | 'kakao';
 };
 export type ModifyUserDetailInfoAuthTokenAndBody = {
   token: string;
@@ -127,7 +127,7 @@ export type GitHubAccountCheckQuery = {
   github_link: string;
 };
 export type GitHubAccountCheckResponse = OkAndOptionalReason;
-type GITHUB_STATUS = "IN_PROGRESS" | "COMPLETE" | "FAIL";
+type GITHUB_STATUS = 'IN_PROGRESS' | 'COMPLETE' | 'FAIL';
 export type GithubUpdateStatusAuthToken = {
   user_id: string;
 };
@@ -154,16 +154,16 @@ export type AWSResponse = {
   url: string;
   fields: {
     key: string;
-    "x-amz-algorithm": string;
-    "x-amz-credential": string;
-    "x-amz-date": string;
+    'x-amz-algorithm': string;
+    'x-amz-credential': string;
+    'x-amz-date': string;
     policy: string;
-    "x-amz-signature": string;
+    'x-amz-signature': string;
   };
 };
 export type GetPreSignedURLParamAndAuthToken = {
   file_name: string;
-  type: "resource" | "profile";
+  type: 'resource' | 'profile';
 } & AuthToken;
 export type GetPreSignedURLResponse = OkAndOptionalReason & {
   url?: string;
@@ -171,12 +171,17 @@ export type GetPreSignedURLResponse = OkAndOptionalReason & {
 };
 
 // ! PROJECT
+export type TaskGroupStatus = 'READY_PROGRESSING' | 'COMPLETED';
+export type MilestoneStatus = 'IN_PROGRESS' | 'COMPLETED';
 export type ProjectStatus =
-  | "READY"
-  | "IN_PROGRESS"
-  | "COMPLETED"
-  | "TERMINATED";
-type ProjectPermission = "OWNER" | "MANAGER" | "MEMBER" | "NOTHING";
+  | 'READY'
+  | 'IN_PROGRESS'
+  | 'COMPLETED'
+  | 'TERMINATED';
+export type TaskPermission = 'OWNER' | 'MANAGER' | 'MEMBER' | 'NOTHING';
+export type TaskGroupPermission = 'OWNER' | 'MANAGER' | 'MEMBER' | 'NOTHING';
+export type MilestonePermission = 'OWNER' | 'MANAGER' | 'MEMBER' | 'NOTHING';
+export type ProjectPermission = 'OWNER' | 'MANAGER' | 'MEMBER' | 'NOTHING';
 export type Member = {
   id: number;
   name: string;
@@ -184,10 +189,53 @@ export type Member = {
   profile_image_link: string | null;
   profile_image_updated_at: string | null;
 };
-type Milestone = {
+export type Task = {
   id: number;
+  project?: { id: number; title: string; thumbnail_image: string };
+  milestone?: { id: number; subject: string };
+  task_group?: { id: number; title: string };
+  owner?: {
+    id: number;
+    name: string;
+  };
+  title: string;
+  description?: string;
+  description_resource_links?: string[] | string;
+  created_at?: string;
+  tags?: string[] | string;
+  members?: Member[];
+  is_public?: boolean;
+  permission?: TaskPermission;
+};
+export type TaskGroup = {
+  id: number;
+  project?: { id: number; title: string; thumbnail_image: string };
+  milestone?: { id: number; subject: string };
+  tasks?: Task[];
+  created_by?: {
+    id: number;
+    name: string;
+  };
+  status?: TaskGroupStatus;
+  title: string;
+  created_at?: string;
+  due_date?: string;
+  permission?: TaskGroupPermission;
+};
+export type Milestone = {
+  id: number;
+  project?: { id: number; title: string; thumbnail_image: string };
+  created_by?: {
+    id: number;
+    name: string;
+  };
+  status?: MilestoneStatus;
   subject: string;
-  tags: string[];
+  tags?: string[] | string;
+  created_at?: string;
+  due_date?: string;
+  task_groups?: TaskGroup[];
+  permission?: MilestonePermission;
 };
 export type Project = {
   id: number;
@@ -251,3 +299,51 @@ export type ModifyProjectAuthTokenAndBody = AuthToken & {
   project_id: number;
 };
 export type ModifyProjectAuthResponse = OkAndOptionalReason & Partial<Project>;
+
+// ! MILESTONE
+export type CreateMileStoneAuthTokenAndBody = AuthToken & {
+  project_id: string;
+  body: Partial<Milestone>;
+};
+export type CreateMilestoneAuthResponse = OkAndOptionalReason;
+export type ModifyMileStoneAuthTokenAndBody = AuthToken & {
+  milestone_id: string;
+  body: Partial<Milestone>;
+};
+export type ModifyMilestoneAuthResponse = OkAndOptionalReason;
+export type GetMileStoneAuthTokenAndBody = Partial<AuthToken> & {
+  milestone_id: string;
+};
+export type GetMilestoneAuthResponse = OkAndOptionalReason & Partial<Milestone>;
+
+// ! TASK GROUP
+export type CreateTaskGroupAuthTokenAndBody = AuthToken & {
+  milestone_id: string;
+  body: Partial<TaskGroup>;
+};
+export type CreateTaskGroupAuthResponse = OkAndOptionalReason;
+export type ModifyTaskGroupAuthTokenAndBody = AuthToken & {
+  task_group_id: string;
+  body: Partial<TaskGroup>;
+};
+export type ModifyTaskGroupAuthResponse = OkAndOptionalReason;
+export type GetTaskGroupAuthTokenAndBody = Partial<AuthToken> & {
+  task_group_id: string;
+};
+export type GetTaskGroupAuthResponse = OkAndOptionalReason & Partial<TaskGroup>;
+
+// ! TASK
+export type CreateTaskAuthTokenAndBody = AuthToken & {
+  task_group_id: string;
+  body: Partial<Task>;
+};
+export type CreateTaskAuthResponse = OkAndOptionalReason & { task_id?: number };
+export type ModifyTaskAuthTokenAndBody = AuthToken & {
+  task_id: string;
+  body: Partial<Task>;
+};
+export type ModifyTaskAuthResponse = OkAndOptionalReason;
+export type GetTaskAuthTokenAndBody = Partial<AuthToken> & {
+  task_id: string;
+};
+export type GetTaskAuthResponse = OkAndOptionalReason & Partial<Task>;

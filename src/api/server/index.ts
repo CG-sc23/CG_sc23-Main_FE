@@ -11,7 +11,7 @@ import {
 import { Deactivate, UserInfo } from '@/api/server/user';
 import { Resources } from '@/api/server/resource';
 import { GitHub } from '@/api/server/externalHistory';
-import { Projects } from '@/api/server/project';
+import { Projects, MileStone, TaskGroup, Task } from '@/api/server/project';
 import { handleApiError } from '@/api/handleError';
 
 const server = {
@@ -35,6 +35,9 @@ const server = {
   ...Resources,
   ...GitHub,
   ...Projects,
+  ...MileStone,
+  ...TaskGroup,
+  ...Task,
 };
 
 export default server;

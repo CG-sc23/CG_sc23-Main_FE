@@ -1,15 +1,15 @@
 import { colors } from '@/components/constant/color';
-import { ProjectStatus } from '../type/client';
+import { MilestoneStatus, ProjectStatus } from '../type/client';
 
 type ReturnProjectStatus = {
   text: string;
   color: string;
 };
-type Strategies = {
+type ProjectStrategies = {
   [key in ProjectStatus]: ReturnProjectStatus;
 };
 export function myProjectStatus(provider: ProjectStatus) {
-  const strategies: Strategies = {
+  const strategies: ProjectStrategies = {
     READY: {
       text: '시작 대기',
       color: colors.blue500,
@@ -25,6 +25,23 @@ export function myProjectStatus(provider: ProjectStatus) {
     TERMINATED: {
       text: '프로젝트 포기',
       color: colors.red500,
+    },
+  } as const;
+  return strategies[provider as keyof typeof strategies];
+}
+
+type MileStoneStrategies = {
+  [key in MilestoneStatus]: ReturnProjectStatus;
+};
+export function myMileStoneStatus(provider: MilestoneStatus) {
+  const strategies: MileStoneStrategies = {
+    IN_PROGRESS: {
+      text: '진행 중',
+      color: colors.green500,
+    },
+    COMPLETED: {
+      text: `프로젝트 완료`,
+      color: colors.yellow500,
     },
   } as const;
   return strategies[provider as keyof typeof strategies];

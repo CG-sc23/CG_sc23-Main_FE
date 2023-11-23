@@ -4,6 +4,12 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import dynamic from 'next/dynamic';
 import MDEditor from '@uiw/react-md-editor';
+import useGetTask from '@/hooks/task/useGetTask';
+import LoadingSpinner from '@/components/Spinner';
+import { calculateDDay } from '@/libs/utils/project';
+import Image from 'next/image';
+import { formatDate } from '@/libs/utils';
+import { useMemo } from 'react';
 // const MDEditor = dynamic(() => import('@uiw/react-md-editor'));
 
 const MEMBER_LIMIT = 5;
@@ -11,6 +17,7 @@ const OVERLAP_NUMBER = 25;
 
 const Container = styled.div`
   position: relative;
+  width: 896px;
 
   background-color: ${colors.white};
 `;
@@ -22,7 +29,7 @@ const Article = styled.section`
   display: flex;
   flex-direction: column;
 
-  width: ${`${breakpoints[3]}px`};
+  min-height: 100vh;
   height: 100%;
 
   margin: 0 auto;
@@ -124,10 +131,13 @@ const MarkdownWrapper = styled.div`
   position: relative;
   flex: 1;
 
+  background-color: transparent;
+
   padding: 1rem 0.5rem;
 `;
 const Markdown = css({
   height: '100%',
+  backgroundColor: 'transparent',
 });
 const Detail = styled.div`
   position: relative;
@@ -154,6 +164,9 @@ const ProjectThumbnailWrapper = styled.div`
 
   width: 8rem;
   height: 8rem;
+
+  border-radius: 9999px;
+  overflow: hidden;
 
   display: flex;
   justify-content: center;
@@ -200,7 +213,7 @@ const DetailRight = styled.div`
   display: flex;
   flex-direction: column;
 
-  justify-content: space-between;
+  justify-content: flex-end;
 
   height: 100%;
 `;
@@ -260,6 +273,15 @@ const More = styled.div`
   border-radius: 9999px;
   background-color: ${colors.white};
   border: 1px solid ${colors.grey300};
+`;
+
+const LoadingWrapper = styled.div`
+  width: 100%;
+  height: 100vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 // ! DUMMY
@@ -342,62 +364,97 @@ const dummyMD = `
 `;
 
 export default function TaskPage() {
+  const { task, isLoading } = useGetTask();
+  const ownerProfile = useMemo(
+    () => task?.members?.find((m) => m.id === task?.owner?.id),
+    [task],
+  );
+
   return (
     <Container>
-      <Article>
-        <Header>
-          <Title>Title</Title>
-          <Info>
-            <Author>
-              <AuthorThumbnailWrapper>
-                <DummyProfileThumbnail />
-              </AuthorThumbnailWrapper>
-              이웅희
-            </Author>
-            <Date>2020-02-02</Date>
-          </Info>
-          <TagList>
-            {dummyTag.map((val) => (
-              <Tag key={val}>{val}</Tag>
-            ))}
-          </TagList>
-        </Header>
-        <Content>
-          <MarkdownWrapper data-color-mode="light">
-            <MDEditor.Markdown source={dummyMD} css={Markdown} />
-          </MarkdownWrapper>
-        </Content>
-        <Detail>
-          <DetailLeft>
-            <ProjectThumbnailWrapper>
-              <DummyProfileThumbnail />
-            </ProjectThumbnailWrapper>
-            <TaskParents>
-              <ProjectTitle>Project Title</ProjectTitle>
-              <MilestoneTitle>Milestone Title</MilestoneTitle>
-              <TaskGroupTitle>TaskGroup Title</TaskGroupTitle>
-            </TaskParents>
-          </DetailLeft>
-          <DetailRight>
-            <DDay className="plus">D-Day +24</DDay>
-            <ThumbnailGroup>
-              {dummyMember.map((val, idx, origin) => (
-                <MemberThumbnailWrapper
-                  key={val}
-                  index={idx}
-                  length={origin.length}
-                >
-                  {idx < MEMBER_LIMIT ? (
-                    <DummyProfileThumbnail color={val} />
-                  ) : (
-                    <More>+ {origin.length - MEMBER_LIMIT}</More>
-                  )}
-                </MemberThumbnailWrapper>
-              ))}
-            </ThumbnailGroup>
-          </DetailRight>
-        </Detail>
-      </Article>
+      {isLoading ? (
+        <LoadingWrapper>
+          <LoadingSpinner />
+        </LoadingWrapper>
+      ) : (
+        <Article>
+          <Header>
+            <Title>{task?.title}</Title>
+            <Info>
+              <Author>
+                <AuthorThumbnailWrapper>
+                  <Image
+                    src={
+                      ownerProfile?.profile_image_link &&
+                      ownerProfile?.profile_image_updated_at
+                        ? `${ownerProfile?.profile_image_link}?timestamp=${ownerProfile?.profile_image_updated_at}`
+                        : '/profile.jpg'
+                    }
+                    alt={ownerProfile?.email as string}
+                    fill
+                  />
+                </AuthorThumbnailWrapper>
+                {task?.owner?.name}
+              </Author>
+              <Date>{formatDate(task?.created_at as string)}</Date>
+            </Info>
+            <TagList>
+              {Array.isArray(task?.tags) &&
+                task?.tags?.map((val) => <Tag key={val}>{val}</Tag>)}
+            </TagList>
+          </Header>
+          <Content>
+            <MarkdownWrapper data-color-mode="light">
+              <MDEditor.Markdown
+                source={task?.description}
+                css={Markdown}
+                style={{ backgroundColor: 'transparent' }}
+              />
+            </MarkdownWrapper>
+          </Content>
+          <Detail>
+            <DetailLeft>
+              <ProjectThumbnailWrapper>
+                <Image
+                  src={task?.project?.thumbnail_image ?? '/project.jpg'}
+                  fill
+                  alt="project_thumbnail"
+                />
+              </ProjectThumbnailWrapper>
+              <TaskParents>
+                <ProjectTitle>{task?.project?.title}</ProjectTitle>
+                <MilestoneTitle>{task?.milestone?.subject}</MilestoneTitle>
+                <TaskGroupTitle>{task?.task_group?.title}</TaskGroupTitle>
+              </TaskParents>
+            </DetailLeft>
+            <DetailRight>
+              <ThumbnailGroup>
+                {task?.members?.map((m, idx, origin) => (
+                  <MemberThumbnailWrapper
+                    key={`${m.email}_${m.id}`}
+                    index={idx}
+                    length={origin.length}
+                  >
+                    {idx < MEMBER_LIMIT ? (
+                      <Image
+                        src={
+                          m?.profile_image_link && m?.profile_image_updated_at
+                            ? `${m?.profile_image_link}?timestamp=${m?.profile_image_updated_at}`
+                            : '/profile.jpg'
+                        }
+                        alt={m.email}
+                        fill
+                      />
+                    ) : (
+                      <More>+ {origin.length - MEMBER_LIMIT}</More>
+                    )}
+                  </MemberThumbnailWrapper>
+                ))}
+              </ThumbnailGroup>
+            </DetailRight>
+          </Detail>
+        </Article>
+      )}
     </Container>
   );
 }
