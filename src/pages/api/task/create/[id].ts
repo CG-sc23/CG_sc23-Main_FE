@@ -55,6 +55,6 @@ export default async function handleCreateTask(
 
   return res.status(200).json({
     ok: true,
-    task_id: data?.task_id,
+    id: data?.id,
   });
 }

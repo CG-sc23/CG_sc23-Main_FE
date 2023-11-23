@@ -247,7 +247,7 @@ export default function Write() {
     });
 
     if (res?.ok) {
-      router.replace(`/tasks/${res.task_id}`);
+      router.replace(`/tasks/${res?.id}`);
     } else openSnackBar('요청에 실패하였습니다.');
   };
 

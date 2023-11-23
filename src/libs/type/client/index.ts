@@ -337,7 +337,7 @@ export type CreateTaskAuthTokenAndBody = AuthToken & {
   task_group_id: string;
   body: Partial<Task>;
 };
-export type CreateTaskAuthResponse = OkAndOptionalReason & { task_id?: number };
+export type CreateTaskAuthResponse = OkAndOptionalReason & { id?: number };
 export type ModifyTaskAuthTokenAndBody = AuthToken & {
   task_id: string;
   body: Partial<Task>;

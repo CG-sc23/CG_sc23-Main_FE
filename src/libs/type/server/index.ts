@@ -333,7 +333,7 @@ export type CreateTaskAuthApiTokenAndBody = AuthToken & {
   body: Project;
 };
 export type CreateTaskAuthApiResponse = SuccessAndOptionalReason & {
-  task_id?: number;
+  id?: number;
 };
 export type ModifyTaskAuthApiTokenAndBody = AuthToken & {
   task_id: string;
