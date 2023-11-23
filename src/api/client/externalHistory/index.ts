@@ -19,7 +19,7 @@ export const GitHub = {
   async commonStack(queries: CommonStackQuery) {
     try {
       const { data } = await http.get<CommonStackResponse>(
-        `/api/external-history/common/${encodeURI(queries.stack)}`,
+        `/api/external-history/common/${encodeURIComponent(queries.stack)}`,
       );
 
       return data;
