@@ -15,6 +15,12 @@ import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { NavContainer } from '@/components/MenuBar';
 
+// import '@uiw/react-md-editor/dist/markdown-editor.css';
+// import '@uiw/react-md-editor/lib/esm/components/DragBar/index.css';
+// import '@uiw/react-md-editor/lib/esm/components/TextArea/index.css';
+// import '@uiw/react-md-editor/lib/esm/components/Toolbar/index.css';
+// import '@uiw/react-md-editor/lib/esm/components/Toolbar/Child.css';
+
 const MenuBar = dynamic(() => import('@/components/MenuBar'), {
   ssr: false,
   loading: () => <NavContainer />,

@@ -42,7 +42,7 @@ type Props = { title: string; id: number; created_at: string; tags: string[] };
 export function Task({ title, id, created_at, tags }: Props) {
   return (
     <Container href={`/tasks/${id}`}>
-      <Title>title</Title>
+      <Title>{title}</Title>
       <span
         css={css`
           font-size: 0.8rem;
