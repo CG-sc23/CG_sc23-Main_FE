@@ -8,8 +8,8 @@ export const server = axios.create({
 
 // export const client = axios.create();
 export const client = axios.create({
-  // baseURL: 'https://www.domowebest.com',
-  baseURL: 'http://localhost:3000',
+  baseURL: 'https://www.domowebest.com',
+  // baseURL: 'http://localhost:3000',
 });
 
 // type SourceRequest = {
