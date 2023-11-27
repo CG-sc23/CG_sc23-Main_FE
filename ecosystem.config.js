@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       name: 'DOMO',
-      script: 'yarn',
+      script: '/run/user/1000/fnm_multishells/9564_1701077243664/bin/yarn',
       args: 'start',
       autorestart: true,
       watch: false,
