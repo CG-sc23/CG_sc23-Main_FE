@@ -5,7 +5,8 @@
   "scripts": {
     "build": "next build",
     "dev": "next dev --turbo",
-    "start": "next start",
+    "start": "next start -p 3000",
+    "prestart": "next clean && next build",
     "clean": "rimraf ./.next ./.swc ./coverage ./.reports ./.results ./node_modules ./.cache",
     "lint": "next lint",
     "lint:fix": "next lint --fix",

@@ -297,8 +297,9 @@ export default function Keyword({ status }: Props) {
                     >
                       <Image
                         src={logo.url}
-                        fill
                         alt={logo.color}
+                        fill
+                        unoptimized
                         priority
                         sizes="(max-width: 768px) 100px, (max-width: 1200px) 50vw, 33vw"
                         style={{
