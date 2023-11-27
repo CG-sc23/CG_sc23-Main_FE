@@ -59,7 +59,6 @@ jobs:
             cd /home/ubuntu/CG_sc23-Main_FE
 
             git pull -X theirs
-            yarn clean
             yarn install
             yarn run build
 
