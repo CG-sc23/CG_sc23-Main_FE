@@ -51,12 +51,11 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           port: ${{ secrets.EC2_PORT }}
           script: |
-            sudo npm install -g yarn pm2
-
             cd /home/ubuntu/app
-            yarn install --production
+            /run/user/1000/fnm_multishells/9564_1701077243664/bin/yarn install --production
 
-            pm2 reload ecosystem.config.js --env production || pm2 start ecosystem.config.js --env production
+            /run/user/1000/fnm_multishells/9564_1701077243664/bin/pm2 reload ecosystem.config.js --env production \
+            || /run/user/1000/fnm_multishells/9564_1701077243664/bin/pm2 start ecosystem.config.js --env production
 
       - name: Update Deployment Status (Success)
         if: success()
