@@ -60,7 +60,7 @@ jobs:
 
             git pull -X theirs
             yarn clean
-            yarn install --production
+            yarn install
 
             pm2 reload ecosystem.config.js || pm2 start ecosystem.config.js
 
