@@ -61,6 +61,7 @@ jobs:
             git pull -X theirs
             yarn clean
             yarn install
+            yarn run build
 
             pm2 reload ecosystem.config.js || pm2 start ecosystem.config.js
 
