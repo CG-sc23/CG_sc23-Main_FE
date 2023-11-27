@@ -1,0 +1,77 @@
+name: '[DOMO] Deploy'
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Run NextJS Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repositry
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install Dependencies
+        run: yarn install
+
+      - name: Build
+        run: yarn build
+
+      - name: Start Deployment
+        uses: bobheadxi/deployments@v1.4.0
+        id: deployment
+        with:
+          step: start
+          token: ${{ secrets.GITHUB_TOKEN }}
+          env: Production
+
+      - name: Copy files to EC2
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: ${{ secrets.EC2_PORT }}
+          source: '.next,public,package.json,yarn.lock,ecosystem.config.js'
+          target: '/home/ubuntu/app'
+
+      - name: Deploy on EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: ${{ secrets.EC2_PORT }}
+          script: |
+            cd /home/ubuntu/app
+            yarn install --production
+
+            pm2 reload ecosystem.config.js --env production || pm2 start ecosystem.config.js --env production
+
+      - name: Update Deployment Status (Success)
+        if: success()
+        uses: bobheadxi/deployments@v1.4.0
+        with:
+          step: finish
+          token: ${{ secrets.GITHUB_TOKEN }}
+          status: success
+          env: Production
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+
+      - name: Update Deployment Status (Failure)
+        if: failure()
+        uses: bobheadxi/deployments@v1.4.0
+        with:
+          step: finish
+          token: ${{ secrets.GITHUB_TOKEN }}
+          status: failure
+          env: Production
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
