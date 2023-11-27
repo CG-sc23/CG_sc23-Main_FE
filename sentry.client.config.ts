@@ -2,10 +2,10 @@
 // The config you add here will be used whenever a users loads a page in their browser.
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
-import * as Sentry from "@sentry/nextjs";
+import * as Sentry from '@sentry/nextjs';
 
 Sentry.init({
-  dsn: "https://8fff24501f99cf214ebc3c0291e3057c@o4506135474012160.ingest.sentry.io/4506297450889216",
+  dsn: 'https://8fff24501f99cf214ebc3c0291e3057c@o4506135474012160.ingest.sentry.io/4506297450889216',
 
   // Adjust this value in production, or use tracesSampler for greater control
   tracesSampleRate: 1,
@@ -23,8 +23,8 @@ Sentry.init({
   integrations: [
     new Sentry.Replay({
       // Additional Replay configuration goes in here, for example:
-      maskAllText: true,
-      blockAllMedia: true,
+      maskAllText: false,
+      blockAllMedia: false,
     }),
   ],
 });
