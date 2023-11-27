@@ -51,11 +51,15 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           port: ${{ secrets.EC2_PORT }}
           script: |
-            cd /home/ubuntu/app
-            /run/user/1000/fnm_multishells/9564_1701077243664/bin/yarn install --production
+            export PATH="/home/ubuntu/.local/share/fnm:$PATH"
+            eval "`fnm env`"
 
-            /run/user/1000/fnm_multishells/9564_1701077243664/bin/pm2 reload ecosystem.config.js \
-            || /run/user/1000/fnm_multishells/9564_1701077243664/bin/pm2 start ecosystem.config.js
+            alias pm2='authbind --deep pm2'
+
+            cd /home/ubuntu/app
+            yarn install --production
+
+            pm2 reload ecosystem.config.js || pm2 start ecosystem.config.js
 
       - name: Update Deployment Status (Success)
         if: success()
