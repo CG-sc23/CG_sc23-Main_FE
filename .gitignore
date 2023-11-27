@@ -42,3 +42,5 @@ next-env.d.ts
 
 # yarn
 .yarn
+# Sentry Config File
+.sentryclirc
