@@ -13,7 +13,7 @@ import { Project } from '@/libs/type/client';
 const MEMBER_LIMIT = 5;
 const OVERLAP_NUMBER = 25;
 
-const Card = styled(Link)`
+const Container = styled(Link)`
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
@@ -41,6 +41,46 @@ const Card = styled(Link)`
       color: white;
     }
   }
+`;
+
+const Title = styled.h1`
+  font-size: 1.5rem;
+  font-weight: 600;
+
+  text-overflow: clip;
+
+  height: 3rem;
+`;
+const Info = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+`;
+const Status = styled.span`
+  color: ${(props) => props.color};
+  font-weight: 500;
+`;
+const Div = styled.span`
+  display: block;
+  width: 1px;
+  height: 100%;
+  background-color: ${colors.grey500};
+`;
+const DDay = styled.span<{ sign: 'PLUS' | 'MINUS' }>`
+  color: ${(props) =>
+    props.sign === 'PLUS' ? colors.yellow500 : colors.green500};
+`;
+const ProjectThumbnailWrapper = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  ${bpmax[0]} {
+    display: none;
+  }
+`;
+const ShortDescription = styled.div`
+  line-height: 1.6;
+  flex: 1;
 `;
 
 const ThumbnailGroup = styled.div`
@@ -94,60 +134,17 @@ export default function Project({ project }: Props) {
   const projectStatus = myProjectStatus(project.status);
 
   return (
-    <Card key={`PROJECT_${project.id}`} href={`/projects/${project.id}`}>
-      {/* title */}
-      <h1
-        css={css`
-          font-size: 1.5rem;
-          font-weight: 600;
-        `}
-      >
-        {project.title}
-      </h1>
-      {/* status, due_date */}
-      <div
-        css={css`
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-        `}
-      >
-        <span
-          css={css`
-            color: ${projectStatus.color};
-            font-weight: 500;
-          `}
-        >
-          {projectStatus.text}
-        </span>
-        <span
-          css={css`
-            display: block;
-            width: 1px;
-            height: 100%;
-            background-color: ${colors.grey500};
-          `}
-        />
-        <span
-          css={css`
-            color: ${dDay.sign === 'PLUS' ? colors.yellow500 : colors.green500};
-          `}
-        >
+    <Container key={`PROJECT_${project.id}`} href={`/projects/${project.id}`}>
+      <Title>{project.title}</Title>
+      <Info>
+        <Status color={projectStatus.color}>{projectStatus.text}</Status>
+        <Div />
+        <DDay sign={dDay.sign}>
           D{dDay.sign === 'PLUS' ? '+' : '-'}
           {dDay.day}
-        </span>
-      </div>
-      {/* thumbnail image - only for mobile */}
-      <div
-        css={css`
-          display: flex;
-          width: 100%;
-          justify-content: center;
-          ${bpmax[0]} {
-            display: none;
-          }
-        `}
-      >
+        </DDay>
+      </Info>
+      <ProjectThumbnailWrapper>
         <Image
           src={project.thumbnail_image ?? '/project.jpg'}
           alt={project.title}
@@ -158,16 +155,8 @@ export default function Project({ project }: Props) {
             border-radius: 1rem;
           `}
         />
-      </div>
-      {/* short_descriptions */}
-      <p
-        css={css`
-          line-height: 1.6;
-        `}
-      >
-        {project.short_description}
-      </p>
-      {/* member's profiles */}
+      </ProjectThumbnailWrapper>
+      <ShortDescription>{project.short_description}</ShortDescription>
       <ThumbnailGroup>
         {project.members.map((member, idx, origin) => (
           <MemberThumbnailWrapper
@@ -192,6 +181,6 @@ export default function Project({ project }: Props) {
           </MemberThumbnailWrapper>
         ))}
       </ThumbnailGroup>
-    </Card>
+    </Container>
   );
 }
