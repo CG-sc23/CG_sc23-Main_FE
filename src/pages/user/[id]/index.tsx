@@ -3,29 +3,27 @@ import Image from 'next/image';
 import { css } from '@emotion/react';
 import { useMemo } from 'react';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
-
-import { bpmax } from '@/libs/styles/constants';
+import { safeLocalStorage } from '@toss/storage';
 import MDEditor from '@uiw/react-md-editor';
-// const MDEditor = dynamic(() => import('@uiw/react-md-editor'));
 
 import client from '@/api/client';
 
 import useUser from '@/hooks/user/useUser';
+import useSnackBar from '@/hooks/useSnackBar';
+
+import { bpmax } from '@/libs/styles/constants';
 import { assert } from '@/libs/utils/assert';
 import {
   GithubUpdateStatusResponse,
   UserDetailInfoResponse,
 } from '@/libs/type/client';
+import { queryKey } from '@/libs/constant';
 
-import Keyword from '@/components/Keyword';
-import Stack from '@/components/Stack';
 import { colors } from '@/components/constant/color';
 import ProjectWrapper from '@/components/Projects/ProjectWrapper';
 import ProjectCard from '@/components/Projects/ProjectCard';
-import { safeLocalStorage } from '@toss/storage';
-import { queryKey } from '@/libs/constant';
-import useSnackBar from '@/hooks/useSnackBar';
-import dynamic from 'next/dynamic';
+import GithubStatistic from '@/components/Profile/GithubStatistic';
+import Skeleton from '@/components/Skeleton';
 
 export const getServerSideProps = (async (ctx) => {
   const id = ctx.params?.id as string;
@@ -287,35 +285,7 @@ export default function Profile({
         {user.description ? (
           <MDEditor.Markdown source={user.description} />
         ) : (
-          <div
-            css={css`
-              position: relative;
-              min-height: 300px;
-              width: 100%;
-              margin-bottom: 1.5rem;
-
-              display: flex;
-
-              justify-content: center;
-              align-items: center;
-
-              gap: 10px;
-
-              background-color: ${colors.grey50};
-              border: 1px solid ${colors.grey200};
-            `}
-          >
-            <h2
-              css={css`
-                color: ${colors.black};
-                text-decoration: none;
-                font-size: 2rem;
-                font-weight: bold;
-              `}
-            >
-              아직 자기소개가 비어있어요!
-            </h2>
-          </div>
+          <Skeleton>아직 자기소개가 비어있어요!</Skeleton>
         )}
       </div>
       <div
@@ -324,8 +294,8 @@ export default function Profile({
           flex-direction: column;
         `}
       >
-        <Stack status={github_status.status} />
-        <Keyword status={github_status.status} />
+        <GithubStatistic status={github_status.status} title="언어" />
+        <GithubStatistic status={github_status.status} title="라이브러리" />
       </div>
       <h1
         css={css`
