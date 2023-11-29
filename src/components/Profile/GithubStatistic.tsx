@@ -12,6 +12,7 @@ import { Pie } from 'react-chartjs-2';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 import {
+  GitHubKeywordResponse,
   GitHubStackResponse,
   GithubUpdateStatusResponse,
 } from '@/libs/type/client';
@@ -180,17 +181,24 @@ export default function GithubStatistic({ status, title }: Props) {
   const { data: stackList } = useQuery({
     queryKey: [queryKey.USER_STACK, id, title],
     queryFn: async () => {
-      return await client.gitHubStack({
+      if (title === '언어') {
+        return await client.gitHubStack({
+          user_id: id as string,
+        });
+      }
+
+      return await client.gitHubKeyword({
         user_id: id as string,
       });
     },
     select: (r: unknown) => {
       if (!r) return null;
-      const res = r as GitHubStackResponse;
-      if (!res.stacks) return null;
+      const res = r as GitHubStackResponse & GitHubKeywordResponse;
+      const data = res?.stacks ?? res?.keywords;
+      if (!data) return null;
       const threshold = 5;
 
-      const sorted = Object.entries(res.stacks).sort((a, b) => {
+      const sorted = Object.entries(data).sort((a, b) => {
         if (a[1] > b[1]) return -1;
         if (a[1] === b[1]) return 0;
         return 1;
@@ -357,6 +365,7 @@ export default function GithubStatistic({ status, title }: Props) {
                   variants={flipAnimation}
                   onClick={() => onFlipBinary(idx)}
                   color={logo.color}
+                  key={`${title}_${id}_${logo.url}}`}
                 >
                   {getStackFlip(logo as Logo, flipBinary.at(idx) === '1')}
                 </Stack>
