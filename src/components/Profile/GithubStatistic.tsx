@@ -144,6 +144,14 @@ const FrontOfStackNoLogo = styled.div`
   justify-content: center;
 `;
 
+type Logo = {
+  name: string;
+  lines: number;
+  url: string | null;
+  color: string;
+  alphaColor: string;
+  logoColor: string;
+};
 type Props = {
   status: GithubUpdateStatusResponse['status'];
   title: '언어' | '라이브러리';
@@ -281,6 +289,40 @@ export default function GithubStatistic({ status, title }: Props) {
     [chartData, logoData],
   );
 
+  const getStackFlip = (logo: Logo, isBackSide: boolean) => {
+    if (isBackSide) {
+      return (
+        <BackOfStack>
+          {logo.lines?.toLocaleString()}&nbsp;{COUNTING_UNIT}
+        </BackOfStack>
+      );
+    }
+
+    if (logo?.url) {
+      return (
+        <FrontOfStack>
+          <Image
+            src={logo.url}
+            alt={logo.color}
+            fill
+            unoptimized
+            priority
+            sizes="(max-width: 768px) 100px, (max-width: 1200px) 50vw, 33vw"
+            style={{
+              objectFit: 'contain',
+            }}
+          />
+        </FrontOfStack>
+      );
+    }
+
+    return (
+      <FrontOfStackNoLogo color={logo.color}>
+        {logo.name?.toString().toUpperCase()}
+      </FrontOfStackNoLogo>
+    );
+  };
+
   return (
     <Container>
       <Title>{title}</Title>
@@ -316,29 +358,7 @@ export default function GithubStatistic({ status, title }: Props) {
                   onClick={() => onFlipBinary(idx)}
                   color={logo.color}
                 >
-                  {flipBinary.at(idx) === '1' ? (
-                    <BackOfStack>
-                      {logo.lines?.toLocaleString()}&nbsp;{COUNTING_UNIT}
-                    </BackOfStack>
-                  ) : logo.url ? (
-                    <FrontOfStack>
-                      <Image
-                        src={logo.url}
-                        alt={logo.color}
-                        fill
-                        unoptimized
-                        priority
-                        sizes="(max-width: 768px) 100px, (max-width: 1200px) 50vw, 33vw"
-                        style={{
-                          objectFit: 'contain',
-                        }}
-                      />
-                    </FrontOfStack>
-                  ) : (
-                    <FrontOfStackNoLogo color={logo.color}>
-                      {logo.name?.toString().toUpperCase()}
-                    </FrontOfStackNoLogo>
-                  )}
+                  {getStackFlip(logo as Logo, flipBinary.at(idx) === '1')}
                 </Stack>
               ))}
             </StackWrapper>
