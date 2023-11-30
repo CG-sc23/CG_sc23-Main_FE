@@ -28,6 +28,14 @@ import {
   ModifyTaskAuthApiResponse,
   GetTaskAuthApiTokenAndBody,
   GetTaskAuthApiResponse,
+  MakeJoinRequestApiAuthTokenAndPayload,
+  MakeJoinRequestApiResponse,
+  ReplyJoinRequestApiAuthTokenAndPayload,
+  ReplyJoinRequestApiResponse,
+  ViewJoinRequestApiAuthTokeAndQueries,
+  ViewJoinRequestApiResponse,
+  KickMemberApiAuthTokenAndPayload,
+  KickMemberApiResponse,
 } from '@/libs/type/server';
 
 export const Projects = {
@@ -97,6 +105,64 @@ export const Projects = {
       );
     } catch (e) {
       return handleApiError<ModifyProjectAuthApiResponse>(e);
+    }
+  },
+  async postMakeJoinRequest(payload: MakeJoinRequestApiAuthTokenAndPayload) {
+    try {
+      return await http.post<MakeJoinRequestApiResponse>(
+        `/project/v1/${payload.project_id}/join`,
+        payload.body,
+        {
+          headers: {
+            Authorization: `Token ${payload.token}`,
+          },
+        },
+      );
+    } catch (e) {
+      return handleApiError<MakeJoinRequestApiResponse>(e);
+    }
+  },
+  async postReplyJoinRequest(payload: ReplyJoinRequestApiAuthTokenAndPayload) {
+    try {
+      return await http.post<ReplyJoinRequestApiResponse>(
+        `/project/v1/join/reply`,
+        payload.body,
+        {
+          headers: {
+            Authorization: `Token ${payload.token}`,
+          },
+        },
+      );
+    } catch (e) {
+      return handleApiError<ReplyJoinRequestApiResponse>(e);
+    }
+  },
+  async getViewJoinRequest(params: ViewJoinRequestApiAuthTokeAndQueries) {
+    try {
+      return await http.get<ViewJoinRequestApiResponse>(
+        `/project/v1/${params.project_id}/join`,
+        {
+          headers: {
+            Authorization: `Token ${params.token}`,
+          },
+        },
+      );
+    } catch (e) {
+      return handleApiError<ViewJoinRequestApiResponse>(e);
+    }
+  },
+  async deleteKickMember(payload: KickMemberApiAuthTokenAndPayload) {
+    try {
+      return await http.delete<KickMemberApiResponse>(
+        `/project/v1/${payload.project_id}/kick?user_email=${payload.user_email}`,
+        {
+          headers: {
+            Authorization: `Token ${payload.token}`,
+          },
+        },
+      );
+    } catch (e) {
+      return handleApiError<KickMemberApiResponse>(e);
     }
   },
 };

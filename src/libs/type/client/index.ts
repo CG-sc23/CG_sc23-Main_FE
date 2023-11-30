@@ -299,6 +299,36 @@ export type ModifyProjectAuthTokenAndBody = AuthToken & {
   project_id: number;
 };
 export type ModifyProjectAuthResponse = OkAndOptionalReason & Partial<Project>;
+export type MakeJoinRequestAuthTokenAndPayload = AuthToken & {
+  project_id: number;
+  body: {
+    message: string;
+  };
+};
+export type MakeJoinRequestResponse = OkAndOptionalReason;
+export type ReplyJoinRequestAuthTokenAndPayload = AuthToken & {
+  body: {
+    join_request_id: number;
+    accept: boolean;
+  };
+};
+export type ReplyJoinRequestResponse = OkAndOptionalReason;
+export type ViewJoinRequestAuthTokeAndQueries = AuthToken & {
+  project_id: number;
+};
+export type ViewJoinRequestResponse = OkAndOptionalReason & {
+  result?: {
+    id: string;
+    user: Member;
+    message: string;
+    created_at: string;
+  }[];
+};
+export type KickMemberAuthTokenAndPayload = AuthToken & {
+  project_id: number;
+  user_email: string;
+};
+export type KickMemberResponse = OkAndOptionalReason;
 
 // ! MILESTONE
 export type CreateMileStoneAuthTokenAndBody = AuthToken & {
