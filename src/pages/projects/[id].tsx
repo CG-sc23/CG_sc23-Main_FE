@@ -1,34 +1,34 @@
-import styled from '@emotion/styled';
-import { bpmax, bpmin } from '@/libs/styles/constants';
-import { css } from '@emotion/react';
-import Card from '@/components/Card';
-import MDEditor from '@uiw/react-md-editor';
+import styled from "@emotion/styled";
+import { bpmax, bpmin } from "@/libs/styles/constants";
+import { css } from "@emotion/react";
+import Card from "@/components/Card";
+import MDEditor from "@uiw/react-md-editor";
 // const MDEditor = dynamic(() => import('@uiw/react-md-editor'), {ssr:false});
 
-import { myProjectStatus } from '@/libs/utils/project';
-import { colors } from '@/components/constant/color';
-import { Milestone } from '@/components/Projects/Milestone';
-import useGetProject from '@/hooks/project/useGetProject';
-import LoadingSpinner from '@/components/Spinner';
-import Link from 'next/link';
-import { FaRegPlusSquare } from 'react-icons/fa';
-import { milestoneCreationPermitted } from '@/libs/utils/milestone';
-import { MouseEvent, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
-import client from '@/api/client';
+import { myProjectStatus } from "@/libs/utils/project";
+import { colors } from "@/components/constant/color";
+import { Milestone } from "@/components/Projects/Milestone";
+import useGetProject from "@/hooks/project/useGetProject";
+import LoadingSpinner from "@/components/Spinner";
+import Link from "next/link";
+import { FaRegPlusSquare } from "react-icons/fa";
+import { milestoneCreationPermitted } from "@/libs/utils/milestone";
+import { MouseEvent, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import client from "@/api/client";
 import {
   MakeInviteResponse,
   ProjectStatus,
   SearchResponse,
-} from '@/libs/type/client';
-import { safeLocalStorage } from '@toss/storage';
-import { queryKey } from '@/libs/constant';
-import { GetProjectInviteForInviterApiResponse } from '@/libs/type/server';
-import useSnackBar from '@/hooks/useSnackBar';
-import ReactDatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import { formatDate } from '@/libs/utils';
-import dynamic from 'next/dynamic';
+} from "@/libs/type/client";
+import { safeLocalStorage } from "@toss/storage";
+import { queryKey } from "@/libs/constant";
+import { GetProjectInviteForInviterApiResponse } from "@/libs/type/server";
+import useSnackBar from "@/hooks/useSnackBar";
+import ReactDatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { formatDate } from "@/libs/utils";
+import dynamic from "next/dynamic";
 
 const Container = styled.div`
   height: 100%;
@@ -102,34 +102,34 @@ export default function ProjectDetail() {
   const { project, isLoading, refetch } = useGetProject();
   const token = safeLocalStorage.get(queryKey.USER_ACCESS_TOKEN);
   const { openSnackBar } = useSnackBar();
-  const [toggle, setToggle] = useState('000');
+  const [toggle, setToggle] = useState("000");
 
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [searchLoading, setSearchLoading] = useState(false);
-  const [searchResult, setSearchResult] = useState<SearchResponse['result']>(
-    [],
+  const [searchResult, setSearchResult] = useState<SearchResponse["result"]>(
+    []
   );
-  const [inviteList, setInviteList] = useState<SearchResponse['result']>([]);
+  const [inviteList, setInviteList] = useState<SearchResponse["result"]>([]);
   const [inviteResult, setInviteResult] = useState<
-    MakeInviteResponse['result']
+    MakeInviteResponse["result"]
   >([]);
   const [inviteLoading, setInviteLoading] = useState(false);
 
   const [projectInvitee, setProjectInvitee] = useState<
-    GetProjectInviteForInviterApiResponse['result']
+    GetProjectInviteForInviterApiResponse["result"]
   >([]);
   const [projectInviteeLoading, setProjectInviteeLoading] = useState(false);
 
   const [projectStatusLoading, setProjectStatusLoading] = useState(false);
 
-  const [newMilestone, setNewMilestone] = useState('');
+  const [newMilestone, setNewMilestone] = useState("");
   const [dueDate, setDueDate] = useState(new Date());
   const [tags, setTags] = useState<string[]>([]);
-  const [tag, setTag] = useState<string>('');
+  const [tag, setTag] = useState<string>("");
 
   const handleTagDelete = (e: MouseEvent<HTMLElement>) => {
     const targetIndex = tags.findIndex(
-      (tag) => tag === e.currentTarget.innerHTML,
+      (tag) => tag === e.currentTarget.innerHTML
     );
 
     const updatedList = tags
@@ -141,16 +141,16 @@ export default function ProjectDetail() {
   const [createMileStoneLoading, setCreateMileStoneLoading] = useState(false);
 
   const getToggleState = (idx: number) => {
-    return toggle.at(idx) === '1';
+    return toggle.at(idx) === "1";
   };
   const onToggle = (idx: number) => {
-    if (toggle.at(idx) === '1') {
-      setToggle((prev) => prev.slice(0, idx) + '0' + prev.slice(idx + 1));
+    if (toggle.at(idx) === "1") {
+      setToggle((prev) => prev.slice(0, idx) + "0" + prev.slice(idx + 1));
     } else {
       setToggle((prev) => {
-        const updated = '0'.repeat(prev.length);
+        const updated = "0".repeat(prev.length);
 
-        return updated.slice(0, idx) + '1' + updated.slice(idx + 1);
+        return updated.slice(0, idx) + "1" + updated.slice(idx + 1);
       });
     }
   };
@@ -174,7 +174,7 @@ export default function ProjectDetail() {
       .finally(() => setProjectStatusLoading(false));
 
     if (res?.ok) refetch();
-    else openSnackBar('요청이 실패하였습니다.');
+    else openSnackBar("요청이 실패하였습니다.");
   };
 
   return (
@@ -215,7 +215,7 @@ export default function ProjectDetail() {
             </Block>
           </Card>
           {milestoneCreationPermitted(project?.permission) ? (
-            <Card style={{ position: 'relative' }}>
+            <Card style={{ position: "relative" }}>
               <h1
                 css={css`
                   font-size: 2rem;
@@ -248,7 +248,7 @@ export default function ProjectDetail() {
 
                     if (!res?.ok) return;
                     const list = res.result?.filter(
-                      (r) => r.project_id === project.id,
+                      (r) => r.project_id === project.id
                     );
 
                     setProjectInvitee(list);
@@ -260,12 +260,12 @@ export default function ProjectDetail() {
               </div>
               <div>
                 <AnimatePresence>
-                  {toggle.includes('1') ? (
+                  {toggle.includes("1") ? (
                     <motion.div
                       initial={{ opacity: 0, height: 0 }}
                       animate={{
                         opacity: 1,
-                        height: 'auto',
+                        height: "auto",
                       }}
                       exit={{ opacity: 0, height: 0 }}
                       transition={{ duration: 0.2 }}
@@ -301,12 +301,12 @@ export default function ProjectDetail() {
 
                               const res = await client
                                 .searchUser({
-                                  email: search,
+                                  request_data: search,
                                 })
                                 .finally(() => setSearchLoading(false));
 
                               if (!res?.ok || !res.result) return;
-                              setSearch('');
+                              setSearch("");
                               setInviteResult([]);
                               setSearchResult(res.result);
                             }}
@@ -385,7 +385,7 @@ export default function ProjectDetail() {
                                   onClick={() => {
                                     const disable = inviteList?.find(
                                       (i) =>
-                                        i.email === searchResult.at(idx)?.email,
+                                        i.email === searchResult.at(idx)?.email
                                     );
                                     if (disable) return;
                                     setSearchResult(
@@ -393,10 +393,10 @@ export default function ProjectDetail() {
                                         prev && [
                                           ...prev.slice(0, idx),
                                           ...prev.slice(idx + 1),
-                                        ],
+                                        ]
                                     );
                                     setInviteList(
-                                      (prev) => prev && [...prev, res],
+                                      (prev) => prev && [...prev, res]
                                     );
                                   }}
                                 >
@@ -444,7 +444,7 @@ export default function ProjectDetail() {
                                         prev && [
                                           ...prev?.slice(0, idx),
                                           ...prev?.slice(idx + 1),
-                                        ],
+                                        ]
                                     );
                                   }}
                                   key={`INVITE_${res?.id}`}
@@ -520,7 +520,7 @@ export default function ProjectDetail() {
                                 setInviteLoading(true);
 
                                 const list = JSON.stringify(
-                                  inviteList.map((u) => u.email),
+                                  inviteList.map((u) => u.email)
                                 );
 
                                 const res = await client
@@ -563,7 +563,7 @@ export default function ProjectDetail() {
                                 background-color: ${colors.green200};
                               }
                             `}
-                            onClick={() => onStatus('IN_PROGRESS')}
+                            onClick={() => onStatus("IN_PROGRESS")}
                           >
                             진행 중
                           </Button>
@@ -575,7 +575,7 @@ export default function ProjectDetail() {
                                 background-color: ${colors.red200};
                               }
                             `}
-                            onClick={() => onStatus('TERMINATED')}
+                            onClick={() => onStatus("TERMINATED")}
                           >
                             포기
                           </Button>
@@ -587,7 +587,7 @@ export default function ProjectDetail() {
                                 background-color: ${colors.yellow200};
                               }
                             `}
-                            onClick={() => onStatus('COMPLETED')}
+                            onClick={() => onStatus("COMPLETED")}
                           >
                             완료
                           </Button>
@@ -831,12 +831,12 @@ export default function ProjectDetail() {
                     setTag(e.target.value);
                   }}
                   onKeyUp={(e) => {
-                    if (e.code !== 'Enter') return;
-                    if (tag === '') return;
+                    if (e.code !== "Enter") return;
+                    if (tag === "") return;
                     e.preventDefault();
                     e.stopPropagation();
 
-                    setTag('');
+                    setTag("");
                     if (tags.includes(tag)) return;
                     setTags((prev) => [...prev, tag]);
                   }}
@@ -867,7 +867,7 @@ export default function ProjectDetail() {
                     const res = await client
                       .createMileStone({
                         token,
-                        project_id: project?.id + '',
+                        project_id: project?.id + "",
                         body: {
                           due_date: dueDate.toISOString(),
                           subject: newMilestone,
@@ -878,9 +878,9 @@ export default function ProjectDetail() {
 
                     if (res?.ok) {
                       refetch();
-                    } else openSnackBar('요청에 실패하였습니다.');
-                    setNewMilestone('');
-                    setTag('');
+                    } else openSnackBar("요청에 실패하였습니다.");
+                    setNewMilestone("");
+                    setTag("");
                     setTags([]);
                   }}
                   css={css`
@@ -899,7 +899,7 @@ export default function ProjectDetail() {
                   `}
                   disabled={createMileStoneLoading}
                 >
-                  {createMileStoneLoading ? '로딩 중' : '생성'}
+                  {createMileStoneLoading ? "로딩 중" : "생성"}
                 </button>
               </div>
             </Card>
