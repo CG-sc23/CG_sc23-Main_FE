@@ -8,8 +8,8 @@ export default async function handleSearch(
 ) {
   if (req.method !== "GET") return res.status(405).end();
 
-  if (!req.query?.request_data) return res.status(404).end();
-  const request_data = req.query.request_data as string;
+  if (!req.query?.["request-data"]) return res.status(404).end();
+  const request_data = req.query?.["request-data"] as string;
 
   const result = await server.getSearchUser({
     request_data,
