@@ -1,25 +1,25 @@
-import server from '@/api/server';
-import type { SearchResponse } from '@/libs/type/client';
-import type { NextApiResponse, NextApiRequest } from 'next';
+import server from "@/api/server";
+import type { SearchResponse } from "@/libs/type/client";
+import type { NextApiResponse, NextApiRequest } from "next";
 
 export default async function handleSearch(
   req: NextApiRequest,
-  res: NextApiResponse<SearchResponse>,
+  res: NextApiResponse<SearchResponse>
 ) {
-  if (req.method !== 'GET') return res.status(405).end();
+  if (req.method !== "GET") return res.status(405).end();
 
-  if (!req.query?.email) return res.status(404).end();
-  const email = req.query.email as string;
+  if (!req.query?.["request-data"]) return res.status(404).end();
+  const request_data = req.query?.["request-data"] as string;
 
   const result = await server.getSearchUser({
-    email,
+    request_data,
   });
 
   if (result === undefined)
-    return res.status(500).json({ ok: false, reason: '서버 통신 없음' });
+    return res.status(500).json({ ok: false, reason: "서버 통신 없음" });
 
   if (result.data === undefined)
-    return res.status(500).json({ ok: false, reason: '서버 결과 없음' });
+    return res.status(500).json({ ok: false, reason: "서버 결과 없음" });
 
   const { data } = result;
 

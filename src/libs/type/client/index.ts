@@ -20,7 +20,7 @@ export type SignOutAuthToken = { token: string };
 export type SignUpEmailVerifyResponse = OkAndOptionalReason;
 export type SignUpEmailVerifyConfirmResponse = OkAndOptionalReason;
 
-export type Provider = 'KAKAO' | 'NAVER';
+export type Provider = "KAKAO" | "NAVER";
 export type SocialAuthPayload = {
   code: string;
   provider: Provider;
@@ -54,7 +54,7 @@ export type GetUserInfoResponse = OkAndOptionalReason & {
   name?: string;
   profileImageLink?: string | null;
   profileImageUpdatedAt?: string | null;
-  provider?: 'our' | 'naver' | 'kakao';
+  provider?: "our" | "naver" | "kakao";
 };
 export type UserDetailInfoQuery = {
   user_id: string;
@@ -68,7 +68,7 @@ export type UserDetailInfoResponse = OkAndOptionalReason & {
   short_description?: string;
   description?: string;
   description_resource_links?: string[];
-  provider?: 'our' | 'naver' | 'kakao';
+  provider?: "our" | "naver" | "kakao";
 };
 export type ModifyUserDetailInfoAuthTokenAndBody = {
   token: string;
@@ -89,7 +89,7 @@ export type SearchUser = {
   profile_image_updated_at: string | null;
 };
 export type SearchParams = {
-  email: string;
+  request_data: string;
 };
 export type SearchResponse = OkAndOptionalReason & {
   result?: SearchUser[];
@@ -127,7 +127,7 @@ export type GitHubAccountCheckQuery = {
   github_link: string;
 };
 export type GitHubAccountCheckResponse = OkAndOptionalReason;
-type GITHUB_STATUS = 'IN_PROGRESS' | 'COMPLETE' | 'FAIL';
+type GITHUB_STATUS = "IN_PROGRESS" | "COMPLETE" | "FAIL";
 export type GithubUpdateStatusAuthToken = {
   user_id: string;
 };
@@ -154,16 +154,16 @@ export type AWSResponse = {
   url: string;
   fields: {
     key: string;
-    'x-amz-algorithm': string;
-    'x-amz-credential': string;
-    'x-amz-date': string;
+    "x-amz-algorithm": string;
+    "x-amz-credential": string;
+    "x-amz-date": string;
     policy: string;
-    'x-amz-signature': string;
+    "x-amz-signature": string;
   };
 };
 export type GetPreSignedURLParamAndAuthToken = {
   file_name: string;
-  type: 'resource' | 'profile';
+  type: "resource" | "profile";
 } & AuthToken;
 export type GetPreSignedURLResponse = OkAndOptionalReason & {
   url?: string;
@@ -171,17 +171,17 @@ export type GetPreSignedURLResponse = OkAndOptionalReason & {
 };
 
 // ! PROJECT
-export type TaskGroupStatus = 'READY_PROGRESSING' | 'COMPLETED';
-export type MilestoneStatus = 'IN_PROGRESS' | 'COMPLETED';
+export type TaskGroupStatus = "READY_PROGRESSING" | "COMPLETED";
+export type MilestoneStatus = "IN_PROGRESS" | "COMPLETED";
 export type ProjectStatus =
-  | 'READY'
-  | 'IN_PROGRESS'
-  | 'COMPLETED'
-  | 'TERMINATED';
-export type TaskPermission = 'OWNER' | 'MANAGER' | 'MEMBER' | 'NOTHING';
-export type TaskGroupPermission = 'OWNER' | 'MANAGER' | 'MEMBER' | 'NOTHING';
-export type MilestonePermission = 'OWNER' | 'MANAGER' | 'MEMBER' | 'NOTHING';
-export type ProjectPermission = 'OWNER' | 'MANAGER' | 'MEMBER' | 'NOTHING';
+  | "READY"
+  | "IN_PROGRESS"
+  | "COMPLETED"
+  | "TERMINATED";
+export type TaskPermission = "OWNER" | "MANAGER" | "MEMBER" | "NOTHING";
+export type TaskGroupPermission = "OWNER" | "MANAGER" | "MEMBER" | "NOTHING";
+export type MilestonePermission = "OWNER" | "MANAGER" | "MEMBER" | "NOTHING";
+export type ProjectPermission = "OWNER" | "MANAGER" | "MEMBER" | "NOTHING";
 export type Member = {
   id: number;
   name: string;
