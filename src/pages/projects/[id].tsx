@@ -233,18 +233,18 @@ export default function ProjectDetail() {
   // TODO Admin_Button 1. Invite User
   const [search, setSearch] = useState('');
   const [searchLoading, setSearchLoading] = useState(false);
-  const [searchResult, setSearchResult] = useState<SearchResponse["result"]>(
-    []
+  const [searchResult, setSearchResult] = useState<SearchResponse['result']>(
+    [],
   );
-  const [inviteList, setInviteList] = useState<SearchResponse["result"]>([]);
+  const [inviteList, setInviteList] = useState<SearchResponse['result']>([]);
   const [inviteResult, setInviteResult] = useState<
-    MakeInviteResponse["result"]
+    MakeInviteResponse['result']
   >([]);
   const [inviteLoading, setInviteLoading] = useState(false);
 
   // TODO Admin_Button 2. Check invited User
   const [projectInvitee, setProjectInvitee] = useState<
-    GetProjectInviteForInviterApiResponse["result"]
+    GetProjectInviteForInviterApiResponse['result']
   >([]);
   const [projectInviteeLoading, setProjectInviteeLoading] = useState(false);
 
@@ -313,7 +313,7 @@ export default function ProjectDetail() {
 
   const handleTagDelete = (e: MouseEvent<HTMLElement>) => {
     const targetIndex = tags.findIndex(
-      (tag) => tag === e.currentTarget.innerHTML
+      (tag) => tag === e.currentTarget.innerHTML,
     );
 
     const updatedList = tags
@@ -342,7 +342,7 @@ export default function ProjectDetail() {
       .finally(() => setProjectStatusLoading(false));
 
     if (res?.ok) refetch();
-    else openSnackBar("요청이 실패하였습니다.");
+    else openSnackBar('요청이 실패하였습니다.');
   };
 
   return (
@@ -707,7 +707,7 @@ export default function ProjectDetail() {
 
                         const res = await client
                           .searchUser({
-                            email: search,
+                            request_data: search,
                           })
                           .finally(() => setSearchLoading(false));
 
