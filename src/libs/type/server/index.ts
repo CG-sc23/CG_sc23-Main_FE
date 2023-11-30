@@ -309,6 +309,36 @@ export type ModifyProjectAuthApiTokenAndBody = AuthToken & {
   body: Partial<Project>;
 };
 export type ModifyProjectAuthApiResponse = SuccessAndOptionalReason;
+export type MakeJoinRequestApiAuthTokenAndPayload = AuthToken & {
+  project_id: string;
+  body: {
+    message: string;
+  };
+};
+export type MakeJoinRequestApiResponse = SuccessAndOptionalReason;
+export type ReplyJoinRequestApiAuthTokenAndPayload = AuthToken & {
+  body: {
+    join_request_id: number;
+    accept: boolean;
+  };
+};
+export type ReplyJoinRequestApiResponse = SuccessAndOptionalReason;
+export type ViewJoinRequestApiAuthTokeAndQueries = AuthToken & {
+  project_id: string;
+};
+export type ViewJoinRequestApiResponse = SuccessAndOptionalReason & {
+  result: {
+    id: string;
+    user: Member;
+    message: string;
+    created_at: string;
+  };
+};
+export type KickMemberApiAuthTokenAndPayload = AuthToken & {
+  project_id: string;
+  user_email: string;
+};
+export type KickMemberApiResponse = SuccessAndOptionalReason;
 
 // ! MILESTONE
 export type CreateMileStoneAuthApiTokenAndBody = AuthToken & {
