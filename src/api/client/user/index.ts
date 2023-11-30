@@ -18,6 +18,8 @@ import {
   GetProjectInviteForInviteeResponse,
   ReplyProjectInviteAuthToken,
   ReplyProjectInviteResponse,
+  GetRecommendedUserAuthToken,
+  GetRecommendedUserResponse,
 } from "@/libs/type/client";
 
 export const Deactivate = {
@@ -90,6 +92,22 @@ export const UserInfo = {
       return data;
     } catch (e) {
       return handleClientError<SearchResponse>(e);
+    }
+  },
+  async recommendedUser(queries: GetRecommendedUserAuthToken) {
+    try {
+      const { data } = await http.get<GetRecommendedUserResponse>(
+        "/api/user/recommendation",
+        {
+          headers: {
+            Authorization: `Token ${queries.token}`,
+          },
+        }
+      );
+
+      return data;
+    } catch (e) {
+      return handleClientError<GetRecommendedUserResponse>(e);
     }
   },
   async projectInviter(queries: GetProjectInviteForInviterAuthToken) {

@@ -85,14 +85,31 @@ export type ModifyUserDetailInfoResponse = OkAndOptionalReason;
 export type SearchUser = {
   id: number;
   email: string;
+  name: string;
   profile_image_link: string | null;
   profile_image_updated_at: string | null;
+  short_description: string | null;
 };
 export type SearchParams = {
   request_data: string;
 };
 export type SearchResponse = OkAndOptionalReason & {
   result?: SearchUser[];
+};
+export type RecommendedUser = {
+  id: number;
+  email: string;
+  name: string;
+  profile_image_link: string | null;
+  profile_image_updated_at: string | null;
+  short_description: string | null;
+};
+export type GetRecommendedUserAuthToken = AuthToken;
+export type GetRecommendedUserResponse = OkAndOptionalReason & {
+  result?: {
+    count: number;
+    users: RecommendedUser[];
+  };
 };
 export type GetProjectInviteForInviterAuthToken = AuthToken;
 export type GetProjectInviteForInviterResponse = OkAndOptionalReason & {

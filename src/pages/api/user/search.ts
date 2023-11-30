@@ -27,8 +27,12 @@ export default async function handleSearch(
     return res.status(401).json({ ok: false, reason: data.reason });
   }
 
+  if (!!data.result) {
+    return res.status(401).json({ ok: false, reason: "유저 정보 없음" });
+  }
+
   return res.status(200).json({
     ok: true,
-    result: data?.result,
+    result: data.result,
   });
 }

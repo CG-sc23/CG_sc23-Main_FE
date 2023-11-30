@@ -77,8 +77,10 @@ export type ModifyUserDetailInfoApiResponse = SuccessAndOptionalReason;
 type SearchUser = {
   id: number;
   email: string;
+  name: string;
   profile_image_link: string | null;
   profile_image_updated_at: string | null;
+  short_description?: string | null;
 };
 export type SearchApiParams = {
   request_data: string;
@@ -110,6 +112,19 @@ export type ReplyProjectInviteApiAuthToken = AuthToken & {
   };
 };
 export type ReplyProjectInviteApiResponse = SuccessAndOptionalReason;
+type RecommendedUser = {
+  id: number;
+  email: string;
+  name: string;
+  profile_image_link: string;
+  profile_image_updated_at: string | null;
+  short_description: string | null;
+};
+export type GetUserRecommendationApiAuthToken = AuthToken;
+export type GetUserRecommendationApiResponse = SuccessAndOptionalReason & {
+  count: number;
+  users: RecommendedUser[];
+};
 
 // ! ExternalHistory
 export type CommonStackApiQuery = { stack: string };

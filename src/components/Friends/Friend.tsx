@@ -1,8 +1,10 @@
+import { bpmin } from "@/libs/styles/constants";
 import styled from "@emotion/styled";
 import Link from "next/link";
+import { colors } from "../constant/color";
 
 type Props = {
-  user_id: string;
+  user_id: number;
   email: string;
   name: string;
   profile_image_link: string | null;
@@ -13,11 +15,20 @@ const Container = styled(Link)`
   display: flex;
   align-items: center;
   gap: 1rem;
+  padding: 0.5rem;
+  transition: 0.2s;
+  ${bpmin[0]} {
+    &:hover {
+      transform: scale(1.01);
+      background-color: ${colors.grey400};
+      color: white;
+    }
+  }
 `;
 
 const Image = styled.img`
-  width: 4rem;
-  height: 4rem;
+  width: 3.5rem;
+  height: 3.5rem;
   object-fit: contain;
 `;
 

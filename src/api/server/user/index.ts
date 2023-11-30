@@ -17,6 +17,8 @@ import {
   GetProjectInviterForInviteeApiResponse,
   ReplyProjectInviteApiAuthToken,
   ReplyProjectInviteApiResponse,
+  GetUserRecommendationApiAuthToken,
+  GetUserRecommendationApiResponse,
 } from "@/libs/type/server";
 
 export const Deactivate = {
@@ -76,6 +78,15 @@ export const UserInfo = {
       );
     } catch (e) {
       return handleApiError<SearchApiResponse>(e);
+    }
+  },
+  async getRecommendedUser(query: GetUserRecommendationApiAuthToken) {
+    try {
+      return await http.get<GetUserRecommendationApiResponse>(
+        "/user/v1/recommend"
+      );
+    } catch (e) {
+      return handleApiError<GetUserRecommendationApiResponse>(e);
     }
   },
   async getProjectInviteForInviter(

@@ -1,14 +1,14 @@
-import useUser from '@/hooks/user/useUser';
-import styled from '@emotion/styled';
-import { bpmax } from '@/libs/styles/constants';
-import ProjectCard from '@/components/Projects/ProjectCard';
-import ProjectWrapper from '@/components/Projects/ProjectWrapper';
-import { GoPlus } from 'react-icons/go';
-import { colors } from '@/components/constant/color';
-import Link from 'next/link';
-import useGetAllProject from '@/hooks/project/useGetAllProject';
-import LoadingSpinner from '@/components/Spinner';
-import { css } from '@emotion/react';
+import useUser from "@/hooks/user/useUser";
+import styled from "@emotion/styled";
+import { bpmax } from "@/libs/styles/constants";
+import ProjectCard from "@/components/Projects/ProjectCard";
+import ProjectWrapper from "@/components/Projects/ProjectWrapper";
+import { GoPlus } from "react-icons/go";
+import { colors } from "@/components/constant/color";
+import Link from "next/link";
+import useGetAllProject from "@/hooks/project/useGetAllProject";
+import LoadingSpinner from "@/components/Spinner";
+import { css } from "@emotion/react";
 
 // Container for projects page
 const Container = styled.div`
@@ -38,12 +38,12 @@ const Button = styled(Link)`
   width: 3.5rem;
   height: 3.5rem;
   border-radius: 4rem;
-  z-index: 9999;
   font-size: 1.5rem;
   font-weight: 500;
   background-color: ${colors.black};
   color: white;
   box-shadow: 5px 5px 10px ${colors.grey500};
+  z-index: 50;
 
   ${bpmax[0]} {
     right: 2rem;
