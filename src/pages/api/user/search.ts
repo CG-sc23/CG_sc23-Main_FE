@@ -8,7 +8,7 @@ export default async function handleSearch(
 ) {
   if (req.method !== "GET") return res.status(405).end();
 
-  if (!req.query?.email) return res.status(404).end();
+  if (!req.query?.request_data) return res.status(404).end();
   const request_data = req.query.request_data as string;
 
   const result = await server.getSearchUser({
