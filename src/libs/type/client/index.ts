@@ -162,6 +162,26 @@ export type GitHubKeywordResponse = OkAndOptionalReason & {
 };
 export type GitHubManualUpdateAuthToken = AuthToken;
 export type GitHubManualUpdateResponse = OkAndOptionalReason;
+export type ProjectInfo = {
+  project: {
+    id: number;
+    owner: Member;
+    status: ProjectStatus;
+    title: string;
+    short_description: string;
+    description: string;
+    description_resource_links: string[];
+    created_at: string;
+    due_date: string;
+    thumbnail_image: string;
+    members: Member[];
+  };
+};
+
+export type GetProjectsInfoAuthToken = { user_id: string };
+export type GetProjectsInfoResponse = OkAndOptionalReason & {
+  projects?: ProjectInfo[];
+};
 
 // ! RESOURCE
 export type AWSResponse = {
@@ -261,7 +281,7 @@ export type Project = {
   short_description: string;
   members: Member[];
   description?: string;
-  description_resource_links?: string;
+  description_resource_links?: string[];
   permission?: ProjectPermission;
   owner?: Member;
   milestone?: Milestone[];

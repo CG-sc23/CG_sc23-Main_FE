@@ -20,6 +20,8 @@ import {
   GetProjectInviteForInviteeResponse,
   ReplyProjectInviteAuthToken,
   ReplyProjectInviteResponse,
+  GetProjectsInfoAuthToken,
+  GetProjectsInfoResponse,
 } from '@/libs/type/client';
 
 export const Deactivate = {
@@ -53,6 +55,17 @@ export const UserInfo = {
       return data;
     } catch (e) {
       return handleClientError<GetUserInfoResponse>(e);
+    }
+  },
+  async userProjectsInfo(queries: GetProjectsInfoAuthToken) {
+    try {
+      const { data } = await http.get<GetProjectsInfoResponse>(
+        `/api/user/projectsInfo/${queries.user_id}`,
+      );
+
+      return data;
+    } catch (e) {
+      return handleClientError<GetProjectsInfoResponse>(e);
     }
   },
   async userDetail(query: UserDetailInfoQuery) {

@@ -16,6 +16,7 @@ import { assert } from '@/libs/utils/assert';
 import {
   GithubUpdateStatusResponse,
   UserDetailInfoResponse,
+  GetProjectsInfoResponse,
 } from '@/libs/type/client';
 import { queryKey } from '@/libs/constant';
 
@@ -39,19 +40,24 @@ export const getServerSideProps = (async (ctx) => {
   });
   assert(github_status, 'Invalid Github Status.');
 
+  const projects = await client.userProjectsInfo({ user_id: id });
+  assert(projects, 'Invalid project infos');
+
   return {
-    props: { user, id, github_status },
+    props: { user, id, github_status, projects },
   };
 }) satisfies GetServerSideProps<{
   id: string;
   user: UserDetailInfoResponse;
   github_status: GithubUpdateStatusResponse;
+  projects: GetProjectsInfoResponse;
 }>;
 
 export default function Profile({
   id,
   user,
   github_status,
+  projects,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const token = safeLocalStorage.get(queryKey.USER_ACCESS_TOKEN);
   const { openSnackBar } = useSnackBar();
@@ -59,6 +65,8 @@ export default function Profile({
   const isOwn = useMemo(() => {
     return loggedInUser && loggedInUser.email === user.email;
   }, [loggedInUser, user]);
+
+  console.log(projects);
 
   return (
     <div
@@ -308,11 +316,14 @@ export default function Profile({
       >
         프로젝트
       </h1>
-      {/* <ProjectWrapper>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((el) => (
-          <ProjectCard id={el} />
+      <ProjectWrapper>
+        {projects.projects?.map((project) => (
+          <ProjectCard
+            key={`Project_${project.project.id}`}
+            project={project.project}
+          />
         ))}
-      </ProjectWrapper> */}
+      </ProjectWrapper>
     </div>
   );
 }
