@@ -88,7 +88,7 @@ export default function Friends() {
     // if logout
     if (!token) {
       openSnackBar('로그인을 먼저 해주세요!');
-      router.replace('/auth/SignUp');
+      router.replace('/auth/SignIn');
       return;
     }
 
