@@ -133,7 +133,7 @@ type ProjectInfo = {
     title: string;
     short_description: string;
     description: string;
-    description_resource_links: string[];
+    description_resource_links: string;
     created_at: string;
     due_date: string;
     thumbnail_image: string;
