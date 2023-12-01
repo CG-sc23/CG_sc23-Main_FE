@@ -43,7 +43,7 @@ export type GetUserInfoApiResponse = {
   name?: string;
   profile_image_link?: string | null;
   profile_image_updated_at?: string | null;
-  provider?: 'our' | 'naver' | 'kakao';
+  provider?: "our" | "naver" | "kakao";
   detail?: string;
 };
 export type UserDetailInfoApiQuery = {
@@ -59,7 +59,7 @@ export type UserDetailInfoApiResponse = {
   short_description?: string;
   description?: string;
   description_resource_links?: string[];
-  provider?: 'our' | 'naver' | 'kakao';
+  provider?: "our" | "naver" | "kakao";
   detail?: string;
 };
 export type ModifyUserDetailInfoApiAuthTokenAndBody = {
@@ -80,7 +80,7 @@ type SearchUser = {
   name: string;
   profile_image_link: string | null;
   profile_image_updated_at: string | null;
-  short_description?: string | null;
+  short_description: string | null;
 };
 export type SearchApiParams = {
   request_data: string;
@@ -136,7 +136,7 @@ export type GitHubAccountCheckApiQuery = {
   github_link: string;
 };
 export type GitHubAccountCheckApiResponse = SuccessAndOptionalReason;
-type GITHUB_STATUS = 'IN_PROGRESS' | 'COMPLETE' | 'FAIL';
+type GITHUB_STATUS = "IN_PROGRESS" | "COMPLETE" | "FAIL";
 export type GithubUpdateStatusApiAuthToken = {
   user_id: string;
 };
@@ -165,16 +165,16 @@ type AWSResponse = {
   url: string;
   fields: {
     key: string;
-    'x-amz-algorithm': string;
-    'x-amz-credential': string;
-    'x-amz-date': string;
+    "x-amz-algorithm": string;
+    "x-amz-credential": string;
+    "x-amz-date": string;
     policy: string;
-    'x-amz-signature': string;
+    "x-amz-signature": string;
   };
 };
 export type GetPreSignedURLApiParamAndAuthToken = AuthToken & {
   file_name: string;
-  type: 'profile' | 'resource';
+  type: "profile" | "resource";
 };
 export type GetPreSignedURLApiResponse = {
   success?: boolean;
@@ -185,13 +185,13 @@ export type GetPreSignedURLApiResponse = {
 };
 
 // ! PROJECT
-type TaskGroupStatus = 'READY_PROGRESSING' | 'COMPLETED';
-type MilestoneStatus = 'IN_PROGRESS' | 'COMPLETED';
-type ProjectStatus = 'READY' | 'IN_PROGRESS' | 'COMPLETED' | 'TERMINATED';
-type TaskPermission = 'OWNER' | 'MANAGER' | 'MEMBER' | 'NOTHING';
-type TaskGroupPermission = 'OWNER' | 'MANAGER' | 'MEMBER' | 'NOTHING';
-type MilestonePermission = 'OWNER' | 'MANAGER' | 'MEMBER' | 'NOTHING';
-type ProjectPermission = 'OWNER' | 'MANAGER' | 'MEMBER' | 'NOTHING';
+type TaskGroupStatus = "READY_PROGRESSING" | "COMPLETED";
+type MilestoneStatus = "IN_PROGRESS" | "COMPLETED";
+type ProjectStatus = "READY" | "IN_PROGRESS" | "COMPLETED" | "TERMINATED";
+type TaskPermission = "OWNER" | "MANAGER" | "MEMBER" | "NOTHING";
+type TaskGroupPermission = "OWNER" | "MANAGER" | "MEMBER" | "NOTHING";
+type MilestonePermission = "OWNER" | "MANAGER" | "MEMBER" | "NOTHING";
+type ProjectPermission = "OWNER" | "MANAGER" | "MEMBER" | "NOTHING";
 type Member = {
   id: number;
   name: string;
