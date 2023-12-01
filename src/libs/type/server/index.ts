@@ -77,14 +77,29 @@ export type ModifyUserDetailInfoApiResponse = SuccessAndOptionalReason;
 type SearchUser = {
   id: number;
   email: string;
-  profile_image_link: string | null;
+  name: string;
+  profile_image_link: string;
   profile_image_updated_at: string | null;
+  short_description: string | null;
 };
 export type SearchApiParams = {
   request_data: string;
 };
 export type SearchApiResponse = SuccessAndOptionalReason & {
   result?: SearchUser[];
+};
+type RecommendedUser = {
+  id: number;
+  email: string;
+  name: string;
+  profile_image_link: string;
+  profile_image_updated_at: string | null;
+  short_description: string | null;
+};
+export type RecommendedUserApiAuthToken = AuthToken;
+export type RecommendedUserApiResponse = SuccessAndOptionalReason & {
+  count: number;
+  users: RecommendedUser[];
 };
 export type GetProjectInviteForInviterApiAuthToken = AuthToken;
 export type GetProjectInviteForInviterApiResponse = SuccessAndOptionalReason & {

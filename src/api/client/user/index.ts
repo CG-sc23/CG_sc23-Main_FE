@@ -1,6 +1,6 @@
-import { client as http } from "@/api/instance";
+import { client as http } from '@/api/instance';
 
-import { handleClientError } from "@/api/handleError";
+import { handleClientError } from '@/api/handleError';
 import {
   DeactivateAuthToken,
   DeactivateResponse,
@@ -12,24 +12,26 @@ import {
   ModifyUserDetailInfoResponse,
   SearchParams,
   SearchResponse,
+  RecommendedUserParams,
+  RecommendedUserResponse,
   GetProjectInviteForInviterAuthToken,
   GetProjectInviteForInviterResponse,
   GetProjectInviteForInviteeAuthToken,
   GetProjectInviteForInviteeResponse,
   ReplyProjectInviteAuthToken,
   ReplyProjectInviteResponse,
-} from "@/libs/type/client";
+} from '@/libs/type/client';
 
 export const Deactivate = {
   async deactivate(queries: DeactivateAuthToken) {
     try {
       const { data } = await http.delete<DeactivateResponse>(
-        "/api/user/deactivate",
+        '/api/user/deactivate',
         {
           headers: {
             Authorization: `Token ${queries.token}`,
           },
-        }
+        },
       );
 
       return data;
@@ -42,7 +44,7 @@ export const Deactivate = {
 export const UserInfo = {
   async userInfo(queries: GetUserInfoAuthToken) {
     try {
-      const { data } = await http.get<GetUserInfoResponse>("/api/user/info", {
+      const { data } = await http.get<GetUserInfoResponse>('/api/user/info', {
         headers: {
           Authorization: `Token ${queries.token}`,
         },
@@ -56,7 +58,7 @@ export const UserInfo = {
   async userDetail(query: UserDetailInfoQuery) {
     try {
       const { data } = await http.get<UserDetailInfoResponse>(
-        `/api/user/detail/${query.user_id}`
+        `/api/user/detail/${query.user_id}`,
       );
 
       return data;
@@ -67,13 +69,13 @@ export const UserInfo = {
   async modifyUserInfo(payload: ModifyUserDetailInfoAuthTokenAndBody) {
     try {
       const { data } = await http.put<ModifyUserDetailInfoResponse>(
-        "/api/user/modify",
+        '/api/user/modify',
         payload.body,
         {
           headers: {
             Authorization: `Token ${payload.token}`,
           },
-        }
+        },
       );
 
       return data;
@@ -84,7 +86,7 @@ export const UserInfo = {
   async searchUser(query: SearchParams) {
     try {
       const { data } = await http.get<SearchResponse>(
-        `/api/user/search?request-data=${query.request_data}`
+        `/api/user/search?request-data=${query.request_data}`,
       );
 
       return data;
@@ -92,15 +94,31 @@ export const UserInfo = {
       return handleClientError<SearchResponse>(e);
     }
   },
+  async recommendUser(query: RecommendedUserParams) {
+    try {
+      const { data } = await http.get<RecommendedUserResponse>(
+        '/api/user/recommendation',
+        {
+          headers: {
+            Authorization: `Token ${query.token}`,
+          },
+        },
+      );
+
+      return data;
+    } catch (e) {
+      return handleClientError<RecommendedUserResponse>(e);
+    }
+  },
   async projectInviter(queries: GetProjectInviteForInviterAuthToken) {
     try {
       const { data } = await http.get<GetProjectInviteForInviterResponse>(
-        "/api/user/inviter",
+        '/api/user/inviter',
         {
           headers: {
             Authorization: `Token ${queries.token}`,
           },
-        }
+        },
       );
 
       return data;
@@ -111,12 +129,12 @@ export const UserInfo = {
   async projectInvitee(queries: GetProjectInviteForInviteeAuthToken) {
     try {
       const { data } = await http.get<GetProjectInviteForInviteeResponse>(
-        "/api/user/invitee",
+        '/api/user/invitee',
         {
           headers: {
             Authorization: `Token ${queries.token}`,
           },
-        }
+        },
       );
 
       return data;
@@ -127,13 +145,13 @@ export const UserInfo = {
   async replyInvitee(queries: ReplyProjectInviteAuthToken) {
     try {
       const { data } = await http.post<ReplyProjectInviteResponse>(
-        "/api/user/reply",
+        '/api/user/reply',
         queries.body,
         {
           headers: {
             Authorization: `Token ${queries.token}`,
           },
-        }
+        },
       );
 
       return data;
