@@ -182,6 +182,26 @@ const Reply = styled.button`
   }
 `;
 
+const GPTMilestone = styled(Link)`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  border-top: 2px solid ${colors.grey200};
+  ${bpmax[0]} {
+    padding: 2rem 0.2rem;
+  }
+  ${bpmin[0]} {
+    padding: 1rem;
+    transition: 0.2s;
+    &:hover {
+      cursor: pointer;
+      transform: scale(1.02);
+      background-color: ${colors.grey200};
+    }
+  }
+`;
+
 enum OrdinalNumber {
   FIRST,
   SECOND,
@@ -321,6 +341,36 @@ export default function ProjectDetail() {
       .concat(tags.slice(targetIndex + 1));
 
     setTags(updatedList);
+  };
+
+  // TODO Milestone 2. GPT
+  const [gptLoading, setGPTLoading] = useState(false);
+  const [gptMilestone, setGPTMilestone] = useState<{
+    title: string;
+    tags: string[];
+  } | null>(null);
+  const onGPT = async () => {
+    if (gptLoading) return;
+    if (!token) return;
+    if (!project?.id) return;
+    setGPTLoading(true);
+
+    const res = await client
+      .makeMilestoneGPT({
+        token: token,
+        project_id: project?.id,
+      })
+      .finally(() => setGPTLoading(false));
+
+    if (!res?.ok) return openSnackBar('요청에 실패하였습니다.');
+    if (!res?.title) return openSnackBar('요청에 실패하였습니다.');
+    if (!res?.tags) return openSnackBar('요청에 실패하였습니다.');
+
+    openSnackBar('요청에 성공하였습니다.');
+    setGPTMilestone({
+      title: res.title,
+      tags: res.tags,
+    });
   };
 
   const onStatus = async (status: ProjectStatus) => {
@@ -1355,7 +1405,24 @@ export default function ProjectDetail() {
               }
             `}
           >
-            <Header>마일스톤 생성</Header>
+            <div
+              css={css`
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+              `}
+            >
+              <Header>마일스톤 생성</Header>
+              <Button
+                css={css`
+                  white-space: nowrap;
+                  padding: 1rem 1.5rem;
+                `}
+                onClick={onGPT}
+              >
+                {gptLoading ? '로딩 중' : '자동 생성'}
+              </Button>
+            </div>
             <div
               css={css`
                 display: flex;
@@ -1493,6 +1560,59 @@ export default function ProjectDetail() {
               >
                 {createMileStoneLoading ? '로딩 중' : '생성'}
               </button>
+            </div>
+          </Card>
+        </ConditionalRendering>
+
+        <ConditionalRendering condition={!!gptMilestone}>
+          <Card
+            css={css`
+              position: relative;
+            `}
+          >
+            <div
+              onClick={() => {
+                if (createMileStoneLoading) return;
+                if (!token) return;
+                if (!project?.id) return;
+                if (!gptMilestone?.title) return;
+
+                setNewMilestone(gptMilestone?.title);
+                setTags(gptMilestone.tags);
+                setGPTMilestone(null);
+              }}
+              css={css`
+                box-sizing: border-box;
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+                width: 100%;
+                ${bpmax[0]} {
+                  padding: 2rem 0.2rem;
+                }
+                ${bpmin[0]} {
+                  padding: 1rem;
+                  transition: 0.2s;
+                  &:hover {
+                    cursor: pointer;
+                    background-color: ${colors.grey200};
+                    transform: scale(1.02);
+                  }
+                }
+              `}
+            >
+              <h2
+                css={css`
+                  width: 100%;
+                  font-size: 1.2rem;
+                  font-weight: 600;
+                `}
+              >
+                {gptMilestone?.title}
+              </h2>
+              <TagWrapper>
+                {gptMilestone?.tags.map((t) => <Tag key={`GPT_${t}`}>{t}</Tag>)}
+              </TagWrapper>
             </div>
           </Card>
         </ConditionalRendering>

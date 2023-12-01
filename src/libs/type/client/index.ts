@@ -363,6 +363,13 @@ export type KickMemberAuthTokenAndPayload = AuthToken & {
   user_email: string;
 };
 export type KickMemberResponse = OkAndOptionalReason;
+export type MakeMilestoneGPTAuthTokenAndQueries = AuthToken & {
+  project_id: number;
+};
+export type MakeMilestoneGPTResponse = OkAndOptionalReason & {
+  title?: string;
+  tags?: string[];
+};
 
 // ! MILESTONE
 export type CreateMileStoneAuthTokenAndBody = AuthToken & {

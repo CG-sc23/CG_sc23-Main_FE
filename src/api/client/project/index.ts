@@ -36,6 +36,8 @@ import {
   ViewJoinRequestResponse,
   KickMemberAuthTokenAndPayload,
   KickMemberResponse,
+  MakeMilestoneGPTAuthTokenAndQueries,
+  MakeMilestoneGPTResponse,
 } from '@/libs/type/client';
 
 export const Projects = {
@@ -178,6 +180,21 @@ export const Projects = {
       return data;
     } catch (e) {
       return handleClientError<KickMemberResponse>(e);
+    }
+  },
+  async makeMilestoneGPT(params: MakeMilestoneGPTAuthTokenAndQueries) {
+    try {
+      const { data } = await http.get<MakeMilestoneGPTResponse>(
+        `/api/project/gpt/${params.project_id}`,
+        {
+          headers: {
+            Authorization: `Token ${params.token}`,
+          },
+        },
+      );
+      return data;
+    } catch (e) {
+      return handleClientError<MakeMilestoneGPTResponse>(e);
     }
   },
 };

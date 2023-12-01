@@ -36,6 +36,8 @@ import {
   ViewJoinRequestApiResponse,
   KickMemberApiAuthTokenAndPayload,
   KickMemberApiResponse,
+  MakeMilestoneGPTApiAuthTokenAndQueries,
+  MakeMilestoneGPTApiResponse,
 } from '@/libs/type/server';
 
 export const Projects = {
@@ -163,6 +165,20 @@ export const Projects = {
       );
     } catch (e) {
       return handleApiError<KickMemberApiResponse>(e);
+    }
+  },
+  async getMakeMilestoneGPT(params: MakeMilestoneGPTApiAuthTokenAndQueries) {
+    try {
+      return await http.get<MakeMilestoneGPTApiResponse>(
+        `/project/v1/${params.project_id}/milestone-gpt`,
+        {
+          headers: {
+            Authorization: `Token ${params.token}`,
+          },
+        },
+      );
+    } catch (e) {
+      return handleApiError<MakeMilestoneGPTApiResponse>(e);
     }
   },
 };
