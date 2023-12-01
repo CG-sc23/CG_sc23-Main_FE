@@ -1,5 +1,5 @@
-import { handleApiError } from "@/api/handleError";
-import { server as http } from "@/api/instance";
+import { handleApiError } from '@/api/handleError';
+import { server as http } from '@/api/instance';
 import {
   DeactivateApiAuthToken,
   DeactivateApiResponse,
@@ -11,13 +11,15 @@ import {
   ModifyUserDetailInfoApiResponse,
   SearchApiParams,
   SearchApiResponse,
+  RecommendedUserApiAuthToken,
+  RecommendedUserApiResponse,
   GetProjectInviteForInviterApiAuthToken,
   GetProjectInviteForInviterApiResponse,
   GetProjectInviterForInviteeApiAuthToken,
   GetProjectInviterForInviteeApiResponse,
   ReplyProjectInviteApiAuthToken,
   ReplyProjectInviteApiResponse,
-} from "@/libs/type/server";
+} from '@/libs/type/server';
 
 export const Deactivate = {
   async deleteDeactivate(queries: DeactivateApiAuthToken) {
@@ -48,7 +50,7 @@ export const UserInfo = {
   async getUserDetailInfo(query: UserDetailInfoApiQuery) {
     try {
       return await http.get<UserDetailInfoApiResponse>(
-        `/user/v1/detail/${query.user_id}`
+        `/user/v1/detail/${query.user_id}`,
       );
     } catch (e) {
       return handleApiError<UserDetailInfoApiResponse>(e);
@@ -63,7 +65,7 @@ export const UserInfo = {
           headers: {
             Authorization: `Token ${payload.token}`,
           },
-        }
+        },
       );
     } catch (e) {
       return handleApiError<ModifyUserDetailInfoApiResponse>(e);
@@ -72,14 +74,25 @@ export const UserInfo = {
   async getSearchUser(query: SearchApiParams) {
     try {
       return await http.get<SearchApiResponse>(
-        `/user/v1/search?request-data=${query.request_data}`
+        `/user/v1/search?request-data=${query.request_data}`,
       );
     } catch (e) {
       return handleApiError<SearchApiResponse>(e);
     }
   },
+  async getUserRecommendation(queries: RecommendedUserApiAuthToken) {
+    try {
+      return await http.get<RecommendedUserApiResponse>(`/user/v1/recommend`, {
+        headers: {
+          Authorization: `Token ${queries.token}`,
+        },
+      });
+    } catch (e) {
+      return handleApiError<RecommendedUserApiResponse>(e);
+    }
+  },
   async getProjectInviteForInviter(
-    queries: GetProjectInviteForInviterApiAuthToken
+    queries: GetProjectInviteForInviterApiAuthToken,
   ) {
     try {
       return await http.get<GetProjectInviteForInviterApiResponse>(
@@ -88,14 +101,14 @@ export const UserInfo = {
           headers: {
             Authorization: `Token ${queries.token}`,
           },
-        }
+        },
       );
     } catch (e) {
       return handleApiError<GetProjectInviteForInviterApiResponse>(e);
     }
   },
   async getProjectInviteForInvitee(
-    queries: GetProjectInviterForInviteeApiAuthToken
+    queries: GetProjectInviterForInviteeApiAuthToken,
   ) {
     try {
       return await http.get<GetProjectInviterForInviteeApiResponse>(
@@ -104,7 +117,7 @@ export const UserInfo = {
           headers: {
             Authorization: `Token ${queries.token}`,
           },
-        }
+        },
       );
     } catch (e) {
       return handleApiError<GetProjectInviterForInviteeApiResponse>(e);
@@ -119,7 +132,7 @@ export const UserInfo = {
           headers: {
             Authorization: `Token ${queries.token}`,
           },
-        }
+        },
       );
     } catch (e) {
       return handleApiError<ReplyProjectInviteApiResponse>(e);
