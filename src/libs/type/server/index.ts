@@ -125,6 +125,24 @@ export type ReplyProjectInviteApiAuthToken = AuthToken & {
   };
 };
 export type ReplyProjectInviteApiResponse = SuccessAndOptionalReason;
+type ProjectInfo = {
+  id: number;
+  owner: Member;
+  status: ProjectStatus;
+  title: string;
+  short_description: string;
+  description: string;
+  description_resource_links: string[];
+  created_at: string;
+  due_date: string;
+  thumbnail_image: string;
+  members: Member[];
+};
+export type GetProjectsInfoApiQuery = { user_id: string };
+export type GetProjectsInfoResponse = SuccessAndOptionalReason & {
+  count: number;
+  projects: ProjectInfo[];
+};
 
 // ! ExternalHistory
 export type CommonStackApiQuery = { stack: string };

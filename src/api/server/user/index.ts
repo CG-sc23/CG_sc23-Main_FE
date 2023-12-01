@@ -19,6 +19,8 @@ import {
   GetProjectInviterForInviteeApiResponse,
   ReplyProjectInviteApiAuthToken,
   ReplyProjectInviteApiResponse,
+  GetProjectsInfoApiQuery,
+  GetProjectsInfoResponse,
 } from '@/libs/type/server';
 
 export const Deactivate = {
@@ -45,6 +47,15 @@ export const UserInfo = {
       });
     } catch (e) {
       return handleApiError<GetUserInfoApiResponse>(e);
+    }
+  },
+  async getUserProjectsInfo(query: GetProjectsInfoApiQuery) {
+    try {
+      return await http.get<GetProjectsInfoResponse>(
+        `/user/v1/projects/${query.user_id}`,
+      );
+    } catch (e) {
+      return handleApiError<GetProjectsInfoResponse>(e);
     }
   },
   async getUserDetailInfo(query: UserDetailInfoApiQuery) {

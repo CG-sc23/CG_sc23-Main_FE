@@ -4,7 +4,6 @@ import styled from '@emotion/styled';
 import { colors } from '../constant/color';
 import Link from 'next/link';
 import { bpmax, bpmin } from '@/libs/styles/constants';
-import { useState } from 'react';
 import { css } from '@emotion/react';
 import { calculateDDay, myProjectStatus } from '@/libs/utils/project';
 import Image from 'next/image';
@@ -133,6 +132,8 @@ export default function Project({ project }: Props) {
   const dDay = calculateDDay(project.created_at, project.due_date);
   const projectStatus = myProjectStatus(project.status);
 
+  console.log(project);
+
   return (
     <Container key={`PROJECT_${project.id}`} href={`/projects/${project.id}`}>
       <Title>{project.title}</Title>
@@ -158,7 +159,7 @@ export default function Project({ project }: Props) {
       </ProjectThumbnailWrapper>
       <ShortDescription>{project.short_description}</ShortDescription>
       <ThumbnailGroup>
-        {project.members.map((member, idx, origin) => (
+        {project.members?.map((member, idx, origin) => (
           <MemberThumbnailWrapper
             key={`${project.id}_${member.email}`}
             index={idx}
