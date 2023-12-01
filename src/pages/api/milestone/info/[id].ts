@@ -5,7 +5,7 @@ import type { NextApiResponse, NextApiRequest } from 'next';
 
 type AuthHeader = `Token ${string}`;
 function getTokenFromAuthHeader(authHeader: AuthHeader) {
-  const token = authHeader.split(' ').at(1);
+  const token = authHeader?.split(' ').at(1);
   if (!token) return '';
 
   return token;
