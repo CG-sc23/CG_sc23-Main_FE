@@ -132,8 +132,6 @@ export default function Project({ project }: Props) {
   const dDay = calculateDDay(project.created_at, project.due_date);
   const projectStatus = myProjectStatus(project.status);
 
-  console.log(project);
-
   return (
     <Container key={`PROJECT_${project.id}`} href={`/projects/${project.id}`}>
       <Title>{project.title}</Title>

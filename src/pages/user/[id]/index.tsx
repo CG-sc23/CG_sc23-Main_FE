@@ -66,8 +66,6 @@ export default function Profile({
     return loggedInUser && loggedInUser.email === user.email;
   }, [loggedInUser, user]);
 
-  console.log(projects);
-
   return (
     <div
       css={css`
