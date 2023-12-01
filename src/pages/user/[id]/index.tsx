@@ -25,6 +25,7 @@ import ProjectWrapper from '@/components/Projects/ProjectWrapper';
 import ProjectCard from '@/components/Projects/ProjectCard';
 import GithubStatistic from '@/components/Profile/GithubStatistic';
 import Skeleton from '@/components/Skeleton';
+import ConditionalRendering from '@/components/ConditionalRendering';
 
 export const getServerSideProps = (async (ctx) => {
   const id = ctx.params?.id as string;
@@ -314,14 +315,19 @@ export default function Profile({
       >
         프로젝트
       </h1>
-      <ProjectWrapper>
-        {projects.projects?.map((project) => (
-          <ProjectCard
-            key={`Project_${project.project.id}`}
-            project={project.project}
-          />
-        ))}
-      </ProjectWrapper>
+      <ConditionalRendering
+        condition={projects.projects?.length !== 0}
+        fallback={() => <Skeleton>아직 프로젝트가 없어요!</Skeleton>}
+      >
+        <ProjectWrapper>
+          {projects.projects?.map((project) => (
+            <ProjectCard
+              key={`Project_${project.project.id}`}
+              project={project.project}
+            />
+          ))}
+        </ProjectWrapper>
+      </ConditionalRendering>
     </div>
   );
 }
