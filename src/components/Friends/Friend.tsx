@@ -1,8 +1,8 @@
-import styled from "@emotion/styled";
-import Link from "next/link";
+import styled from '@emotion/styled';
+import Link from 'next/link';
 
 type Props = {
-  user_id: string;
+  user_id: number;
   email: string;
   name: string;
   profile_image_link: string | null;
@@ -46,7 +46,7 @@ export function Friend({
 }: Props) {
   return (
     <Container href={`/user/${user_id}`}>
-      <Image src={profile_image_link ?? "/profile.jpg"} alt={name} />
+      <Image src={profile_image_link ?? '/profile.jpg'} alt={name} />
       <DataWrapper>
         <Name>{name}</Name>
         <Email>{email}</Email>

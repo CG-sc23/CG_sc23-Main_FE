@@ -1,19 +1,22 @@
-import styled from "@emotion/styled";
-import { bpmax } from "@/libs/styles/constants";
-import Card from "@/components/Card";
-import { colors } from "@/components/constant/color";
-import { Friend } from "@/components/Friends/Friend";
-import { FriendGroupData } from "@/libs/constant/test";
-import client from "@/api/client";
-import { Mouse } from "@playwright/test";
+import styled from '@emotion/styled';
+import { bpmax } from '@/libs/styles/constants';
+import Card from '@/components/Card';
+import { colors } from '@/components/constant/color';
+import { Friend } from '@/components/Friends/Friend';
+import { FriendGroupData } from '@/libs/constant/test';
+import client from '@/api/client';
 import {
   ChangeEvent,
-  ChangeEventHandler,
-  InputHTMLAttributes,
-  MouseEvent,
+  KeyboardEvent,
+  KeyboardEventHandler,
   useEffect,
   useState,
-} from "react";
+} from 'react';
+import { safeLocalStorage } from '@toss/storage';
+import { queryKey } from '@/libs/constant';
+import { useRouter } from 'next/router';
+import useSnackBar from '@/hooks/useSnackBar';
+import { RecommendedUser } from '@/libs/type/client';
 
 const Container = styled.div`
   height: 100%;
@@ -57,27 +60,46 @@ const FriendWrapper = styled.div`
 `;
 
 export default function Friends() {
-  const [search, setSearch] = useState("");
-  const [searchLoading, setSearchLoading] = useState(false);
+  const [searchedUsers, setSearchedUsers] = useState<RecommendedUser[]>([]);
+  const token = safeLocalStorage.get(queryKey.USER_ACCESS_TOKEN);
+  const router = useRouter();
+  const { openSnackBar } = useSnackBar();
 
   // searching handle
   const searchHandler = async (e: ChangeEvent<HTMLInputElement>) => {
-    setSearchLoading(true);
-    setSearch(e.target.value);
+    const searchText = e.target.value;
 
-    const response = await client
-      .searchUser({
-        request_data: e.target.value,
-      })
-      .finally(() => setSearchLoading(false));
+    // 입력된 텍스트가 없다면
+    if (searchText.length === 0) {
+      await userRecommendation();
+      return;
+    }
 
-    console.log(response);
+    // 입력된 텍스트가 있다면
+    const response = await client.searchUser({
+      request_data: e.target.value,
+    });
 
-    if (!response?.ok || !response.result) return;
+    setSearchedUsers(response?.result ?? []);
+  };
+
+  // recommendation
+  const userRecommendation = async () => {
+    // if logout
+    if (!token) {
+      openSnackBar('로그인을 먼저 해주세요!');
+      router.replace('/auth/SignUp');
+      return;
+    }
+
+    const response = await client.recommendUser({ token });
+    setSearchedUsers(response?.result ?? []);
   };
 
   // 초반 user 가져오기
-  useEffect(() => {});
+  useEffect(() => {
+    userRecommendation();
+  }, []);
 
   return (
     <Container>
@@ -91,12 +113,13 @@ export default function Friends() {
       </Card>
       <Card>
         <FriendWrapper>
-          {FriendGroupData.map((friend) => (
+          {searchedUsers.map((friend) => (
             <Friend
-              user_id={friend.user_id}
+              key={friend.id}
+              user_id={friend.id}
               email={friend.email}
               name={friend.name}
-              profile_image_link={friend.proifle_image_link}
+              profile_image_link={friend.profile_image_link}
               profile_image_updated_at={friend.profile_image_updated_at}
             />
           ))}
