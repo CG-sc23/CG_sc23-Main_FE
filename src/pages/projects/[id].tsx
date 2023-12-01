@@ -1,36 +1,36 @@
-import styled from "@emotion/styled";
-import { bpmax, bpmin } from "@/libs/styles/constants";
-import { css } from "@emotion/react";
-import Card from "@/components/Card";
-import MDEditor from "@uiw/react-md-editor";
+import styled from '@emotion/styled';
+import { bpmax, bpmin } from '@/libs/styles/constants';
+import { css } from '@emotion/react';
+import Card from '@/components/Card';
+import MDEditor from '@uiw/react-md-editor';
 
-import { myProjectStatus } from "@/libs/utils/project";
-import { colors } from "@/components/constant/color";
-import { Milestone } from "@/components/Projects/Milestone";
-import useGetProject from "@/hooks/project/useGetProject";
+import { myProjectStatus } from '@/libs/utils/project';
+import { colors } from '@/components/constant/color';
+import { Milestone } from '@/components/Projects/Milestone';
+import useGetProject from '@/hooks/project/useGetProject';
 
-import { milestoneCreationPermitted } from "@/libs/utils/milestone";
-import { Dispatch, MouseEvent, SetStateAction, useMemo, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import client from "@/api/client";
+import { milestoneCreationPermitted } from '@/libs/utils/milestone';
+import { Dispatch, MouseEvent, SetStateAction, useMemo, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import client from '@/api/client';
 import {
   MakeInviteResponse,
   ProjectStatus,
   SearchResponse,
   ViewJoinRequestResponse,
-} from "@/libs/type/client";
-import { safeLocalStorage } from "@toss/storage";
-import { queryKey } from "@/libs/constant";
-import { GetProjectInviteForInviterApiResponse } from "@/libs/type/server";
-import useSnackBar from "@/hooks/useSnackBar";
-import ReactDatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import { formatDate } from "@/libs/utils";
-import Image from "next/image";
-import Link from "next/link";
-import useUser from "@/hooks/user/useUser";
-import CustomSuspense from "@/components/CustomSuspense";
-import ConditionalRendering from "@/components/ConditionalRendering";
+} from '@/libs/type/client';
+import { safeLocalStorage } from '@toss/storage';
+import { queryKey } from '@/libs/constant';
+import { GetProjectInviteForInviterApiResponse } from '@/libs/type/server';
+import useSnackBar from '@/hooks/useSnackBar';
+import ReactDatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { formatDate } from '@/libs/utils';
+import Image from 'next/image';
+import Link from 'next/link';
+import useUser from '@/hooks/user/useUser';
+import CustomSuspense from '@/components/CustomSuspense';
+import ConditionalRendering from '@/components/ConditionalRendering';
 
 const Container = styled.div`
   height: 100%;
@@ -166,18 +166,18 @@ const Reply = styled.button`
   font-size: 1.5rem;
 
   background-color: ${(props) =>
-    props.color === "green" ? colors.green300 : colors.red300};
+    props.color === 'green' ? colors.green300 : colors.red300};
   color: ${colors.white};
 
   cursor: pointer;
   transition: background-color 0.2s ease;
   &:hover {
     background-color: ${(props) =>
-      props.color === "green" ? colors.green200 : colors.red200};
+      props.color === 'green' ? colors.green200 : colors.red200};
   }
   &:disabled {
     background-color: ${(props) =>
-      props.color === "green" ? colors.green100 : colors.red100};
+      props.color === 'green' ? colors.green100 : colors.red100};
     cursor: not-allowed;
   }
 `;
@@ -196,18 +196,18 @@ export default function ProjectDetail() {
   const { openSnackBar } = useSnackBar();
 
   // TODO Toggle Menu
-  const [toggleAdminMenu, setToggleAdminMenu] = useState("0000");
-  const [toggleUserMenu, setToggleUserMenu] = useState("000");
+  const [toggleAdminMenu, setToggleAdminMenu] = useState('0000');
+  const [toggleUserMenu, setToggleUserMenu] = useState('000');
 
   const getToggleState = (toggle: string) => (idx: number) =>
-    toggle.at(idx) === "1";
+    toggle.at(idx) === '1';
   const updateToggle = (toggle: string) => (idx: number) => {
-    if (toggle.at(idx) === "1") {
-      return toggle.slice(0, idx) + "0" + toggle.slice(idx + 1);
+    if (toggle.at(idx) === '1') {
+      return toggle.slice(0, idx) + '0' + toggle.slice(idx + 1);
     } else {
-      const updated = "0".repeat(toggle.length);
+      const updated = '0'.repeat(toggle.length);
 
-      return updated.slice(0, idx) + "1" + updated.slice(idx + 1);
+      return updated.slice(0, idx) + '1' + updated.slice(idx + 1);
     }
   };
   const toggleUpdateHandler =
@@ -218,7 +218,7 @@ export default function ProjectDetail() {
 
   // TODO User_Button 1. Join Project
   const [joinProjectLoading, setJoinProjectLoading] = useState(false);
-  const [joinMessage, setJoinMessage] = useState("");
+  const [joinMessage, setJoinMessage] = useState('');
 
   const canParticipate = useMemo(() => {
     if (!user?.id) return false;
@@ -231,7 +231,7 @@ export default function ProjectDetail() {
   }, [user?.id, project?.members]);
 
   // TODO Admin_Button 1. Invite User
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
   const [searchLoading, setSearchLoading] = useState(false);
   const [searchResult, setSearchResult] = useState<SearchResponse['result']>(
     [],
@@ -253,7 +253,7 @@ export default function ProjectDetail() {
 
   // TODO Admin_Button 4. View join request
   const [joinRequest, setJoinRequest] = useState<
-    ViewJoinRequestResponse["result"]
+    ViewJoinRequestResponse['result']
   >([]);
   const [joinRequestLoading, setJoinRequestLoading] = useState(false);
 
@@ -277,9 +277,9 @@ export default function ProjectDetail() {
 
     if (res?.ok) {
       setJoinRequest((prev) => prev?.filter((j) => +j.id !== join_request_id));
-      openSnackBar("요청에 성공하였습니다.");
+      openSnackBar('요청에 성공하였습니다.');
       refetch();
-    } else openSnackBar("요청에 실패하였습니다.");
+    } else openSnackBar('요청에 실패하였습니다.');
   };
 
   // TODO Admin_Button 5. Reply join request
@@ -299,16 +299,16 @@ export default function ProjectDetail() {
       .finally(() => setKickMemberLoading(false));
 
     if (res?.ok) {
-      openSnackBar("요청에 성공하였습니다.");
+      openSnackBar('요청에 성공하였습니다.');
       refetch();
-    } else openSnackBar("요청에 실패하였습니다.");
+    } else openSnackBar('요청에 실패하였습니다.');
   };
 
   // TODO Milestone 1. Register new milestone
-  const [newMilestone, setNewMilestone] = useState("");
+  const [newMilestone, setNewMilestone] = useState('');
   const [dueDate, setDueDate] = useState(new Date());
   const [tags, setTags] = useState<string[]>([]);
-  const [tag, setTag] = useState<string>("");
+  const [tag, setTag] = useState<string>('');
   const [createMileStoneLoading, setCreateMileStoneLoading] = useState(false);
 
   const handleTagDelete = (e: MouseEvent<HTMLElement>) => {
@@ -385,7 +385,7 @@ export default function ProjectDetail() {
                     src={
                       m?.profile_image_link && m?.profile_image_updated_at
                         ? `${m?.profile_image_link}?timestamp=${m?.profile_image_updated_at}`
-                        : "/profile.jpg"
+                        : '/profile.jpg'
                     }
                     alt={m.name}
                     fill
@@ -397,7 +397,7 @@ export default function ProjectDetail() {
           </Block>
         </Card>
 
-        <Card style={{ position: "relative" }}>
+        <Card style={{ position: 'relative' }}>
           <Header>사용자 메뉴</Header>
           <ButtonBox>
             <Button
@@ -406,7 +406,7 @@ export default function ProjectDetail() {
               disabledColor={colors.green200}
               onClick={toggleUpdateHandler(
                 toggleUserMenu,
-                setToggleUserMenu
+                setToggleUserMenu,
               )(OrdinalNumber.FIRST)}
               disabled={!canParticipate}
             >
@@ -418,7 +418,7 @@ export default function ProjectDetail() {
               disabledColor={colors.green200}
               onClick={toggleUpdateHandler(
                 toggleUserMenu,
-                setToggleUserMenu
+                setToggleUserMenu,
               )(OrdinalNumber.SECOND)}
             >
               빠밤
@@ -429,21 +429,21 @@ export default function ProjectDetail() {
               disabledColor={colors.green200}
               onClick={toggleUpdateHandler(
                 toggleUserMenu,
-                setToggleUserMenu
+                setToggleUserMenu,
               )(OrdinalNumber.THIRD)}
             >
               프로젝트 기여도
             </Button>
           </ButtonBox>
           <ConditionalRendering
-            condition={toggleUserMenu.includes("1")}
+            condition={toggleUserMenu.includes('1')}
             isAnimate
           >
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{
                 opacity: 1,
-                height: "auto",
+                height: 'auto',
               }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.2 }}
@@ -491,10 +491,10 @@ export default function ProjectDetail() {
                         })
                         .finally(() => setJoinProjectLoading(false));
 
-                      if (res?.ok) openSnackBar("요청이 완료되었습니다.");
-                      else openSnackBar("요청이 실패하였습니다.");
+                      if (res?.ok) openSnackBar('요청이 완료되었습니다.');
+                      else openSnackBar('요청이 실패하였습니다.');
 
-                      setJoinMessage("");
+                      setJoinMessage('');
                     }}
                   >
                     <input
@@ -586,13 +586,13 @@ export default function ProjectDetail() {
         <ConditionalRendering
           condition={milestoneCreationPermitted(project?.permission)}
         >
-          <Card style={{ position: "relative" }}>
+          <Card style={{ position: 'relative' }}>
             <Header>관리자 메뉴</Header>
             <ButtonBox>
               <Button
                 onClick={toggleUpdateHandler(
                   toggleAdminMenu,
-                  setToggleAdminMenu
+                  setToggleAdminMenu,
                 )(OrdinalNumber.FIRST)}
               >
                 멤버 초대
@@ -606,7 +606,7 @@ export default function ProjectDetail() {
 
                   toggleUpdateHandler(
                     toggleAdminMenu,
-                    setToggleAdminMenu
+                    setToggleAdminMenu,
                   )(OrdinalNumber.SECOND)();
                   const res = await client
                     .projectInviter({
@@ -616,7 +616,7 @@ export default function ProjectDetail() {
 
                   if (!res?.ok) return;
                   const list = res.result?.filter(
-                    (r) => r.project_id === project.id
+                    (r) => r.project_id === project.id,
                   );
 
                   setProjectInvitee(list);
@@ -627,7 +627,7 @@ export default function ProjectDetail() {
               <Button
                 onClick={toggleUpdateHandler(
                   toggleAdminMenu,
-                  setToggleAdminMenu
+                  setToggleAdminMenu,
                 )(OrdinalNumber.THIRD)}
               >
                 프로젝트 상태 변경
@@ -641,7 +641,7 @@ export default function ProjectDetail() {
 
                   toggleUpdateHandler(
                     toggleAdminMenu,
-                    setToggleAdminMenu
+                    setToggleAdminMenu,
                   )(OrdinalNumber.FORTH)();
                   const res = await client
                     .viewJoinRequest({
@@ -660,14 +660,14 @@ export default function ProjectDetail() {
             </ButtonBox>
 
             <ConditionalRendering
-              condition={toggleAdminMenu.includes("1")}
+              condition={toggleAdminMenu.includes('1')}
               isAnimate
             >
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{
                   opacity: 1,
-                  height: "auto",
+                  height: 'auto',
                 }}
                 exit={{ opacity: 0, height: 0 }}
                 transition={{ duration: 0.2 }}
@@ -678,7 +678,7 @@ export default function ProjectDetail() {
               >
                 <ConditionalRendering
                   condition={getToggleState(toggleAdminMenu)(
-                    OrdinalNumber.FIRST
+                    OrdinalNumber.FIRST,
                   )}
                 >
                   <motion.div
@@ -712,7 +712,7 @@ export default function ProjectDetail() {
                           .finally(() => setSearchLoading(false));
 
                         if (!res?.ok || !res.result) return;
-                        setSearch("");
+                        setSearch('');
                         setInviteResult([]);
                         setSearchResult(res.result);
                       }}
@@ -790,7 +790,7 @@ export default function ProjectDetail() {
                             `}
                             onClick={() => {
                               const disable = inviteList?.find(
-                                (i) => i.email === searchResult.at(idx)?.email
+                                (i) => i.email === searchResult.at(idx)?.email,
                               );
                               if (disable) return;
                               setSearchResult(
@@ -798,7 +798,7 @@ export default function ProjectDetail() {
                                   prev && [
                                     ...prev.slice(0, idx),
                                     ...prev.slice(idx + 1),
-                                  ]
+                                  ],
                               );
                               setInviteList((prev) => prev && [...prev, res]);
                             }}
@@ -839,7 +839,7 @@ export default function ProjectDetail() {
                                   prev && [
                                     ...prev?.slice(0, idx),
                                     ...prev?.slice(idx + 1),
-                                  ]
+                                  ],
                               );
                             }}
                           >
@@ -903,7 +903,7 @@ export default function ProjectDetail() {
                           setInviteLoading(true);
 
                           const list = JSON.stringify(
-                            inviteList.map((u) => u.email)
+                            inviteList.map((u) => u.email),
                           );
 
                           const res = await client
@@ -929,7 +929,7 @@ export default function ProjectDetail() {
                 </ConditionalRendering>
                 <ConditionalRendering
                   condition={getToggleState(toggleAdminMenu)(
-                    OrdinalNumber.SECOND
+                    OrdinalNumber.SECOND,
                   )}
                 >
                   <motion.div
@@ -990,7 +990,7 @@ export default function ProjectDetail() {
                 </ConditionalRendering>
                 <ConditionalRendering
                   condition={getToggleState(toggleAdminMenu)(
-                    OrdinalNumber.THIRD
+                    OrdinalNumber.THIRD,
                   )}
                 >
                   <motion.div
@@ -1011,7 +1011,7 @@ export default function ProjectDetail() {
                           background-color: ${colors.green200};
                         }
                       `}
-                      onClick={() => onStatus("IN_PROGRESS")}
+                      onClick={() => onStatus('IN_PROGRESS')}
                     >
                       진행 중
                     </Button>
@@ -1023,7 +1023,7 @@ export default function ProjectDetail() {
                           background-color: ${colors.red200};
                         }
                       `}
-                      onClick={() => onStatus("TERMINATED")}
+                      onClick={() => onStatus('TERMINATED')}
                     >
                       포기
                     </Button>
@@ -1035,7 +1035,7 @@ export default function ProjectDetail() {
                           background-color: ${colors.yellow200};
                         }
                       `}
-                      onClick={() => onStatus("COMPLETED")}
+                      onClick={() => onStatus('COMPLETED')}
                     >
                       완료
                     </Button>
@@ -1043,7 +1043,7 @@ export default function ProjectDetail() {
                 </ConditionalRendering>
                 <ConditionalRendering
                   condition={getToggleState(toggleAdminMenu)(
-                    OrdinalNumber.FORTH
+                    OrdinalNumber.FORTH,
                   )}
                 >
                   <motion.div
@@ -1422,12 +1422,12 @@ export default function ProjectDetail() {
                   setTag(e.target.value);
                 }}
                 onKeyUp={(e) => {
-                  if (e.code !== "Enter") return;
-                  if (tag === "") return;
+                  if (e.code !== 'Enter') return;
+                  if (tag === '') return;
                   e.preventDefault();
                   e.stopPropagation();
 
-                  setTag("");
+                  setTag('');
                   if (tags.includes(tag)) return;
                   setTags((prev) => [...prev, tag]);
                 }}
@@ -1459,7 +1459,7 @@ export default function ProjectDetail() {
                   const res = await client
                     .createMileStone({
                       token,
-                      project_id: project?.id + "",
+                      project_id: project?.id + '',
                       body: {
                         due_date: dueDate.toISOString(),
                         subject: newMilestone,
@@ -1470,9 +1470,9 @@ export default function ProjectDetail() {
 
                   if (res?.ok) {
                     refetch();
-                  } else openSnackBar("요청에 실패하였습니다.");
-                  setNewMilestone("");
-                  setTag("");
+                  } else openSnackBar('요청에 실패하였습니다.');
+                  setNewMilestone('');
+                  setTag('');
                   setTags([]);
                 }}
                 css={css`
@@ -1491,7 +1491,7 @@ export default function ProjectDetail() {
                 `}
                 disabled={createMileStoneLoading}
               >
-                {createMileStoneLoading ? "로딩 중" : "생성"}
+                {createMileStoneLoading ? '로딩 중' : '생성'}
               </button>
             </div>
           </Card>
