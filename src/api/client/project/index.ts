@@ -36,6 +36,8 @@ import {
   ViewJoinRequestResponse,
   KickMemberAuthTokenAndPayload,
   KickMemberResponse,
+  PaginatedTaskListsQuery,
+  PaginateTaskListsResponse,
 } from '@/libs/type/client';
 
 export const Projects = {
@@ -337,6 +339,17 @@ export const Task = {
       return data;
     } catch (e) {
       return handleClientError<GetTaskAuthResponse>(e);
+    }
+  },
+  async PaginatedTaskLists(params: PaginatedTaskListsQuery) {
+    try {
+      const { data } = await http.get<PaginateTaskListsResponse>(
+        `/api/task/paginate/${params.page_id}`,
+      );
+
+      return data;
+    } catch (e) {
+      return handleClientError<PaginateTaskListsResponse>(e);
     }
   },
 };

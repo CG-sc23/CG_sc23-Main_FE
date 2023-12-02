@@ -10,6 +10,9 @@ import { User } from '@/components/Feed/User';
 import { Task } from '@/components/Feed/Task';
 
 import { UserDatas, ProjectDatas, TaskDatas } from '@/libs/constant/test';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import client from '@/api/client';
 
 // Container for main page
 const Container = styled.div`
@@ -30,6 +33,18 @@ const Container = styled.div`
 
 export default function Home() {
   const token = safeLocalStorage.get(queryKey.USER_ACCESS_TOKEN);
+  const router = useRouter();
+
+  const fetchTasks = async () => {
+    const data = await client.PaginatedTaskLists({ page_id: '1' });
+    console.log(data);
+  };
+
+  useEffect(() => {
+    // 첫 페이지로 떨어졌을 때 ?page=1
+    router.replace({ query: { page: 1 } });
+    fetchTasks();
+  }, []);
 
   return (
     <Container>

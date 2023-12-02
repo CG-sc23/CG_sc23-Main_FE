@@ -409,3 +409,31 @@ export type GetTaskAuthApiTokenAndBody = Partial<AuthToken> & {
   task_id: string;
 };
 export type GetTaskAuthApiResponse = SuccessAndOptionalReason & Task;
+export type PaginatedTask = {
+  id: number;
+  project: {
+    id: number;
+    title: string;
+  };
+  milestone: {
+    id: number;
+    title: string;
+  };
+  task_group: {
+    id: number;
+    title: string;
+  };
+  owner: Member;
+  title: string;
+  description: string;
+  description_resource_links: string;
+  created_at: string;
+  tags: string[];
+};
+export type GetPaginatedTaskListsQuery = {
+  page_id: string;
+};
+export type GetPaginateTaskListApiResponse = SuccessAndOptionalReason & {
+  total_count: number;
+  tasks: PaginatedTask[];
+};

@@ -36,6 +36,8 @@ import {
   ViewJoinRequestApiResponse,
   KickMemberApiAuthTokenAndPayload,
   KickMemberApiResponse,
+  GetPaginatedTaskListsQuery,
+  GetPaginateTaskListApiResponse,
 } from '@/libs/type/server';
 
 export const Projects = {
@@ -305,6 +307,15 @@ export const Task = {
       );
     } catch (e) {
       return handleApiError<GetTaskAuthApiResponse>(e);
+    }
+  },
+  async getPaginatedTaskLists(query: GetPaginatedTaskListsQuery) {
+    try {
+      return await http.get<GetPaginateTaskListApiResponse>(
+        `task/v1/${query.page_id}`,
+      );
+    } catch (e) {
+      return handleApiError<GetPaginateTaskListApiResponse>(e);
     }
   },
 };
