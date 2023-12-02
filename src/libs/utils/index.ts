@@ -105,3 +105,5 @@ export function getComplementaryHex(hex: string) {
 }
 
 export const userLocalStorage = generateStorage();
+
+export const numberToString = (number: number) => number + '';

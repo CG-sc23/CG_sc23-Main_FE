@@ -113,7 +113,7 @@ export const UserInfo = {
         '/api/user/recommendation',
         {
           headers: {
-            Authorization: `Token ${query.token}`,
+            Authorization: query?.token ? `Token ${query.token}` : null,
           },
         },
       );

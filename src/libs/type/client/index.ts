@@ -104,9 +104,9 @@ export type RecommendedUser = {
   profile_image_updated_at: string | null;
   short_description: string | null;
 };
-export type RecommendedUserParams = AuthToken;
+export type RecommendedUserParams = Partial<AuthToken>;
 export type RecommendedUserResponse = OkAndOptionalReason & {
-  result?: RecommendedUser[];
+  users?: RecommendedUser[];
 };
 export type GetProjectInviteForInviterAuthToken = AuthToken;
 export type GetProjectInviteForInviterResponse = OkAndOptionalReason & {
@@ -370,6 +370,10 @@ export type MakeMilestoneGPTResponse = OkAndOptionalReason & {
   title?: string;
   tags?: string[];
 };
+export type RecommendProjectQuery = Partial<AuthToken>;
+export type RecommendProjectResponse = OkAndOptionalReason & {
+  projects?: Project[];
+};
 
 // ! MILESTONE
 export type CreateMileStoneAuthTokenAndBody = AuthToken & {
@@ -426,7 +430,7 @@ export type PaginatedTask = {
   };
   milestone: {
     id: number;
-    title: string;
+    subject: string;
   };
   task_group: {
     id: number;

@@ -40,6 +40,8 @@ import {
   GetPaginateTaskListApiResponse,
   MakeMilestoneGPTApiAuthTokenAndQueries,
   MakeMilestoneGPTApiResponse,
+  RecommendProjectAuthToken,
+  RecommendProjectApiResponse,
 } from '@/libs/type/server';
 
 export const Projects = {
@@ -328,10 +330,24 @@ export const Task = {
   async getPaginatedTaskLists(query: GetPaginatedTaskListsQuery) {
     try {
       return await http.get<GetPaginateTaskListApiResponse>(
-        `task/v1/${query.page_id}`,
+        `/task/v1/page/${query.page_id}`,
       );
     } catch (e) {
       return handleApiError<GetPaginateTaskListApiResponse>(e);
+    }
+  },
+  async getRecommendedProject(query: RecommendProjectAuthToken) {
+    try {
+      return await http.get<RecommendProjectApiResponse>(
+        `/project/v1/recommend`,
+        {
+          headers: {
+            Authorization: query?.token ? `Token ${query.token}` : null,
+          },
+        },
+      );
+    } catch (e) {
+      return handleApiError<RecommendProjectApiResponse>(e);
     }
   },
 };

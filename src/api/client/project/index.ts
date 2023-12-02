@@ -36,13 +36,12 @@ import {
   ViewJoinRequestResponse,
   KickMemberAuthTokenAndPayload,
   KickMemberResponse,
-<<<<<<< HEAD
   PaginatedTaskListsQuery,
   PaginateTaskListsResponse,
-=======
   MakeMilestoneGPTAuthTokenAndQueries,
   MakeMilestoneGPTResponse,
->>>>>>> main
+  RecommendProjectQuery,
+  RecommendProjectResponse,
 } from '@/libs/type/client';
 
 export const Projects = {
@@ -197,9 +196,26 @@ export const Projects = {
           },
         },
       );
+
       return data;
     } catch (e) {
       return handleClientError<MakeMilestoneGPTResponse>(e);
+    }
+  },
+  async recommendProject(query: RecommendProjectQuery) {
+    try {
+      const { data } = await http.get<RecommendProjectResponse>(
+        '/api/project/recommendation',
+        {
+          headers: {
+            Authorization: query?.token ? `Token ${query.token}` : null,
+          },
+        },
+      );
+
+      return data;
+    } catch (e) {
+      return handleClientError<RecommendProjectResponse>(e);
     }
   },
 };

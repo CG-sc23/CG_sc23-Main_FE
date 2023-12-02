@@ -96,7 +96,7 @@ type RecommendedUser = {
   profile_image_updated_at: string | null;
   short_description: string | null;
 };
-export type RecommendedUserApiAuthToken = AuthToken;
+export type RecommendedUserApiAuthToken = Partial<AuthToken>;
 export type RecommendedUserApiResponse = SuccessAndOptionalReason & {
   count: number;
   users: RecommendedUser[];
@@ -365,6 +365,11 @@ export type MakeMilestoneGPTApiAuthTokenAndQueries = AuthToken & {
 export type MakeMilestoneGPTApiResponse = SuccessAndOptionalReason & {
   title?: string;
   tags?: string[];
+};
+export type RecommendProjectAuthToken = Partial<AuthToken>;
+export type RecommendProjectApiResponse = SuccessAndOptionalReason & {
+  count: number;
+  projects: Project[];
 };
 
 // ! MILESTONE

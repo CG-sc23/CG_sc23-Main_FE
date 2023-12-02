@@ -95,7 +95,7 @@ export const UserInfo = {
     try {
       return await http.get<RecommendedUserApiResponse>(`/user/v1/recommend`, {
         headers: {
-          Authorization: `Token ${queries.token}`,
+          Authorization: queries?.token ? `Token ${queries.token}` : null,
         },
       });
     } catch (e) {
