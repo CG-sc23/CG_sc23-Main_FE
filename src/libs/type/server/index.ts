@@ -359,6 +359,13 @@ export type KickMemberApiAuthTokenAndPayload = AuthToken & {
   user_email: string;
 };
 export type KickMemberApiResponse = SuccessAndOptionalReason;
+export type MakeMilestoneGPTApiAuthTokenAndQueries = AuthToken & {
+  project_id: string;
+};
+export type MakeMilestoneGPTApiResponse = SuccessAndOptionalReason & {
+  title?: string;
+  tags?: string[];
+};
 
 // ! MILESTONE
 export type CreateMileStoneAuthApiTokenAndBody = AuthToken & {
