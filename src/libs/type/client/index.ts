@@ -104,9 +104,9 @@ export type RecommendedUser = {
   profile_image_updated_at: string | null;
   short_description: string | null;
 };
-export type RecommendedUserParams = AuthToken;
+export type RecommendedUserParams = Partial<AuthToken>;
 export type RecommendedUserResponse = OkAndOptionalReason & {
-  result?: RecommendedUser[];
+  users?: RecommendedUser[];
 };
 export type GetProjectInviteForInviterAuthToken = AuthToken;
 export type GetProjectInviteForInviterResponse = OkAndOptionalReason & {
@@ -370,6 +370,10 @@ export type MakeMilestoneGPTResponse = OkAndOptionalReason & {
   title?: string;
   tags?: string[];
 };
+export type RecommendProjectQuery = Partial<AuthToken>;
+export type RecommendProjectResponse = OkAndOptionalReason & {
+  projects?: Project[];
+};
 
 // ! MILESTONE
 export type CreateMileStoneAuthTokenAndBody = AuthToken & {
@@ -418,3 +422,30 @@ export type GetTaskAuthTokenAndBody = Partial<AuthToken> & {
   task_id: string;
 };
 export type GetTaskAuthResponse = OkAndOptionalReason & Partial<Task>;
+export type PaginatedTask = {
+  id: number;
+  project: {
+    id: number;
+    title: string;
+  };
+  milestone: {
+    id: number;
+    subject: string;
+  };
+  task_group: {
+    id: number;
+    title: string;
+  };
+  owner: Member;
+  title: string;
+  description: string;
+  description_resource_links: string;
+  created_at: string;
+  tags: string[];
+};
+export type PaginatedTaskListsQuery = {
+  page_id: string;
+};
+export type PaginateTaskListsResponse = OkAndOptionalReason & {
+  tasks?: PaginatedTask[];
+};

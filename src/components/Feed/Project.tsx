@@ -9,7 +9,6 @@ import { IoIosHeartEmpty } from 'react-icons/io';
 type Props = {
   projectTitle: string;
   projectId: number;
-  likes: number;
   status: string;
   thumbnail: string;
   short_description: string;
@@ -51,7 +50,6 @@ const HR = styled.hr`
 export function Project({
   projectTitle,
   projectId,
-  likes,
   status,
   thumbnail,
   short_description,
@@ -117,31 +115,6 @@ export function Project({
           >
             {myProjectStatus(status as any).text}
           </span>
-          <button
-            onClick={(e) => e.preventDefault()}
-            css={css`
-              display: flex;
-              align-items: center;
-              gap: 0.4rem;
-              transition: 0.5s;
-              &:hover {
-                cursor: pointer;
-                transform: scale(1.2);
-              }
-            `}
-          >
-            <div
-              css={css`
-                display: flex;
-                &:hover {
-                  color: red;
-                }
-              `}
-            >
-              <IoIosHeartEmpty size={18} />
-            </div>
-            <span>{likes}</span>
-          </button>
         </div>
       </div>
     </Container>

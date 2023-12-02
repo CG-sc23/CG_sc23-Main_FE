@@ -36,8 +36,12 @@ import {
   ViewJoinRequestResponse,
   KickMemberAuthTokenAndPayload,
   KickMemberResponse,
+  PaginatedTaskListsQuery,
+  PaginateTaskListsResponse,
   MakeMilestoneGPTAuthTokenAndQueries,
   MakeMilestoneGPTResponse,
+  RecommendProjectQuery,
+  RecommendProjectResponse,
 } from '@/libs/type/client';
 
 export const Projects = {
@@ -192,9 +196,26 @@ export const Projects = {
           },
         },
       );
+
       return data;
     } catch (e) {
       return handleClientError<MakeMilestoneGPTResponse>(e);
+    }
+  },
+  async recommendProject(query: RecommendProjectQuery) {
+    try {
+      const { data } = await http.get<RecommendProjectResponse>(
+        '/api/project/recommendation',
+        {
+          headers: {
+            Authorization: query?.token ? `Token ${query.token}` : null,
+          },
+        },
+      );
+
+      return data;
+    } catch (e) {
+      return handleClientError<RecommendProjectResponse>(e);
     }
   },
 };
@@ -354,6 +375,17 @@ export const Task = {
       return data;
     } catch (e) {
       return handleClientError<GetTaskAuthResponse>(e);
+    }
+  },
+  async PaginatedTaskLists(params: PaginatedTaskListsQuery) {
+    try {
+      const { data } = await http.get<PaginateTaskListsResponse>(
+        `/api/task/paginate/${params.page_id}`,
+      );
+
+      return data;
+    } catch (e) {
+      return handleClientError<PaginateTaskListsResponse>(e);
     }
   },
 };

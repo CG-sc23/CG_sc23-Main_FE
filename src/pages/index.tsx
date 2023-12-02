@@ -2,138 +2,168 @@ import { queryKey } from '@/libs/constant';
 import styled from '@emotion/styled';
 import { safeLocalStorage } from '@toss/storage';
 import { bpmax } from '@/libs/styles/constants';
-import { Block } from '@/components/Feed/Block';
-import { Commerce } from '@/components/Feed/Commerce';
-import { Carousel } from '@/components/Feed/Carousel';
-import { Project } from '@/components/Feed/Project';
-import { User } from '@/components/Feed/User';
-import { Task } from '@/components/Feed/Task';
+import { Chunk } from '@/components/Feed/Chunk';
 
-import { UserDatas, ProjectDatas, TaskDatas } from '@/libs/constant/test';
+import { numberToString } from '@/libs/utils';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import client from '@/api/client';
+
+import {
+  PaginateTaskListsResponse,
+  RecommendProjectResponse,
+  RecommendedUserResponse,
+} from '@/libs/type/client';
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import { assert } from '@/libs/utils/assert';
+
+import {
+  PaginatedTask,
+  Project as RecommendedProject,
+  RecommendedUser,
+} from '@/libs/type/client';
 
 // Container for main page
 const Container = styled.div`
   width: 896px;
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 1rem;
 
   /* mobile */
   ${bpmax[0]} {
     width: 100%;
-    padding: 0;
-    gap: 0;
   }
 `;
 
-export default function Home() {
+type ChunkList = {
+  chunk: {
+    tasks: PaginatedTask[] | undefined;
+    projects: RecommendedProject[] | undefined;
+    users: RecommendedUser[] | undefined;
+  }[];
+  page: number;
+};
+
+// SSR
+export const getServerSideProps = (async () => {
+  const initiallyFetchedTasks = await client.PaginatedTaskLists({
+    page_id: numberToString(1),
+  });
+  assert(initiallyFetchedTasks, 'Problem fetching task lists.');
+
+  const initiallyFetchedProjects = await client.recommendProject({});
+  assert(initiallyFetchedProjects, 'Problem fetching project lists.');
+
+  const initiallyFetchedUsers = await client.recommendUser({});
+  assert(initiallyFetchedUsers, 'Problem fetching user lists.');
+
+  return {
+    props: {
+      initiallyFetchedTasks,
+      initiallyFetchedProjects,
+      initiallyFetchedUsers,
+    },
+  };
+}) satisfies GetServerSideProps<{
+  initiallyFetchedTasks: PaginateTaskListsResponse;
+  initiallyFetchedProjects: RecommendProjectResponse;
+  initiallyFetchedUsers: RecommendedUserResponse;
+}>;
+
+// Home
+export default function Home({
+  initiallyFetchedTasks,
+  initiallyFetchedProjects,
+  initiallyFetchedUsers,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const token = safeLocalStorage.get(queryKey.USER_ACCESS_TOKEN);
+  const [chunks, setChunks] = useState<ChunkList>({
+    chunk: [
+      {
+        tasks: initiallyFetchedTasks.tasks as PaginatedTask[],
+        projects: initiallyFetchedProjects.projects as RecommendedProject[],
+        users: initiallyFetchedUsers.users as RecommendedUser[],
+      },
+    ],
+    page: 1,
+  });
+  const targetRef = useRef<HTMLDivElement>(null);
+
+  const fetchTasks = async () => {
+    const data = await client.PaginatedTaskLists({
+      page_id: numberToString(chunks.page + 1),
+    });
+    if (!data?.ok) {
+      assert('task fetching failed : ' + data?.reason);
+    }
+    return data?.tasks;
+  };
+
+  const fetchRecommendedProjects = async () => {
+    const data = await client.recommendProject({
+      token: token ? token : undefined,
+    });
+    if (!data?.ok) {
+      assert('project recommendation fetching failed : ' + data?.reason);
+    }
+    return data?.projects;
+  };
+
+  const fetchRecommendedFriends = async () => {
+    const data = await client.recommendUser({
+      token: token ? token : undefined,
+    });
+    if (!data?.ok) {
+      assert('friend recommendation fetching failed : ' + data?.reason);
+    }
+    return data?.users;
+  };
+
+  const handleIntersect = useCallback(
+    ([entry]: IntersectionObserverEntry[]) => {
+      if (entry.isIntersecting) {
+        const fetchChunk = async () => {
+          const tasks = await fetchTasks();
+          const projects = await fetchRecommendedProjects();
+          const users = await fetchRecommendedFriends();
+          return { tasks, projects, users };
+        };
+        fetchChunk()
+          .then((res) => {
+            if (res.tasks?.length === 0) return;
+            setChunks((prev) => {
+              return {
+                chunk: [...prev.chunk, res],
+                page: prev.page + 1,
+              };
+            });
+          })
+          .catch((error) => console.error(error));
+      }
+    },
+    [chunks.chunk],
+  );
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(handleIntersect, {
+      threshold: 0.3,
+      root: null,
+    });
+
+    targetRef.current && observer.observe(targetRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [handleIntersect, targetRef.current]);
 
   return (
     <Container>
-      {/* tasks */}
-      {TaskDatas.map((task) => (
-        <Block>
-          <Task
-            key={task.id}
-            id={task.id}
-            title={task.title}
-            content={task.content}
-            author={task.author}
-            projectTitle={task.projectTitle}
-            projectId={task.projectId}
-            milestoneTitle={task.milestoneTitle}
-            milestoneId={task.milestoneId}
-            taskGroupTitle={task.taskGroupTitle}
-            taskGroupId={task.taskGroupId}
-            created_at={task.created_at}
-            author_profile={task?.author_profile}
-          />
-        </Block>
+      {chunks.chunk.map((chunk, index) => (
+        <Chunk
+          key={index}
+          chunk={chunk}
+          page={index}
+          innerRef={chunks.chunk.length === index + 1 ? targetRef : null}
+        />
       ))}
-      {/* projects */}
-      <Block
-        hasTitle={true}
-        title="프로젝트"
-        showChevron={true}
-        href="/projects"
-      >
-        <Carousel>
-          {/* {ProjectDatas.map((project) => (
-            <Project
-              key={project.projectId}
-              projectTitle={project.projectTitle}
-              projectId={project.projectId}
-              likes={project.likes}
-              status={project.status}
-              thumbnail={project.thumbnail}
-              short_description={project.short_description}
-            />
-          ))} */}
-        </Carousel>
-      </Block>
-      {/* users */}
-      <Block
-        hasTitle={true}
-        title="사용자 추천"
-        showChevron={true}
-        href="/users"
-      >
-        <Carousel>
-          {UserDatas.map((user) => (
-            <User
-              key={user.id}
-              name={user.name}
-              profile={user.profile}
-              short_description={user.short_description}
-              id={user.id}
-            />
-          ))}
-        </Carousel>
-      </Block>
-      {/* commercials */}
-      <Commerce imageUrl={undefined} />
-      {/* tasks */}
-      {TaskDatas.map((task) => (
-        <Block>
-          <Task
-            key={task.id}
-            id={task.id}
-            title={task.title}
-            content={task.content}
-            author={task.author}
-            projectTitle={task.projectTitle}
-            projectId={task.projectId}
-            milestoneTitle={task.milestoneTitle}
-            milestoneId={task.milestoneId}
-            taskGroupTitle={task.taskGroupTitle}
-            taskGroupId={task.taskGroupId}
-            created_at={task.created_at}
-            author_profile={task?.author_profile}
-          />
-        </Block>
-      ))}
-      {/* users */}
-      <Block
-        hasTitle={true}
-        title="사용자 추천"
-        showChevron={true}
-        href="/users"
-      >
-        <Carousel>
-          {UserDatas.map((user) => (
-            <User
-              key={user.id}
-              name={user.name}
-              profile={user.profile}
-              short_description={user.short_description}
-              id={user.id}
-            />
-          ))}
-        </Carousel>
-      </Block>
     </Container>
   );
 }

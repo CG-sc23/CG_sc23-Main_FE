@@ -9,6 +9,7 @@ import { Task } from '@/components/Projects/Task';
 import { FaChevronRight } from 'react-icons/fa6';
 import useGetTaskGroup from '@/hooks/taskGroup/useGetTaskGroup';
 import LoadingSpinner from '@/components/Spinner';
+import { taskCreationPermitted } from '@/libs/utils/task';
 
 const Container = styled.div`
   position: relative;
@@ -88,20 +89,24 @@ export default function TaskGroup() {
                 `}
               >
                 <Header>{taskGroup?.title}</Header>
-                <Link
-                  href={`/tasks/write/${taskGroup?.id}`}
-                  css={css`
-                    padding: 0.5rem;
-                    border: 2px solid black;
-                    border-radius: 0.2rem;
-                    &:hover {
-                      background-color: black;
-                      color: white;
-                    }
-                  `}
-                >
-                  <FaPlus size="20" />
-                </Link>
+                {taskCreationPermitted(taskGroup?.permission) ? (
+                  <Link
+                    href={`/tasks/write/${taskGroup?.id}`}
+                    css={css`
+                      padding: 0.5rem;
+                      border: 2px solid black;
+                      border-radius: 0.2rem;
+                      &:hover {
+                        background-color: black;
+                        color: white;
+                      }
+                    `}
+                  >
+                    <FaPlus size="20" />
+                  </Link>
+                ) : (
+                  <></>
+                )}
               </div>
               <div
                 css={css`

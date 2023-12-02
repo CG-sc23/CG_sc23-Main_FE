@@ -1,6 +1,5 @@
 import server from '@/api/server';
-import type { RecommendedUserResponse } from '@/libs/type/client';
-import { assert } from '@/libs/utils/assert';
+import type { RecommendProjectResponse } from '@/libs/type/client';
 import type { NextApiResponse, NextApiRequest } from 'next';
 
 type AuthHeader = `Token ${string}`;
@@ -11,14 +10,15 @@ function getTokenFromAuthHeader(authHeader: AuthHeader) {
   return token;
 }
 
-export default async function handleModifyUserInfo(
+export default async function handleMakeInvite(
   req: NextApiRequest,
-  res: NextApiResponse<RecommendedUserResponse>,
+  res: NextApiResponse<RecommendProjectResponse>,
 ) {
   if (req.method !== 'GET') return res.status(405).end();
 
   const authHeader = req.headers.authorization as AuthHeader;
-  const result = await server.getUserRecommendation({
+
+  const result = await server.getRecommendedProject({
     token: getTokenFromAuthHeader(authHeader),
   });
 
@@ -30,12 +30,15 @@ export default async function handleModifyUserInfo(
 
   const { data } = result;
 
-  if (!data.success) {
+  if (data.detail) {
     return res.status(401).json({ ok: false, reason: data.detail });
+  }
+  if (data.success === false) {
+    return res.status(400).json({ ok: false, reason: data.reason });
   }
 
   return res.status(200).json({
     ok: true,
-    users: data.users,
+    projects: data?.projects,
   });
 }
