@@ -93,7 +93,7 @@ export default function Friends() {
     }
 
     const response = await client.recommendUser({ token });
-    setSearchedUsers(response?.result ?? []);
+    setSearchedUsers(response?.users ?? []);
   };
 
   // 초반 user 가져오기
