@@ -1,8 +1,10 @@
-import { bpmax, bpmin } from "@/libs/styles/constants";
-import { css } from "@emotion/react";
-import Link from "next/link";
-import { colors } from "../constant/color";
-import { FaChevronRight } from "react-icons/fa6";
+import { bpmax, bpmin } from '@/libs/styles/constants';
+import { css } from '@emotion/react';
+import Link from 'next/link';
+import { colors } from '../constant/color';
+import { FaChevronRight } from 'react-icons/fa6';
+import { MouseEvent, MouseEventHandler } from 'react';
+import { useRouter } from 'next/router';
 
 type Props = {
   title: string;
@@ -33,6 +35,11 @@ export function Task({
   taskGroupTitle,
   taskGroupId,
 }: Props) {
+  const router = useRouter();
+  const linkToTask = (e: MouseEvent<HTMLElement>) => {
+    router.push(`/tasks/${id}`);
+  };
+
   return (
     <div
       css={css`
@@ -48,6 +55,7 @@ export function Task({
           cursor: pointer;
         }
       `}
+      onClick={linkToTask}
     >
       {/* autor, author_profile, created_at */}
       <div
@@ -92,7 +100,9 @@ export function Task({
           gap: 0.5rem;
           align-items: center;
           font-size: 0.8rem;
+          z-index: 10;
         `}
+        onClick={(e: MouseEvent) => e.stopPropagation()}
       >
         {/* TODO : link for each must be altered */}
         <Link href={`/projects/${projectId}`}>{projectTitle}</Link>

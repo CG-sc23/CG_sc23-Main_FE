@@ -1,8 +1,8 @@
-import { bpmax, bpmin } from "@/libs/styles/constants";
-import styled from "@emotion/styled";
-import { css } from "@emotion/react";
-import { colors } from "../constant/color";
-import Link from "next/link";
+import { bpmax, bpmin } from '@/libs/styles/constants';
+import styled from '@emotion/styled';
+import { css } from '@emotion/react';
+import { colors } from '../constant/color';
+import Link from 'next/link';
 
 type Props = {
   name: string;
@@ -45,7 +45,7 @@ export function User({ name, profile, id, short_description }: Props) {
     <Container href={`/user/${id}`}>
       {/* profile image */}
       <img
-        src={profile ?? "/profile.jpg"}
+        src={profile ?? '/profile.jpg'}
         alt={name}
         css={css`
           width: 100%;
@@ -67,7 +67,7 @@ export function User({ name, profile, id, short_description }: Props) {
           font-size: 0.8rem;
         `}
       >
-        {short_description ?? ""}
+        {short_description ?? ''}
       </p>
     </Container>
   );
