@@ -429,7 +429,7 @@ export type PaginatedTask = {
   };
   milestone: {
     id: number;
-    title: string;
+    subject: string;
   };
   task_group: {
     id: number;
