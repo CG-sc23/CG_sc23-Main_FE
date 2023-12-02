@@ -8,7 +8,7 @@ export const taskCreationPermitted = (permission: string | undefined) => {
       permit: true,
     },
     MEMBER: {
-      permit: false,
+      permit: true,
     },
     NOTHING: {
       permit: false,
