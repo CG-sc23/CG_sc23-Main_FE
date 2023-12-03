@@ -3,8 +3,9 @@ import { css } from '@emotion/react';
 import Link from 'next/link';
 import { colors } from '../constant/color';
 import { FaChevronRight } from 'react-icons/fa6';
-import { MouseEvent, MouseEventHandler } from 'react';
+import { MouseEvent } from 'react';
 import { useRouter } from 'next/router';
+import { formatDate } from '@/libs/utils';
 
 type Props = {
   title: string;
@@ -119,7 +120,7 @@ export function Task({
           color: ${colors.grey600};
         `}
       >
-        {created_at}
+        {formatDate(created_at)}
       </span>
     </div>
   );
