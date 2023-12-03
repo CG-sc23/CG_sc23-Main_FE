@@ -55,14 +55,15 @@ type DDayResult = {
 export function calculateDDay(
   created_at: string,
   ended_at: string,
+  ___: boolean = false,
 ): DDayResult {
-  const startDate = new Date(created_at);
+  const startDate = ___ ? new Date() : new Date(created_at);
   const endDate = new Date(ended_at);
 
   const diffTime = Math.abs(endDate.getTime() - startDate.getTime());
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-  if (startDate > endDate) {
+  if (startDate < endDate) {
     return { sign: 'MINUS', day: diffDays };
   } else {
     return { sign: 'PLUS', day: diffDays };
