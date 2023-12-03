@@ -8,6 +8,7 @@ import LoadingSpinner from '@/components/Spinner';
 import Image from 'next/image';
 import { formatDate } from '@/libs/utils';
 import { useMemo } from 'react';
+import Link from 'next/link';
 
 const MEMBER_LIMIT = 5;
 const OVERLAP_NUMBER = 25;
@@ -62,7 +63,7 @@ const Info = styled.div`
   justify-content: space-between;
   align-items: center;
 `;
-const Author = styled.div`
+const Author = styled(Link)`
   display: flex;
   align-items: center;
 
@@ -299,7 +300,7 @@ export default function TaskPage() {
           <Header>
             <Title>{task?.title}</Title>
             <Info>
-              <Author>
+              <Author href={`/user/${ownerProfile?.id}`}>
                 <AuthorThumbnailWrapper>
                   <Image
                     src={
