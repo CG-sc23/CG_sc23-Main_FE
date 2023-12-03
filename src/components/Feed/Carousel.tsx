@@ -1,7 +1,6 @@
-import Card from "@/components/Card";
-import styled from "@emotion/styled";
-import { css } from "@emotion/react";
-import { PropsWithChildren } from "react";
+import styled from '@emotion/styled';
+import { css } from '@emotion/react';
+import { PropsWithChildren } from 'react';
 
 const CardWrapper = styled.div`
   position: relative;

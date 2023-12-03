@@ -1,6 +1,7 @@
 import type { BaseApiResponse } from '@/libs/type/server';
 
 import { server as http } from '@/api/instance';
+import { Advertise } from '@/api/server/ads';
 import {
   SignUp,
   SocialAuth,
@@ -25,6 +26,7 @@ const server = {
     }
   },
 
+  ...Advertise,
   ...SignUp,
   ...SignIn,
   ...SignOut,

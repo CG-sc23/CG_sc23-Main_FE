@@ -1,4 +1,4 @@
-import { ForwardedRef, ReactNode } from 'react';
+import { ForwardedRef, ReactNode, useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import { bpmax } from '@/libs/styles/constants';
 import {
@@ -13,6 +13,9 @@ import { Project } from '@/components/Feed/Project';
 import { Commerce } from '@/components/Feed/Commerce';
 import { User } from '@/components/Feed/User';
 import { numberToString } from '@/libs/utils';
+import client from '@/api/client';
+
+import { Advertise } from '@/libs/type/client';
 
 type Props = {
   innerRef: ForwardedRef<HTMLDivElement>;
@@ -39,6 +42,27 @@ const Container = styled.div`
 `;
 
 export function Chunk({ innerRef, chunk, page }: Props) {
+  const [commerce, setCommerce] = useState<Advertise>();
+
+  const showCommerce = page % 3 === 0;
+  const showUserRecommendation = page % 2 === 1;
+  const showProjectRecommendation = page % 2 === 0;
+
+  const fetchCommerce = async (signal: AbortController) => {
+    const data = await client.advertise(signal);
+    setCommerce(data?.advertise);
+  };
+
+  useEffect(() => {
+    const signal = new AbortController();
+
+    if (commerce) return;
+    if (!showCommerce) return;
+
+    fetchCommerce(signal);
+    return () => signal.abort();
+  }, []);
+
   return (
     <Container ref={innerRef}>
       {/* tasks */}
@@ -60,35 +84,41 @@ export function Chunk({ innerRef, chunk, page }: Props) {
           />
         </Block>
       ))}
-      {/* projects */}
-      <Block
-        hasTitle={true}
-        title="프로젝트"
-        showChevron={true}
-        href="/projects"
-      >
-        <Carousel>
-          {chunk.projects?.map((project) => (
-            <Project
-              key={project.id}
-              projectTitle={project.title}
-              projectId={project.id}
-              status={project.status}
-              thumbnail={project.thumbnail_image}
-              short_description={project.short_description}
-            />
-          ))}
-        </Carousel>
-      </Block>
-      {/* commercials */}
-      {page % 3 === 0 ? <Commerce imageUrl={undefined} /> : <></>}
-      {/* users */}
-      {page % 2 === 0 ? (
+      {/* projects : 홀수 chunk 마다 프로젝트 추천 노출*/}
+      {showProjectRecommendation ? (
+        <Block
+          hasTitle={true}
+          title="프로젝트"
+          showChevron={true}
+          href="/projects"
+        >
+          <Carousel>
+            {chunk.projects?.map((project) => (
+              <Project
+                key={project.id}
+                projectTitle={project.title}
+                projectId={project.id}
+                status={project.status}
+                thumbnail={project.thumbnail_image}
+                short_description={project.short_description}
+              />
+            ))}
+          </Carousel>
+        </Block>
+      ) : (
+        <></>
+      )}
+      {/* commercials : 3 chunk 마다 광고 노출 */}
+      {!!commerce ? (
+        <Commerce imageUrl={commerce?.file_link} href={commerce?.site_link} />
+      ) : null}
+      {/* users : 짝수 chunk 마다 유저 추천 노출*/}
+      {showUserRecommendation ? (
         <Block
           hasTitle={true}
           title="사용자 추천"
           showChevron={true}
-          href="/users"
+          href="/friends"
         >
           <Carousel>
             {chunk.users?.map((user) => (

@@ -449,3 +449,12 @@ export type PaginatedTaskListsQuery = {
 export type PaginateTaskListsResponse = OkAndOptionalReason & {
   tasks?: PaginatedTask[];
 };
+
+// ! Advertise
+export type Advertise = {
+  site_link: string;
+  file_link: string;
+};
+export type AdvertiseResponse = OkAndOptionalReason & {
+  advertise?: Advertise;
+};
