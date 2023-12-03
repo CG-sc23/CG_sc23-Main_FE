@@ -449,3 +449,9 @@ export type GetPaginateTaskListApiResponse = SuccessAndOptionalReason & {
   total_count: number;
   tasks: PaginatedTask[];
 };
+
+// ! Advertise
+export type GetAdvertiseApiResponse = SuccessAndOptionalReason & {
+  site_link: string;
+  file_link: string;
+};

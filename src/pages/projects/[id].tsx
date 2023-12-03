@@ -11,7 +11,7 @@ import useGetProject from '@/hooks/project/useGetProject';
 
 import { milestoneCreationPermitted } from '@/libs/utils/milestone';
 import { Dispatch, MouseEvent, SetStateAction, useMemo, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import client from '@/api/client';
 import {
   MakeInviteResponse,
@@ -119,13 +119,13 @@ const ButtonBox = styled.div`
 const Button = styled.button<{ hoverColor?: string; disabledColor?: string }>`
   background-color: ${(props) => props.color || colors.blue600};
 
-  font-size: 1.5rem;
-  font-weight: bold;
+  font-size: 1.2rem;
+  font-weight: 500;
 
-  border-radius: 5px;
+  border-radius: 0.2rem;
   text-align: center;
 
-  padding: 10px 5px;
+  padding: 0.5rem 1rem;
 
   color: ${colors.white};
 
@@ -162,8 +162,8 @@ const Reply = styled.button`
   height: 100%;
 
   border-radius: 5px;
-  padding: 1rem 1.5rem;
-  font-size: 1.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 1.2rem;
 
   background-color: ${(props) =>
     props.color === 'green' ? colors.green300 : colors.red300};
@@ -461,28 +461,6 @@ export default function ProjectDetail() {
               disabled={!canParticipate}
             >
               프로젝트 참여 요청
-            </Button>
-            <Button
-              color={colors.green600}
-              hoverColor={colors.green400}
-              disabledColor={colors.green200}
-              onClick={toggleUpdateHandler(
-                toggleUserMenu,
-                setToggleUserMenu,
-              )(OrdinalNumber.SECOND)}
-            >
-              빠밤
-            </Button>
-            <Button
-              color={colors.green600}
-              hoverColor={colors.green400}
-              disabledColor={colors.green200}
-              onClick={toggleUpdateHandler(
-                toggleUserMenu,
-                setToggleUserMenu,
-              )(OrdinalNumber.THIRD)}
-            >
-              프로젝트 기여도
             </Button>
           </ButtonBox>
           <ConditionalRendering
@@ -1003,7 +981,7 @@ export default function ProjectDetail() {
                         fallback={() => (
                           <div
                             css={css`
-                              font-size: 2rem;
+                              font-size: 1.5rem;
                               font-weight: bold;
                             `}
                           >
@@ -1124,7 +1102,7 @@ export default function ProjectDetail() {
                           fallback={() => (
                             <div
                               css={css`
-                                font-size: 2rem;
+                                font-size: 1.5rem;
                                 font-weight: bold;
                               `}
                             >
@@ -1142,7 +1120,7 @@ export default function ProjectDetail() {
 
                                 width: 100%;
 
-                                padding: 5px 10px;
+                                padding: 1rem 2rem;
 
                                 font-size: 1.5rem;
                                 transition: background-color 0.2s ease;
