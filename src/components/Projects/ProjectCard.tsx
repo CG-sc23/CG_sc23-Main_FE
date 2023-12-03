@@ -129,7 +129,7 @@ const More = styled.div`
 
 type Props = { project: Project };
 export default function Project({ project }: Props) {
-  const dDay = calculateDDay(project.created_at, project.due_date);
+  const dDay = calculateDDay(project.created_at, project.due_date, true);
   const projectStatus = myProjectStatus(project.status);
 
   return (
