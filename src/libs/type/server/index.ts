@@ -455,3 +455,13 @@ export type GetAdvertiseApiResponse = SuccessAndOptionalReason & {
   site_link: string;
   file_link: string;
 };
+
+// ! Report
+export type CreateReportApiAuthTokenAndPayload = AuthToken & {
+  body: {
+    title: string;
+    description: string;
+  };
+  task_id: string;
+};
+export type CreateReportApiResponse = SuccessAndOptionalReason;

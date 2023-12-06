@@ -458,3 +458,13 @@ export type Advertise = {
 export type AdvertiseResponse = OkAndOptionalReason & {
   advertise?: Advertise;
 };
+
+// ! Report
+export type CreateReportAuthTokenAndPayload = AuthToken & {
+  body: {
+    title: string;
+    description: string;
+  };
+  task_id: number;
+};
+export type CreateReportResponse = OkAndOptionalReason;

@@ -7,8 +7,11 @@ import useGetTask from '@/hooks/task/useGetTask';
 import LoadingSpinner from '@/components/Spinner';
 import Image from 'next/image';
 import { formatDate } from '@/libs/utils';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import Link from 'next/link';
+import useUser from '@/hooks/user/useUser';
+import useSnackBar from '@/hooks/useSnackBar';
+import client from '@/api/client';
 
 const MEMBER_LIMIT = 5;
 const OVERLAP_NUMBER = 25;
@@ -282,12 +285,57 @@ const LoadingWrapper = styled.div`
   align-items: center;
 `;
 
+const ReportButton = styled.button`
+  font-size: 1.2rem;
+  background-color: ${colors.red100};
+
+  border-radius: 5px;
+
+  padding: 0.5rem;
+  margin-left: 5px;
+
+  transition: background-color 0.2s ease-in-out;
+  cursor: pointer;
+  &:hover {
+    background-color: ${colors.red300};
+  }
+  &:disabled {
+    cursor: not-allowed;
+    background-color: ${colors.red50};
+  }
+`;
+
 export default function TaskPage() {
+  const { user, accessToken } = useUser();
   const { task, isLoading } = useGetTask();
+  const { openSnackBar } = useSnackBar();
+  const [reportLoading, setReportLoading] = useState(false);
   const ownerProfile = useMemo(
     () => task?.members?.find((m) => m.id === task?.owner?.id),
     [task],
   );
+  const isOwner = user && user.id === ownerProfile?.id;
+
+  const onReport = async () => {
+    if (!accessToken) return;
+    if (reportLoading) return;
+    if (!task?.id) return;
+    setReportLoading(true);
+
+    const res = await client
+      .createReport({
+        token: accessToken,
+        body: {
+          title: `Report to ${task?.owner?.name} from ${user?.name}`,
+          description: `Report to task ${task?.id}`,
+        },
+        task_id: task?.id,
+      })
+      .finally(() => setReportLoading(false));
+
+    if (res?.ok) return openSnackBar('신고가 접수되었습니다.');
+    openSnackBar('요청에 실패하였습니다.');
+  };
 
   return (
     <Container>
@@ -369,6 +417,9 @@ export default function TaskPage() {
                     )}
                   </MemberThumbnailWrapper>
                 ))}
+                <ReportButton disabled={!!isOwner} onClick={onReport}>
+                  🚨
+                </ReportButton>
               </ThumbnailGroup>
             </DetailRight>
           </Detail>

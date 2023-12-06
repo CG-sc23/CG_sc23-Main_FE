@@ -39,7 +39,7 @@ export function preProcessCommonStackName(str: string) {
 }
 
 export function getRandomHexColor() {
-  return '#' + Math.floor(Math.random() * 16777215).toString(16);
+  return Math.floor(Math.random() * 16777215).toString(16);
 }
 
 export const extractLogoHexFromUrl = (url: string): string | null => {

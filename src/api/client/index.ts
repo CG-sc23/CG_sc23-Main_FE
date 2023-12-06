@@ -5,6 +5,7 @@ import { Deactivate, UserInfo } from '@/api/client/user';
 import { Resources } from '@/api/client/resource';
 import { GitHub } from '@/api/client/externalHistory';
 import { Projects, Milestone, TaskGroup, Task } from '@/api/client/project';
+import { Report } from '@/api/client/report';
 import { handleClientError } from '@/api/handleError';
 
 const client = {
@@ -34,6 +35,7 @@ const client = {
   ...Milestone,
   ...TaskGroup,
   ...Task,
+  ...Report,
 };
 
 export default client;
