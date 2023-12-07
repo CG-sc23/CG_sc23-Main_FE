@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react';
 import Image from 'next/image';
 
-import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { motion } from 'framer-motion';
 import { hexToRgba } from '@toss/utils';
@@ -33,6 +32,7 @@ import {
 
 import { roboto } from '@/pages/_app';
 import { queryKey } from '@/libs/constant';
+import ConditionalRendering from '../ConditionalRendering';
 
 const flipAnimation = {
   hidden: { rotateY: 0 },
@@ -330,51 +330,53 @@ export default function GithubStatistic({ status, title }: Props) {
       </FrontOfStackNoLogo>
     );
   };
+  if (logoData?.length === 0 || !chartData.labels) {
+    return <GitHubSkeleton title={title} status={'NONE'} />;
+  }
 
   return (
     <Container>
       <Title>{title}</Title>
       <Content>
-        {hasData ? (
-          <>
-            <ChartWrapper>
-              <Pie
-                data={chartData}
-                options={{
-                  plugins: {
-                    datalabels: {
-                      formatter: (value, context) => {
-                        return context.chart.data.labels?.at(context.dataIndex);
-                      },
-                      color: colors.black,
-                      font: {
-                        weight: 'bold',
-                        size: 20,
-                        family: roboto.style.fontFamily,
-                      },
+        <ConditionalRendering
+          condition={hasData}
+          fallback={() => <LoadingSpinner />}
+        >
+          <ChartWrapper>
+            <Pie
+              data={chartData}
+              options={{
+                plugins: {
+                  datalabels: {
+                    formatter: (value, context) => {
+                      return context.chart.data.labels?.at(context.dataIndex);
+                    },
+                    color: colors.black,
+                    font: {
+                      weight: 'bold',
+                      size: 20,
+                      family: roboto.style.fontFamily,
                     },
                   },
-                }}
-              />
-            </ChartWrapper>
-            <StackWrapper>
-              {logoData?.map((logo, idx) => (
-                <Stack
-                  initial="hidden"
-                  animate={flipBinary.at(idx) === '1' ? 'visible' : 'hidden'}
-                  variants={flipAnimation}
-                  onClick={() => onFlipBinary(idx)}
-                  color={logo.color}
-                  key={`${title}_${id}_${logo.url}}`}
-                >
-                  {getStackFlip(logo as Logo, flipBinary.at(idx) === '1')}
-                </Stack>
-              ))}
-            </StackWrapper>
-          </>
-        ) : (
-          <LoadingSpinner />
-        )}
+                },
+              }}
+            />
+          </ChartWrapper>
+          <StackWrapper>
+            {logoData?.map((logo, idx) => (
+              <Stack
+                initial="hidden"
+                animate={flipBinary.at(idx) === '1' ? 'visible' : 'hidden'}
+                variants={flipAnimation}
+                onClick={() => onFlipBinary(idx)}
+                color={logo.color}
+                key={`${title}_${id}_${logo.url}}`}
+              >
+                {getStackFlip(logo as Logo, flipBinary.at(idx) === '1')}
+              </Stack>
+            ))}
+          </StackWrapper>
+        </ConditionalRendering>
       </Content>
     </Container>
   );

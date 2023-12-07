@@ -6,12 +6,13 @@ import Skeleton from '../Skeleton';
 
 type Props = {
   title: string;
-  status: GithubUpdateStatusResponse['status'];
+  status: GithubUpdateStatusResponse['status'] | 'NONE';
 };
 export default function GitHubSkeleton({ title, status }: Props) {
   const getStatusText = () => {
     if (status === 'COMPLETE') return 'GitHub 업데이트 완료!';
     if (status === 'IN_PROGRESS') return 'GitHub 이력을 불러오는 중 입니다!';
+    if (status === 'NONE') return '불러올 GitHub 이력이 없습니다!';
     return 'GitHub 주소가 없어요...!';
   };
 

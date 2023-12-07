@@ -84,6 +84,9 @@ const AuthorThumbnailWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  border-radius: 9999px;
+  overflow: hidden;
 `;
 const Date = styled.div`
   font-size: 1.2rem;
@@ -189,25 +192,38 @@ const TaskParents = styled.div`
 
   font-weight: bold;
 `;
-const ProjectTitle = styled.div`
+const ProjectTitle = styled(Link)`
   font-size: 2.5rem;
 
   ${bpmax[3]} {
     font-size: 2rem;
   }
+
+  transition: color 0.2s ease;
+  &:hover {
+    color: ${colors.grey400};
+  }
 `;
-const MilestoneTitle = styled.div`
+const MilestoneTitle = styled(Link)`
   font-size: 2rem;
 
   ${bpmax[3]} {
     font-size: 1.5rem;
   }
+  transition: color 0.2s ease;
+  &:hover {
+    color: ${colors.grey400};
+  }
 `;
-const TaskGroupTitle = styled.div`
+const TaskGroupTitle = styled(Link)`
   font-size: 1.5rem;
 
   ${bpmax[3]} {
     font-size: 1rem;
+  }
+  transition: color 0.2s ease;
+  &:hover {
+    color: ${colors.grey400};
   }
 `;
 const DetailRight = styled.div`
@@ -236,7 +252,7 @@ const ThumbnailGroup = styled.div`
   align-items: center;
   justify-content: flex-end;
 `;
-const MemberThumbnailWrapper = styled.div<{ index: number; length: number }>`
+const MemberThumbnailWrapper = styled(Link)<{ index: number; length: number }>`
   position: relative;
 
   width: 3rem;
@@ -260,6 +276,11 @@ const MemberThumbnailWrapper = styled.div<{ index: number; length: number }>`
       : `${-OVERLAP_NUMBER * (LIMIT - props.index) + OVERLAP_NUMBER}px`;
   }};
   z-index: ${(props) => `${props.length - props.index}`};
+
+  transition: opacity 0.2s ease;
+  &:hover {
+    opacity: 0.7;
+  }
 `;
 const More = styled.div`
   width: 100%;
@@ -389,15 +410,22 @@ export default function TaskPage() {
                 />
               </ProjectThumbnailWrapper>
               <TaskParents>
-                <ProjectTitle>{task?.project?.title}</ProjectTitle>
-                <MilestoneTitle>{task?.milestone?.subject}</MilestoneTitle>
-                <TaskGroupTitle>{task?.task_group?.title}</TaskGroupTitle>
+                <ProjectTitle href={`/projects/${task?.project?.id}`}>
+                  {task?.project?.title}
+                </ProjectTitle>
+                <MilestoneTitle href={`/milestones/${task?.milestone?.id}`}>
+                  {task?.milestone?.subject}
+                </MilestoneTitle>
+                <TaskGroupTitle href={`/tasksgroups/${task?.task_group?.id}`}>
+                  {task?.task_group?.title}
+                </TaskGroupTitle>
               </TaskParents>
             </DetailLeft>
             <DetailRight>
               <ThumbnailGroup>
                 {task?.members?.map((m, idx, origin) => (
                   <MemberThumbnailWrapper
+                    href={`/user/${m.id}`}
                     key={`${m.email}_${m.id}`}
                     index={idx}
                     length={origin.length}
