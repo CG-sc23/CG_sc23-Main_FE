@@ -110,7 +110,7 @@ export function Task({
         <FaChevronRight size={14} />
         <Link href={`/milestones/${milestoneId}`}>{milestoneTitle}</Link>
         <FaChevronRight size={14} />
-        <Link href={`/tasks/${taskGroupId}`}>{taskGroupTitle}</Link>
+        <Link href={`/taskgroups/${taskGroupId}`}>{taskGroupTitle}</Link>
       </div>
       {/* created_at */}
       <span
