@@ -205,7 +205,7 @@ export type GetPreSignedURLResponse = OkAndOptionalReason & {
 };
 
 // ! PROJECT
-export type TaskGroupStatus = 'READY_PROGRESSING' | 'COMPLETED';
+export type TaskGroupStatus = 'READY' | 'IN_PROGRESS' | 'COMPLETED';
 export type MilestoneStatus = 'IN_PROGRESS' | 'COMPLETED';
 export type ProjectStatus =
   | 'READY'
