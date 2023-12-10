@@ -17,6 +17,7 @@ import {
   GithubUpdateStatusResponse,
   UserDetailInfoResponse,
   GetProjectsInfoResponse,
+  GetTasksInfoResponse,
 } from '@/libs/type/client';
 import { queryKey } from '@/libs/constant';
 
@@ -26,6 +27,16 @@ import ProjectCard from '@/components/Projects/ProjectCard';
 import GithubStatistic from '@/components/Profile/GithubStatistic';
 import Skeleton from '@/components/Skeleton';
 import ConditionalRendering from '@/components/ConditionalRendering';
+
+import styled from '@emotion/styled';
+import { Task } from '@/components/Projects/Task';
+
+const TaskWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  width: 100%;
+`;
 
 export const getServerSideProps = (async (ctx) => {
   const id = ctx.params?.id as string;
@@ -44,14 +55,18 @@ export const getServerSideProps = (async (ctx) => {
   const projects = await client.userProjectsInfo({ user_id: id });
   assert(projects, 'Invalid project infos');
 
+  const tasks = await client.userTasksInfo({ user_id: id });
+  assert(tasks, 'Invalid tasks info');
+
   return {
-    props: { user, id, github_status, projects },
+    props: { user, id, github_status, projects, tasks },
   };
 }) satisfies GetServerSideProps<{
   id: string;
   user: UserDetailInfoResponse;
   github_status: GithubUpdateStatusResponse;
   projects: GetProjectsInfoResponse;
+  tasks: GetTasksInfoResponse;
 }>;
 
 export default function Profile({
@@ -59,6 +74,7 @@ export default function Profile({
   user,
   github_status,
   projects,
+  tasks,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const token = safeLocalStorage.get(queryKey.USER_ACCESS_TOKEN);
   const { openSnackBar } = useSnackBar();
@@ -327,6 +343,33 @@ export default function Profile({
             />
           ))}
         </ProjectWrapper>
+      </ConditionalRendering>
+      <h1
+        css={css`
+          font-size: 2rem;
+          font-weight: bold;
+
+          padding: 0.5rem 0;
+          border-bottom: 2px solid #e0e0e0;
+        `}
+      >
+        작성한 태스크
+      </h1>
+      <ConditionalRendering
+        condition={tasks.tasks?.length !== 0}
+        fallback={() => <Skeleton>아직 작성한 글이 없어요!</Skeleton>}
+      >
+        <TaskWrapper>
+          {tasks.tasks?.map((task) => (
+            <Task
+              key={`Project_${task.id}`}
+              title={task.title}
+              id={task.id}
+              created_at={task.created_at as any}
+              tags={task.tags as any}
+            />
+          ))}
+        </TaskWrapper>
       </ConditionalRendering>
     </div>
   );
