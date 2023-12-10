@@ -5,9 +5,15 @@ import Card from '@/components/Card';
 import MDEditor from '@uiw/react-md-editor';
 
 import { myProjectStatus } from '@/libs/utils/project';
+import { hexToRgba } from '@toss/utils';
 import { colors } from '@/components/constant/color';
 import { Milestone } from '@/components/Projects/Milestone';
 import useGetProject from '@/hooks/project/useGetProject';
+
+import { roboto } from '@/pages/_app';
+import { Chart, ArcElement, Tooltip, Legend } from 'chart.js';
+import { Pie } from 'react-chartjs-2';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 import { milestoneCreationPermitted } from '@/libs/utils/milestone';
 import { Dispatch, MouseEvent, SetStateAction, useMemo, useState } from 'react';
@@ -183,6 +189,51 @@ const Reply = styled.button`
   }
 `;
 
+const GPTMilestone = styled(Link)`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  border-top: 2px solid ${colors.grey200};
+  ${bpmax[0]} {
+    padding: 2rem 0.2rem;
+  }
+  ${bpmin[0]} {
+    padding: 1rem;
+    transition: 0.2s;
+    &:hover {
+      cursor: pointer;
+      transform: scale(1.02);
+      background-color: ${colors.grey200};
+    }
+  }
+`;
+
+const ChartWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 16rem;
+
+  ${bpmax[0]} {
+    height: 12rem;
+  }
+`;
+
+const ChartFallback = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 14rem;
+  height: 14rem;
+  border-radius: 9999rem;
+  background-color: black;
+  color: white;
+  font-weight: 500;
+  font-size: 1.2rem;
+`;
+
 enum OrdinalNumber {
   FIRST,
   SECOND,
@@ -190,6 +241,8 @@ enum OrdinalNumber {
   FORTH,
   FIFTH,
 }
+
+Chart.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
 export default function ProjectDetail() {
   const router = useRouter();
@@ -355,6 +408,35 @@ export default function ProjectDetail() {
       tags: res.tags,
     });
   };
+
+  // TODO Chart 1. Chart
+  const chartDataForProject = useMemo(() => {
+    const totalMilestoneCount = project?.milestone?.length ?? 0;
+    const finishedMilestoneCount =
+      project?.milestone?.reduce((acc, cur) => {
+        if (cur.status !== 'IN_PROGRESS') return acc + 1;
+        else return acc;
+      }, 0) ?? 0;
+    const inprogressMilsteneCount =
+      totalMilestoneCount - finishedMilestoneCount;
+
+    return {
+      labels: ['종료된 마일스톤', '진행중인 마일스톤'],
+      datasets: [
+        {
+          data: [finishedMilestoneCount, inprogressMilsteneCount],
+          borderWidth: 1,
+          backgroundColor: [colors.green600, colors.grey300],
+          borderColor: ['white', 'white'],
+        },
+      ],
+    };
+  }, [project]);
+
+  const isCharAvailable = useMemo(() => {
+    if (!!project?.milestone?.length) return true;
+    else return false;
+  }, [project]);
 
   // TODO Milestone 3. Delete
   const [deleteLoading, setDeleteLoading] = useState(false);
@@ -1294,6 +1376,35 @@ export default function ProjectDetail() {
             `}
           >
             <Header>프로젝트 일정</Header>
+            <ChartWrapper>
+              <ConditionalRendering
+                condition={isCharAvailable}
+                fallback={() => (
+                  <ChartFallback>아직 목표가 없습니다!</ChartFallback>
+                )}
+              >
+                <Pie
+                  data={chartDataForProject}
+                  options={{
+                    plugins: {
+                      datalabels: {
+                        formatter: (value, context) => {
+                          return context.chart.data.labels?.at(
+                            context.dataIndex,
+                          );
+                        },
+                        color: colors.black,
+                        font: {
+                          weight: 'bold',
+                          size: 12,
+                          family: roboto.style.fontFamily,
+                        },
+                      },
+                    },
+                  }}
+                />
+              </ConditionalRendering>
+            </ChartWrapper>
             <div
               css={css`
                 display: flex;

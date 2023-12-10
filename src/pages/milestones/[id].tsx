@@ -8,7 +8,13 @@ import { taskgroupCreationPermitted } from '@/libs/utils/taskgroup';
 import { myMileStoneStatus, myProjectStatus } from '@/libs/utils/project';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { KeyboardEvent, MouseEvent, useState } from 'react';
+
+import { roboto } from '@/pages/_app';
+import { Chart, ArcElement, Tooltip, Legend } from 'chart.js';
+import { Pie } from 'react-chartjs-2';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+
+import { useState, useMemo } from 'react';
 import { formatDate } from '@/libs/utils';
 import useGetMileStone from '@/hooks/milestone/useGetMileStone';
 import LoadingSpinner from '@/components/Spinner';
@@ -16,6 +22,7 @@ import { safeLocalStorage } from '@toss/storage';
 import { queryKey } from '@/libs/constant';
 import useSnackBar from '@/hooks/useSnackBar';
 import client from '@/api/client';
+import ConditionalRendering from '@/components/ConditionalRendering';
 
 const Container = styled.div`
   width: 896px;
@@ -43,6 +50,33 @@ const SubHeader = styled.h2`
   font-weight: 600;
 `;
 
+const ChartWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 16rem;
+
+  ${bpmax[0]} {
+    height: 12rem;
+  }
+`;
+
+const ChartFallback = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 14rem;
+  height: 14rem;
+  border-radius: 9999rem;
+  background-color: black;
+  color: white;
+  font-weight: 500;
+  font-size: 1.2rem;
+`;
+
+Chart.register(ArcElement, Tooltip, Legend, ChartDataLabels);
+
 export default function MilestoneDetail() {
   const { milestone, isLoading, refetch } = useGetMileStone();
 
@@ -52,6 +86,34 @@ export default function MilestoneDetail() {
 
   const [title, setTitle] = useState('');
   const [dueDate, setDueDate] = useState<Date>(new Date());
+
+  const isChartAvailable = useMemo(() => {
+    if (!!milestone?.task_groups?.length) return true;
+    else return false;
+  }, [milestone]);
+
+  const chartDataForMilestone = useMemo(() => {
+    const totalTaskGroupCount = milestone?.task_groups?.length ?? 0;
+    const finishedTaskGroupCount =
+      milestone?.task_groups?.reduce((acc, cur) => {
+        if (cur.status !== 'IN_PROGRESS') return acc + 1;
+        else return acc;
+      }, 0) ?? 0;
+    const inprogressTaskGroupCount =
+      totalTaskGroupCount - finishedTaskGroupCount;
+
+    return {
+      labels: ['종료된 태스크 그룹', '진행중인 태스크 그룹'],
+      datasets: [
+        {
+          data: [finishedTaskGroupCount, inprogressTaskGroupCount],
+          borderWidth: 1,
+          backgroundColor: [colors.green600, colors.grey300],
+          borderColor: ['white', 'white'],
+        },
+      ],
+    };
+  }, [milestone]);
 
   return (
     <Container>
@@ -75,24 +137,35 @@ export default function MilestoneDetail() {
             {/* subject */}
             <Header>{milestone?.subject}</Header>
             {/* thumbnail (project) */}
-            <div
-              css={css`
-                display: flex;
-                align-items: center;
-                justify-content: center;
-              `}
-            >
-              <img
-                src={milestone?.project?.thumbnail_image ?? '/project.jpg'}
-                alt={milestone?.subject}
-                css={css`
-                  width: 12rem;
-                  height: 12rem;
-                  object-fit: contain;
-                `}
-              />
-            </div>
-
+            <ChartWrapper>
+              <ConditionalRendering
+                condition={isChartAvailable}
+                fallback={() => (
+                  <ChartFallback>아직 목표가 없습니다!</ChartFallback>
+                )}
+              >
+                <Pie
+                  data={chartDataForMilestone}
+                  options={{
+                    plugins: {
+                      datalabels: {
+                        formatter: (value, context) => {
+                          return context.chart.data.labels?.at(
+                            context.dataIndex,
+                          );
+                        },
+                        color: colors.black,
+                        font: {
+                          weight: 'bold',
+                          size: 12,
+                          family: roboto.style.fontFamily,
+                        },
+                      },
+                    },
+                  }}
+                />
+              </ConditionalRendering>
+            </ChartWrapper>
             {/* status */}
             <div
               css={css`

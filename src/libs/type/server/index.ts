@@ -205,7 +205,7 @@ export type GetPreSignedURLApiResponse = {
 };
 
 // ! PROJECT
-type TaskGroupStatus = 'READY_PROGRESSING' | 'COMPLETED';
+type TaskGroupStatus = 'READY' | 'IN_PROGRESS' | 'COMPLETED';
 type MilestoneStatus = 'IN_PROGRESS' | 'COMPLETED';
 type ProjectStatus = 'READY' | 'IN_PROGRESS' | 'COMPLETED' | 'TERMINATED';
 type TaskPermission = 'OWNER' | 'MANAGER' | 'MEMBER' | 'NOTHING';
