@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { css } from '@emotion/react';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { safeLocalStorage } from '@toss/storage';
 import MDEditor from '@uiw/react-md-editor';
@@ -17,7 +17,6 @@ import {
   GithubUpdateStatusResponse,
   UserDetailInfoResponse,
   GetProjectsInfoResponse,
-  GetTasksInfoResponse,
 } from '@/libs/type/client';
 import { queryKey } from '@/libs/constant';
 
@@ -30,6 +29,7 @@ import ConditionalRendering from '@/components/ConditionalRendering';
 
 import styled from '@emotion/styled';
 import { Task } from '@/components/Projects/Task';
+import useUserTask from '@/hooks/user/useUserTask';
 
 const TaskWrapper = styled.div`
   display: flex;
@@ -55,18 +55,14 @@ export const getServerSideProps = (async (ctx) => {
   const projects = await client.userProjectsInfo({ user_id: id });
   assert(projects, 'Invalid project infos');
 
-  const tasks = await client.userTasksInfo({ user_id: id });
-  assert(tasks, 'Invalid tasks info');
-
   return {
-    props: { user, id, github_status, projects, tasks },
+    props: { user, id, github_status, projects },
   };
 }) satisfies GetServerSideProps<{
   id: string;
   user: UserDetailInfoResponse;
   github_status: GithubUpdateStatusResponse;
   projects: GetProjectsInfoResponse;
-  tasks: GetTasksInfoResponse;
 }>;
 
 export default function Profile({
@@ -74,11 +70,11 @@ export default function Profile({
   user,
   github_status,
   projects,
-  tasks,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const token = safeLocalStorage.get(queryKey.USER_ACCESS_TOKEN);
   const { openSnackBar } = useSnackBar();
   const { user: loggedInUser } = useUser();
+  const { tasks, isLoading } = useUserTask(id);
   const isOwn = useMemo(() => {
     return loggedInUser && loggedInUser.email === user.email;
   }, [loggedInUser, user]);
@@ -356,17 +352,18 @@ export default function Profile({
         작성한 태스크
       </h1>
       <ConditionalRendering
-        condition={tasks.tasks?.length !== 0}
+        condition={tasks?.length !== 0}
         fallback={() => <Skeleton>아직 작성한 글이 없어요!</Skeleton>}
       >
         <TaskWrapper>
-          {tasks.tasks?.map((task) => (
+          {tasks?.map((task) => (
             <Task
               key={`Project_${task.id}`}
               title={task.title}
               id={task.id}
               created_at={task.created_at as any}
               tags={task.tags as any}
+              is_public={task.is_public}
             />
           ))}
         </TaskWrapper>
