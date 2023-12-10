@@ -1,4 +1,4 @@
-import React, { useState, DragEvent } from 'react';
+import React, { useState, DragEvent, useEffect } from 'react';
 import { css } from '@emotion/react';
 import Image from 'next/image';
 import { colors } from './constant/color';
@@ -16,6 +16,10 @@ export default function Dropzone({
 }: DropzoneProps) {
   const [highlight, setHighlight] = useState<boolean>(false);
   const [thumbnail, setThumbnail] = useState<string | null>(defaultThumbnail); // 단일 썸네일 상태
+
+  useEffect(() => {
+    setThumbnail(defaultThumbnail);
+  }, [setThumbnail, defaultThumbnail]);
 
   const updateThumbnail = (file: File) => {
     const reader = new FileReader();

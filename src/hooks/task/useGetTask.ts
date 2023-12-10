@@ -6,15 +6,15 @@ import { useRouter } from 'next/router';
 
 export default function useGetTask() {
   const router = useRouter();
+  const id = router.query.task_id ?? router.query.id;
   const {
     data: task,
     isLoading,
     refetch,
   } = useQuery({
-    queryKey: ['TASK', router.query.id],
+    queryKey: ['TASK', id],
     queryFn: async () => {
       const token = safeLocalStorage.get(queryKey.USER_ACCESS_TOKEN);
-      const id = router.query.id;
       if (!id) return null;
 
       const res = await client.TaskInfo({

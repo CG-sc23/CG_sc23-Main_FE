@@ -6,15 +6,15 @@ import { useRouter } from 'next/router';
 
 export default function useGetProject() {
   const router = useRouter();
+  const id = router.query.project_id ?? router.query.id;
   const {
     data: project,
     isLoading,
     refetch,
   } = useQuery({
-    queryKey: ['PROJECT', router.query.id],
+    queryKey: ['PROJECT', id],
     queryFn: async () => {
       const token = safeLocalStorage.get(queryKey.USER_ACCESS_TOKEN);
-      const id = router.query.id;
       if (!id) return null;
 
       const res = await client.projectInfo({
@@ -25,7 +25,7 @@ export default function useGetProject() {
       if (!res?.ok) return null;
       return res;
     },
-    enabled: !!router.query.id,
+    enabled: !!id,
   });
 
   return {

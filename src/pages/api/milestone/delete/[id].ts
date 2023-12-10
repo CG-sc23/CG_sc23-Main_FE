@@ -1,5 +1,5 @@
 import server from '@/api/server';
-import type { GetMilestoneAuthResponse } from '@/libs/type/client';
+import type { DeleteMileStoneResponse } from '@/libs/type/client';
 import type { NextApiResponse, NextApiRequest } from 'next';
 
 type AuthHeader = `Token ${string}`;
@@ -10,18 +10,18 @@ function getTokenFromAuthHeader(authHeader: AuthHeader) {
   return token;
 }
 
-export default async function handleMileStoneInfo(
+export default async function handleMileStoneDelete(
   req: NextApiRequest,
-  res: NextApiResponse<GetMilestoneAuthResponse>,
+  res: NextApiResponse<DeleteMileStoneResponse>,
 ) {
-  if (req.method !== 'GET') return res.status(405).end();
+  if (req.method !== 'DELETE') return res.status(405).end();
 
   const authHeader = req.headers.authorization as AuthHeader;
 
   if (!req.query?.id) return res.status(404).end();
   const id = req.query.id as string;
 
-  const result = await server.getMilestoneInfo({
+  const result = await server.deleteMilestoneInfo({
     token: getTokenFromAuthHeader(authHeader),
     milestone_id: id,
   });
@@ -43,15 +43,5 @@ export default async function handleMileStoneInfo(
 
   return res.status(200).json({
     ok: true,
-    id: data?.id,
-    project: data?.project,
-    created_by: data?.created_by,
-    status: data?.status,
-    subject: data?.subject,
-    tags: data?.tags,
-    created_at: data?.created_at,
-    due_date: data?.due_date,
-    task_groups: data?.task_groups,
-    permission: data?.permission,
   });
 }

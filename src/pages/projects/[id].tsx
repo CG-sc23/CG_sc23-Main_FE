@@ -31,6 +31,7 @@ import Link from 'next/link';
 import useUser from '@/hooks/user/useUser';
 import CustomSuspense from '@/components/CustomSuspense';
 import ConditionalRendering from '@/components/ConditionalRendering';
+import { useRouter } from 'next/router';
 
 const Container = styled.div`
   height: 100%;
@@ -182,41 +183,23 @@ const Reply = styled.button`
   }
 `;
 
-const GPTMilestone = styled(Link)`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  width: 100%;
-  border-top: 2px solid ${colors.grey200};
-  ${bpmax[0]} {
-    padding: 2rem 0.2rem;
-  }
-  ${bpmin[0]} {
-    padding: 1rem;
-    transition: 0.2s;
-    &:hover {
-      cursor: pointer;
-      transform: scale(1.02);
-      background-color: ${colors.grey200};
-    }
-  }
-`;
-
 enum OrdinalNumber {
   FIRST,
   SECOND,
   THIRD,
   FORTH,
+  FIFTH,
 }
 
 export default function ProjectDetail() {
+  const router = useRouter();
   const { project, isLoading, refetch } = useGetProject();
   const token = safeLocalStorage.get(queryKey.USER_ACCESS_TOKEN);
   const { isLoggedIn, user } = useUser();
   const { openSnackBar } = useSnackBar();
 
   // TODO Toggle Menu
-  const [toggleAdminMenu, setToggleAdminMenu] = useState('0000');
+  const [toggleAdminMenu, setToggleAdminMenu] = useState('00000');
   const [toggleUserMenu, setToggleUserMenu] = useState('000');
 
   const getToggleState = (toggle: string) => (idx: number) =>
@@ -371,6 +354,25 @@ export default function ProjectDetail() {
       title: res.title,
       tags: res.tags,
     });
+  };
+
+  // TODO Milestone 3. Delete
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const getOnDelete = (id: number) => async () => {
+    if (deleteLoading) return;
+    if (!token) return;
+
+    const res = await client
+      .deleteMilestoneInfo({
+        milestone_id: id + '',
+        token,
+      })
+      .finally(() => setDeleteLoading(false));
+
+    if (res?.ok) {
+      openSnackBar('요청에 성공하였습니다.');
+      refetch();
+    } else openSnackBar('요청에 실패하였습니다.');
   };
 
   const onStatus = async (status: ProjectStatus) => {
@@ -684,6 +686,13 @@ export default function ProjectDetail() {
                 }}
               >
                 멤버 관리
+              </Button>
+              <Button
+                onClick={() => {
+                  router.push(`/projects/form?project_id=${project?.id}`);
+                }}
+              >
+                프로젝트 수정
               </Button>
             </ButtonBox>
 
@@ -1613,10 +1622,14 @@ export default function ProjectDetail() {
             </Header>
             {project?.milestone?.map((milestone) => (
               <Milestone
-                key={`MILESTONE_${milestone.id}_${project.id}`}
+                key={`MILESTONE_${milestone.id}_${project.id}_${milestone.created_at}`}
                 id={milestone.id}
                 subject={milestone.subject}
                 tags={(milestone.tags as string[]) || []}
+                hasDeleteButton={milestoneCreationPermitted(
+                  project?.permission,
+                )}
+                onDelete={getOnDelete(milestone.id)}
               />
             ))}
           </Block>

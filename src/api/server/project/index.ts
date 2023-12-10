@@ -16,6 +16,8 @@ import {
   ModifyMilestoneAuthApiResponse,
   GetMileStoneAuthApiTokenAndBody,
   GetMilestoneAuthApiResponse,
+  DeleteMileStoneApiAuthTokenAndQuery,
+  DeleteMileStoneApiResponse,
   CreateTaskGroupAuthApiTokenAndBody,
   CreateTaskGroupAuthApiResponse,
   ModifyTaskGroupAuthApiTokenAndBody,
@@ -230,6 +232,20 @@ export const MileStone = {
       );
     } catch (e) {
       return handleApiError<GetMilestoneAuthApiResponse>(e);
+    }
+  },
+  async deleteMilestoneInfo(params: DeleteMileStoneApiAuthTokenAndQuery) {
+    try {
+      return await http.delete<DeleteMileStoneApiResponse>(
+        `/milestone/v1/${params.milestone_id}`,
+        {
+          headers: {
+            Authorization: params.token ? `Token ${params.token}` : null,
+          },
+        },
+      );
+    } catch (e) {
+      return handleApiError<DeleteMileStoneApiResponse>(e);
     }
   },
 };

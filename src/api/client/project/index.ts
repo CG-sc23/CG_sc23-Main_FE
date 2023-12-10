@@ -24,6 +24,8 @@ import {
   ModifyTaskGroupAuthTokenAndBody,
   GetMileStoneAuthTokenAndBody,
   GetMilestoneAuthResponse,
+  DeleteMileStoneAuthTokenAndQuery,
+  DeleteMileStoneResponse,
   GetTaskAuthResponse,
   GetTaskAuthTokenAndBody,
   GetTaskGroupAuthResponse,
@@ -269,6 +271,22 @@ export const Milestone = {
       return data;
     } catch (e) {
       return handleClientError<GetMilestoneAuthResponse>(e);
+    }
+  },
+  async deleteMilestoneInfo(params: DeleteMileStoneAuthTokenAndQuery) {
+    try {
+      const { data } = await http.delete<DeleteMileStoneResponse>(
+        `/api/milestone/delete/${params.milestone_id}`,
+        {
+          headers: {
+            Authorization: params.token ? `Token ${params.token}` : null,
+          },
+        },
+      );
+
+      return data;
+    } catch (e) {
+      return handleClientError<DeleteMileStoneResponse>(e);
     }
   },
 };

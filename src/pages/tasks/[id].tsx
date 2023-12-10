@@ -12,6 +12,7 @@ import Link from 'next/link';
 import useUser from '@/hooks/user/useUser';
 import useSnackBar from '@/hooks/useSnackBar';
 import client from '@/api/client';
+import ConditionalRendering from '@/components/ConditionalRendering';
 
 const MEMBER_LIMIT = 5;
 const OVERLAP_NUMBER = 25;
@@ -325,6 +326,35 @@ const ReportButton = styled.button`
     background-color: ${colors.red50};
   }
 `;
+const FloatButton = styled(Link)`
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  right: 4rem;
+  bottom: 4rem;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 4rem;
+  z-index: 9999;
+  font-size: 1.5rem;
+  font-weight: 500;
+  background-color: ${colors.black};
+  color: white;
+  box-shadow: 5px 5px 10px ${colors.grey500};
+
+  ${bpmax[0]} {
+    right: 2rem;
+    bottom: 2rem;
+  }
+  cursor: pointer;
+
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: ${colors.grey800};
+  }
+`;
 
 export default function TaskPage() {
   const { user, accessToken } = useUser();
@@ -335,7 +365,7 @@ export default function TaskPage() {
     () => task?.members?.find((m) => m.id === task?.owner?.id),
     [task],
   );
-  const isOwner = user && user.id === ownerProfile?.id;
+  const isOwner = Boolean(user && user.id === ownerProfile?.id);
 
   const onReport = async () => {
     if (!accessToken) return;
@@ -445,7 +475,7 @@ export default function TaskPage() {
                     )}
                   </MemberThumbnailWrapper>
                 ))}
-                <ReportButton disabled={!!isOwner} onClick={onReport}>
+                <ReportButton disabled={isOwner} onClick={onReport}>
                   🚨
                 </ReportButton>
               </ThumbnailGroup>
@@ -453,6 +483,13 @@ export default function TaskPage() {
           </Detail>
         </Article>
       )}
+      <ConditionalRendering condition={isOwner}>
+        <FloatButton
+          href={`/tasks/write/${task?.task_group?.id}?task_id=${task?.id}`}
+        >
+          ✏️
+        </FloatButton>
+      </ConditionalRendering>
     </Container>
   );
 }

@@ -390,6 +390,10 @@ export type GetMileStoneAuthTokenAndBody = Partial<AuthToken> & {
   milestone_id: string;
 };
 export type GetMilestoneAuthResponse = OkAndOptionalReason & Partial<Milestone>;
+export type DeleteMileStoneAuthTokenAndQuery = AuthToken & {
+  milestone_id: string;
+};
+export type DeleteMileStoneResponse = OkAndOptionalReason;
 
 // ! TASK GROUP
 export type CreateTaskGroupAuthTokenAndBody = AuthToken & {

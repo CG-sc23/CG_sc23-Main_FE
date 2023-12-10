@@ -1,6 +1,11 @@
-import { FocusEvent, KeyboardEvent, MouseEvent, useRef, useState } from 'react';
+import {
+  FocusEvent,
+  KeyboardEvent,
+  MouseEvent,
+  useEffect,
+  useState,
+} from 'react';
 import MDEditor from '@uiw/react-md-editor';
-// const MDEditor = dynamic(() => import('@uiw/react-md-editor'));
 
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
@@ -14,6 +19,7 @@ import client from '@/api/client';
 import { extractImageLinks } from '@/libs/utils/editor';
 import { useRouter } from 'next/router';
 import Switch from 'react-switch';
+import useGetTask from '@/hooks/task/useGetTask';
 
 const Container = styled.div`
   position: relative;
@@ -192,11 +198,28 @@ export default function Write() {
   const router = useRouter();
   const { accessToken } = useUser();
   const { openSnackBar } = useSnackBar();
-  const [title, setTitle] = useState('');
+  const { task, isLoading, refetch } = useGetTask();
+
+  const [title, setTitle] = useState(task?.title || '');
   const [tag, setTag] = useState('');
   const [tagList, setTagList] = useState<string[]>([]);
   const [markdown, setMarkdown] = useState('');
   const [isPublic, setIsPublic] = useState(true);
+
+  const [isModify, setIsModify] = useState(false);
+
+  useEffect(() => {
+    if (isLoading) return;
+
+    if (!task) return;
+    if (!router.query.task_id) return;
+    setTitle(task.title as string);
+    setTagList(task.tags as string[]);
+    setMarkdown(task.description as string);
+    setIsPublic(task.is_public as boolean);
+
+    setIsModify(true);
+  }, [isLoading, task]);
 
   const onTagSubmit = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.code !== 'Enter') return;
@@ -234,21 +257,43 @@ export default function Write() {
     if (!tagList.length) return openSnackBar('태그를 입력해주세요.');
     if (!markdown) return openSnackBar('내용을 입력해주세요.');
 
-    const res = await client.createTask({
-      token: accessToken,
-      body: {
-        title,
-        tags: JSON.stringify(tagList),
-        description: markdown,
-        description_resource_links: JSON.stringify(extractImageLinks(markdown)),
-        is_public: isPublic,
-      },
-      task_group_id: router.query?.id as string,
-    });
-
-    if (res?.ok) {
-      router.replace(`/tasks/${res?.id}`);
-    } else openSnackBar('요청에 실패하였습니다.');
+    if (isModify) {
+      if (!task?.id) return null;
+      const res = await client.modifyTask({
+        token: accessToken,
+        body: {
+          title,
+          tags: JSON.stringify(tagList),
+          description: markdown,
+          description_resource_links: JSON.stringify(
+            extractImageLinks(markdown),
+          ),
+          is_public: isPublic,
+        },
+        task_id: task?.id + '',
+      });
+      if (res?.ok) {
+        refetch();
+        router.replace(`/tasks/${task?.id}`);
+      } else openSnackBar('요청에 실패하였습니다.');
+    } else {
+      const res = await client.createTask({
+        token: accessToken,
+        body: {
+          title,
+          tags: JSON.stringify(tagList),
+          description: markdown,
+          description_resource_links: JSON.stringify(
+            extractImageLinks(markdown),
+          ),
+          is_public: isPublic,
+        },
+        task_group_id: router.query?.id as string,
+      });
+      if (res?.ok) {
+        router.replace(`/tasks/${res?.id}`);
+      } else openSnackBar('요청에 실패하였습니다.');
+    }
   };
 
   return (

@@ -19,6 +19,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import client from '@/api/client';
 import { CreateProjectAuthTokenAndBody } from '@/libs/type/client';
+import useGetProject from '@/hooks/project/useGetProject';
 
 const Editor = dynamic(() => import('@/components/Editor'), { ssr: false });
 
@@ -125,12 +126,14 @@ export default function ProjectForm({}: InferGetServerSidePropsType<any>) {
   const { user: loggedInUser, isLoggedIn } = useUser();
   const { openSnackBar } = useSnackBar();
   const router = useRouter();
+  const { project, isLoading: projectLoading, refetch } = useGetProject();
+
   const [shortDescription, setShortDescription] = useState('');
   const [markdown, setMarkdown] = useState('');
   const [thumbnail, setThumbnail] = useState<string | undefined>();
   const [dueDate, setDueDate] = useState<Date | null>(new Date());
   const [isLoading, setIsLoading] = useState(false);
-  const { register, handleSubmit, getValues } = useForm<FormData>({
+  const { register, handleSubmit, getValues, setValue } = useForm<FormData>({
     defaultValues: {
       title: '',
     },
@@ -166,6 +169,20 @@ export default function ProjectForm({}: InferGetServerSidePropsType<any>) {
       due_date: dueDate?.toISOString(),
     };
 
+    if (router.query.project_id) {
+      const res = await client
+        .modifyProject({
+          token,
+          body: uploadData,
+          project_id: +router.query.project_id,
+        })
+        .finally(() => setIsLoading(false));
+
+      refetch();
+      if (res?.ok) return router.push(`/projects/${router.query.project_id}`);
+      return openSnackBar(`입력이 잘못되었습니다.\n다시 입력해주세요.`);
+    }
+
     const res = await client
       .createProject({
         token,
@@ -178,11 +195,19 @@ export default function ProjectForm({}: InferGetServerSidePropsType<any>) {
   };
 
   useEffect(() => {
-    if (isLoggedIn) return;
+    if (!isLoggedIn) {
+      openSnackBar('로그인 먼저 해주세요!');
+      router.replace('/');
+      return;
+    }
+    if (!project) return;
 
-    openSnackBar('로그인 먼저 해주세요!');
-    router.replace('/');
-  }, [isLoggedIn]);
+    setValue('title', project?.title);
+    setShortDescription(project?.short_description!);
+    setThumbnail(project.thumbnail_image);
+    setDueDate(new Date(project.due_date!));
+    setMarkdown(project.description!);
+  }, [isLoggedIn, project]);
 
   return (
     <Container>
@@ -199,7 +224,7 @@ export default function ProjectForm({}: InferGetServerSidePropsType<any>) {
           >
             <Dropzone
               onFileAdded={onUploadThumbnailImage}
-              defaultThumbnail={'/project.jpg'}
+              defaultThumbnail={thumbnail ?? '/project.jpg'}
             />
           </div>
           {/* 프로젝트 제목 */}
