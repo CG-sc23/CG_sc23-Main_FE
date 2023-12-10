@@ -412,6 +412,7 @@ export default function ProjectDetail() {
   const getOnDelete = (id: number) => async () => {
     if (deleteLoading) return;
     if (!token) return;
+    setDeleteLoading(true);
 
     const res = await client
       .deleteMilestoneInfo({

@@ -7,6 +7,7 @@ import { css } from '@emotion/react';
 import { FaChevronUp, FaChevronDown } from 'react-icons/fa6';
 import { myProjectStatus } from '@/libs/utils/project';
 import { formatDate } from '@/libs/utils';
+import ConditionalRendering from '../ConditionalRendering';
 
 // [Layer] Project > Milestone > Task Group > Task
 // TODO : TaskGroup UI
@@ -69,15 +70,53 @@ const Button = styled(Link)`
   }
 `;
 
+const DeleteButton = styled.button<{
+  hoverColor?: string;
+  disabledColor?: string;
+}>`
+  background-color: ${(props) => props.color || colors.red600};
+
+  width: 100%;
+  font-size: 1.2rem;
+  font-weight: 500;
+
+  border-radius: 0.2rem;
+  text-align: center;
+
+  padding: 0.5rem 1rem;
+
+  color: ${colors.white};
+
+  cursor: pointer;
+
+  transition: background-color 0.2s ease;
+  &:hover {
+    background-color: ${(props) => props.hoverColor || colors.red400};
+  }
+  &:disabled {
+    background-color: ${(props) => props.disabledColor || colors.blue200};
+    cursor: not-allowed;
+  }
+`;
 type Props = {
   id: number;
   title: string;
   status: string;
   created_at: string;
   due_date: string;
+  hasDeleteButton?: boolean;
+  onDelete?: () => Promise<void>;
 };
 
-export function TaskGroup({ id, title, status, created_at, due_date }: Props) {
+export function TaskGroup({
+  id,
+  title,
+  status,
+  created_at,
+  due_date,
+  hasDeleteButton = false,
+  onDelete,
+}: Props) {
   const [showTasks, setShowTasks] = useState(false);
 
   const handleShowTasks = (e: MouseEvent<HTMLButtonElement>) => {
@@ -123,10 +162,11 @@ export function TaskGroup({ id, title, status, created_at, due_date }: Props) {
             <span>{formatDate(due_date)}</span>
           </TaskContentBox>
           <Button href={`/taskgroups/${id}`}>상세보기</Button>
+          <ConditionalRendering condition={hasDeleteButton}>
+            <DeleteButton onClick={onDelete}>삭제</DeleteButton>
+          </ConditionalRendering>
         </TaskWrapper>
-      ) : (
-        <></>
-      )}
+      ) : null}
     </Container>
   );
 }

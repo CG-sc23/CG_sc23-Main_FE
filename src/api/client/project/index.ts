@@ -26,6 +26,10 @@ import {
   GetMilestoneAuthResponse,
   DeleteMileStoneAuthTokenAndQuery,
   DeleteMileStoneResponse,
+  DeleteTaskAuthTokenAndQuery,
+  DeleteTaskGroupAuthTokenAndQuery,
+  DeleteTaskGroupResponse,
+  DeleteTaskResponse,
   GetTaskAuthResponse,
   GetTaskAuthTokenAndBody,
   GetTaskGroupAuthResponse,
@@ -342,6 +346,22 @@ export const TaskGroup = {
       return handleClientError<GetTaskGroupAuthResponse>(e);
     }
   },
+  async deleteTaskGroupInfo(params: DeleteTaskGroupAuthTokenAndQuery) {
+    try {
+      const { data } = await http.delete<DeleteTaskGroupResponse>(
+        `/api/task-group/delete/${params.task_group_id}`,
+        {
+          headers: {
+            Authorization: params.token ? `Token ${params.token}` : null,
+          },
+        },
+      );
+
+      return data;
+    } catch (e) {
+      return handleClientError<DeleteTaskGroupResponse>(e);
+    }
+  },
 };
 
 export const Task = {
@@ -393,6 +413,22 @@ export const Task = {
       return data;
     } catch (e) {
       return handleClientError<GetTaskAuthResponse>(e);
+    }
+  },
+  async deleteTaskInfo(params: DeleteTaskAuthTokenAndQuery) {
+    try {
+      const { data } = await http.delete<DeleteTaskResponse>(
+        `/api/task/delete/${params.task_id}`,
+        {
+          headers: {
+            Authorization: params.token ? `Token ${params.token}` : null,
+          },
+        },
+      );
+
+      return data;
+    } catch (e) {
+      return handleClientError<DeleteTaskResponse>(e);
     }
   },
   async PaginatedTaskLists(params: PaginatedTaskListsQuery) {

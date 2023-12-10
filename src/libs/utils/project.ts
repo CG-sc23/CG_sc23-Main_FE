@@ -1,5 +1,9 @@
 import { colors } from '@/components/constant/color';
-import { MilestoneStatus, ProjectStatus } from '../type/client';
+import {
+  MilestoneStatus,
+  ProjectStatus,
+  TaskGroupStatus,
+} from '../type/client';
 
 type ReturnProjectStatus = {
   text: string;
@@ -40,7 +44,27 @@ export function myMileStoneStatus(provider: MilestoneStatus) {
       color: colors.green500,
     },
     COMPLETED: {
-      text: `프로젝트 완료`,
+      text: `마일스톤 완료`,
+      color: colors.yellow500,
+    },
+  } as const;
+  return strategies[provider as keyof typeof strategies];
+}
+type TaskGroupStrategies = {
+  [key in TaskGroupStatus]: ReturnProjectStatus;
+};
+export function myTaskGroupStatus(provider: TaskGroupStatus) {
+  const strategies: TaskGroupStrategies = {
+    READY: {
+      text: '시작 대기',
+      color: colors.blue500,
+    },
+    IN_PROGRESS: {
+      text: '진행 중',
+      color: colors.green500,
+    },
+    COMPLETED: {
+      text: `태스크그룹 완료`,
       color: colors.yellow500,
     },
   } as const;

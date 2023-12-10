@@ -407,6 +407,10 @@ export type GetTaskGroupAuthApiTokenAndBody = Partial<AuthToken> & {
   task_group_id: string;
 };
 export type GetTaskGroupAuthApiResponse = SuccessAndOptionalReason & TaskGroup;
+export type DeleteTaskGroupApiAuthTokenAndQuery = AuthToken & {
+  task_group_id: string;
+};
+export type DeleteTaskGroupApiResponse = SuccessAndOptionalReason;
 
 // ! TASK
 export type CreateTaskAuthApiTokenAndBody = AuthToken & {
@@ -425,6 +429,10 @@ export type GetTaskAuthApiTokenAndBody = Partial<AuthToken> & {
   task_id: string;
 };
 export type GetTaskAuthApiResponse = SuccessAndOptionalReason & Task;
+export type DeleteTaskApiAuthTokenAndQuery = AuthToken & {
+  task_id: string;
+};
+export type DeleteTaskApiResponse = SuccessAndOptionalReason;
 export type PaginatedTask = {
   id: number;
   project: {

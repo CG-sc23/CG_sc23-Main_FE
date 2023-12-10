@@ -53,7 +53,7 @@ export function Task({ title, id, created_at, tags }: Props) {
       </span>
       <TagWrapper>
         {tags.map((tag) => (
-          <Tag>{tag}</Tag>
+          <Tag key={`${id}_${tag}`}>{tag}</Tag>
         ))}
       </TagWrapper>
     </Container>

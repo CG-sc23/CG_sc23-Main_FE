@@ -13,6 +13,7 @@ import useUser from '@/hooks/user/useUser';
 import useSnackBar from '@/hooks/useSnackBar';
 import client from '@/api/client';
 import ConditionalRendering from '@/components/ConditionalRendering';
+import { useRouter } from 'next/router';
 
 const MEMBER_LIMIT = 5;
 const OVERLAP_NUMBER = 25;
@@ -366,6 +367,26 @@ export default function TaskPage() {
     [task],
   );
   const isOwner = Boolean(user && user.id === ownerProfile?.id);
+  const router = useRouter();
+
+  const [deletedLoading, setDeletedLoading] = useState(false);
+  const onDelete = async () => {
+    if (deletedLoading) return;
+    if (!accessToken) return;
+    setDeletedLoading(true);
+
+    const res = await client
+      .deleteTaskInfo({
+        task_id: task?.id + '',
+        token: accessToken,
+      })
+      .finally(() => setDeletedLoading(false));
+
+    if (res?.ok) {
+      openSnackBar('요청에 성공하였습니다.');
+      router.push(`/taskgroups/${task?.task_group?.id}`);
+    } else openSnackBar('요청에 실패하였습니다.');
+  };
 
   const onReport = async () => {
     if (!accessToken) return;
@@ -410,6 +431,7 @@ export default function TaskPage() {
                     }
                     alt={ownerProfile?.email as string}
                     fill
+                    sizes="(max-width: 768px) 100px, (max-width: 1200px) 50vw, 33vw"
                   />
                 </AuthorThumbnailWrapper>
                 {task?.owner?.name}
@@ -437,6 +459,7 @@ export default function TaskPage() {
                   src={task?.project?.thumbnail_image ?? '/project.jpg'}
                   fill
                   alt="project_thumbnail"
+                  sizes="(max-width: 768px) 100px, (max-width: 1200px) 50vw, 33vw"
                 />
               </ProjectThumbnailWrapper>
               <TaskParents>
@@ -469,6 +492,7 @@ export default function TaskPage() {
                         }
                         alt={m.email}
                         fill
+                        sizes="(max-width: 768px) 100px, (max-width: 1200px) 50vw, 33vw"
                       />
                     ) : (
                       <More>+ {origin.length - MEMBER_LIMIT}</More>
@@ -484,6 +508,19 @@ export default function TaskPage() {
         </Article>
       )}
       <ConditionalRendering condition={isOwner}>
+        <FloatButton
+          onClick={onDelete}
+          css={css`
+            bottom: 8rem;
+            background-color: ${colors.red400};
+            &:hover {
+              background-color: ${colors.red200};
+            }
+          `}
+          href={`/tasks/write/${task?.task_group?.id}?task_id=${task?.id}`}
+        >
+          🗑️
+        </FloatButton>
         <FloatButton
           href={`/tasks/write/${task?.task_group?.id}?task_id=${task?.id}`}
         >

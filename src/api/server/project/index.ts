@@ -24,12 +24,16 @@ import {
   ModifyTaskGroupAuthApiResponse,
   GetTaskGroupAuthApiTokenAndBody,
   GetTaskGroupAuthApiResponse,
+  DeleteTaskGroupApiAuthTokenAndQuery,
+  DeleteTaskGroupApiResponse,
   CreateTaskAuthApiTokenAndBody,
   CreateTaskAuthApiResponse,
   ModifyTaskAuthApiTokenAndBody,
   ModifyTaskAuthApiResponse,
   GetTaskAuthApiTokenAndBody,
   GetTaskAuthApiResponse,
+  DeleteTaskApiAuthTokenAndQuery,
+  DeleteTaskApiResponse,
   MakeJoinRequestApiAuthTokenAndPayload,
   MakeJoinRequestApiResponse,
   ReplyJoinRequestApiAuthTokenAndPayload,
@@ -296,6 +300,20 @@ export const TaskGroup = {
       return handleApiError<GetTaskGroupAuthApiResponse>(e);
     }
   },
+  async deleteTaskGroupInfo(params: DeleteTaskGroupApiAuthTokenAndQuery) {
+    try {
+      return await http.delete<DeleteTaskGroupApiResponse>(
+        `/task-group/v1/${params.task_group_id}`,
+        {
+          headers: {
+            Authorization: `Token ${params.token}`,
+          },
+        },
+      );
+    } catch (e) {
+      return handleApiError<DeleteTaskGroupApiResponse>(e);
+    }
+  },
 };
 
 export const Task = {
@@ -341,6 +359,20 @@ export const Task = {
       );
     } catch (e) {
       return handleApiError<GetTaskAuthApiResponse>(e);
+    }
+  },
+  async deleteTaskInfo(params: DeleteTaskApiAuthTokenAndQuery) {
+    try {
+      return await http.delete<DeleteTaskApiResponse>(
+        `/task/v1/${params.task_id}`,
+        {
+          headers: {
+            Authorization: `Token ${params.token}`,
+          },
+        },
+      );
+    } catch (e) {
+      return handleApiError<DeleteTaskApiResponse>(e);
     }
   },
   async getPaginatedTaskLists(query: GetPaginatedTaskListsQuery) {
