@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { colors } from '../constant/color';
 import { css } from '@emotion/react';
 import { formatDate } from '@/libs/utils';
+import ConditionalRendering from '../ConditionalRendering';
 
 // [Layer] Project > Milestone > Task Group > Task
 // TODO : Task UI
@@ -21,9 +22,19 @@ const Container = styled(Link)`
   }
 `;
 
+const TitleWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+`;
+
 const Title = styled.h2`
   font-size: 1.4rem;
   font-weight: 500;
+`;
+
+const PulicOrNot = styled.div`
+  color: red;
 `;
 
 const TagWrapper = styled.div`
@@ -38,12 +49,21 @@ const Tag = styled.div`
   font-size: 0.8rem;
 `;
 
-type Props = { title: string; id: number; created_at: string; tags: string[] };
+type Props = {
+  title: string;
+  id: number;
+  created_at: string;
+  tags: string[];
+  is_public?: boolean;
+};
 
-export function Task({ title, id, created_at, tags }: Props) {
+export function Task({ title, id, created_at, tags, is_public = true }: Props) {
   return (
     <Container href={`/tasks/${id}`}>
-      <Title>{title}</Title>
+      <TitleWrapper>
+        <Title>{title}</Title>
+        {!is_public ? <PulicOrNot>비공개</PulicOrNot> : null}
+      </TitleWrapper>
       <span
         css={css`
           font-size: 0.8rem;
