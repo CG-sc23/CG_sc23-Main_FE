@@ -135,7 +135,7 @@ export type GetProjectsInfoAuthToken = { user_id: string };
 export type GetProjectsInfoResponse = OkAndOptionalReason & {
   projects?: ProjectInfo[];
 };
-export type GetTasksInfoQuery = {
+export type GetTasksInfoQuery = Partial<AuthToken> & {
   user_id: string;
 };
 export type GetTasksInfoResponse = OkAndOptionalReason & {
