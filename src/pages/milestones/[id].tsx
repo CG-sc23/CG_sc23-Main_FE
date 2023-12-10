@@ -95,14 +95,14 @@ export default function MilestoneDetail() {
     const totalTaskGroupCount = milestone?.task_groups?.length ?? 0;
     const finishedTaskGroupCount =
       milestone?.task_groups?.reduce((acc, cur) => {
-        if (cur.status !== 'IN_PROGRESS') return acc + 1;
+        if (cur.status === 'COMPLETED') return acc + 1;
         else return acc;
       }, 0) ?? 0;
     const inprogressTaskGroupCount =
       totalTaskGroupCount - finishedTaskGroupCount;
 
     return {
-      labels: ['종료된 태스크 그룹', '진행중인 태스크 그룹'],
+      labels: ['종료된 태스크 그룹', '종료되지 않은 태스크 그룹'],
       datasets: [
         {
           data: [finishedTaskGroupCount, inprogressTaskGroupCount],

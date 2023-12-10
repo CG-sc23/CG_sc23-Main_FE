@@ -430,7 +430,7 @@ export default function ProjectDetail() {
     const totalMilestoneCount = project?.milestone?.length ?? 0;
     const finishedMilestoneCount =
       project?.milestone?.reduce((acc, cur) => {
-        if (cur.status !== 'IN_PROGRESS') return acc + 1;
+        if (cur.status === 'COMPLETED') return acc + 1;
         else return acc;
       }, 0) ?? 0;
     const inprogressMilsteneCount =
