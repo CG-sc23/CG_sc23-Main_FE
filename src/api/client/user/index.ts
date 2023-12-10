@@ -22,6 +22,8 @@ import {
   ReplyProjectInviteResponse,
   GetProjectsInfoAuthToken,
   GetProjectsInfoResponse,
+  GetTasksInfoQuery,
+  GetTasksInfoResponse,
 } from '@/libs/type/client';
 
 export const Deactivate = {
@@ -66,6 +68,22 @@ export const UserInfo = {
       return data;
     } catch (e) {
       return handleClientError<GetProjectsInfoResponse>(e);
+    }
+  },
+  async userTasksInfo(query: GetTasksInfoQuery) {
+    try {
+      const { data } = await http.get<GetTasksInfoResponse>(
+        `/api/user/tasksInfo/${query.user_id}`,
+        {
+          headers: {
+            Authorization: query.token ? `Token ${query.token}` : null,
+          },
+        },
+      );
+
+      return data;
+    } catch (e) {
+      return handleClientError<GetTasksInfoResponse>(e);
     }
   },
   async userDetail(query: UserDetailInfoQuery) {

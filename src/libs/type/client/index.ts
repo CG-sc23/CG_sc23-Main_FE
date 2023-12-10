@@ -131,6 +131,16 @@ export type ReplyProjectInviteAuthToken = AuthToken & {
   };
 };
 export type ReplyProjectInviteResponse = OkAndOptionalReason;
+export type GetProjectsInfoAuthToken = { user_id: string };
+export type GetProjectsInfoResponse = OkAndOptionalReason & {
+  projects?: ProjectInfo[];
+};
+export type GetTasksInfoQuery = Partial<AuthToken> & {
+  user_id: string;
+};
+export type GetTasksInfoResponse = OkAndOptionalReason & {
+  tasks?: Task[];
+};
 
 // ! ExternalHistory
 export type CommonStackQuery = { stack: string };
@@ -176,11 +186,6 @@ export type ProjectInfo = {
     thumbnail_image: string;
     members: Member[];
   };
-};
-
-export type GetProjectsInfoAuthToken = { user_id: string };
-export type GetProjectsInfoResponse = OkAndOptionalReason & {
-  projects?: ProjectInfo[];
 };
 
 // ! RESOURCE

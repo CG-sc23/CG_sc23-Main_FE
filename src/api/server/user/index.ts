@@ -21,6 +21,8 @@ import {
   ReplyProjectInviteApiResponse,
   GetProjectsInfoApiQuery,
   GetProjectsInfoResponse,
+  GetTasksInfoApiQuery,
+  GetTasksInfoResposne,
 } from '@/libs/type/server';
 
 export const Deactivate = {
@@ -56,6 +58,20 @@ export const UserInfo = {
       );
     } catch (e) {
       return handleApiError<GetProjectsInfoResponse>(e);
+    }
+  },
+  async getUserTasksInfo(query: GetTasksInfoApiQuery) {
+    try {
+      return await http.get<GetTasksInfoResposne>(
+        `/user/v1/${query.user_id}/tasks`,
+        {
+          headers: {
+            Authorization: query.token ? `Token ${query.token}` : null,
+          },
+        },
+      );
+    } catch (e) {
+      return handleApiError<GetTasksInfoResposne>(e);
     }
   },
   async getUserDetailInfo(query: UserDetailInfoApiQuery) {

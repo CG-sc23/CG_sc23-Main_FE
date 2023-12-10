@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { css } from '@emotion/react';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { safeLocalStorage } from '@toss/storage';
 import MDEditor from '@uiw/react-md-editor';
@@ -26,6 +26,17 @@ import ProjectCard from '@/components/Projects/ProjectCard';
 import GithubStatistic from '@/components/Profile/GithubStatistic';
 import Skeleton from '@/components/Skeleton';
 import ConditionalRendering from '@/components/ConditionalRendering';
+
+import styled from '@emotion/styled';
+import { Task } from '@/components/Projects/Task';
+import useUserTask from '@/hooks/user/useUserTask';
+
+const TaskWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  width: 100%;
+`;
 
 export const getServerSideProps = (async (ctx) => {
   const id = ctx.params?.id as string;
@@ -63,6 +74,7 @@ export default function Profile({
   const token = safeLocalStorage.get(queryKey.USER_ACCESS_TOKEN);
   const { openSnackBar } = useSnackBar();
   const { user: loggedInUser } = useUser();
+  const { tasks, isLoading } = useUserTask(id);
   const isOwn = useMemo(() => {
     return loggedInUser && loggedInUser.email === user.email;
   }, [loggedInUser, user]);
@@ -327,6 +339,34 @@ export default function Profile({
             />
           ))}
         </ProjectWrapper>
+      </ConditionalRendering>
+      <h1
+        css={css`
+          font-size: 2rem;
+          font-weight: bold;
+
+          padding: 0.5rem 0;
+          border-bottom: 2px solid #e0e0e0;
+        `}
+      >
+        작성한 태스크
+      </h1>
+      <ConditionalRendering
+        condition={tasks?.length !== 0}
+        fallback={() => <Skeleton>아직 작성한 글이 없어요!</Skeleton>}
+      >
+        <TaskWrapper>
+          {tasks?.map((task) => (
+            <Task
+              key={`Project_${task.id}`}
+              title={task.title}
+              id={task.id}
+              created_at={task.created_at as any}
+              tags={task.tags as any}
+              is_public={task.is_public}
+            />
+          ))}
+        </TaskWrapper>
       </ConditionalRendering>
     </div>
   );

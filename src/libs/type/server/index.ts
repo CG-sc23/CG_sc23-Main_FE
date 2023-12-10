@@ -145,6 +145,11 @@ export type GetProjectsInfoResponse = SuccessAndOptionalReason & {
   count: number;
   projects: ProjectInfo[];
 };
+export type GetTasksInfoApiQuery = Partial<AuthToken> & { user_id: string };
+export type GetTasksInfoResposne = SuccessAndOptionalReason & {
+  count: number;
+  tasks: Task[];
+};
 
 // ! ExternalHistory
 export type CommonStackApiQuery = { stack: string };
