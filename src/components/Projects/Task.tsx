@@ -14,6 +14,7 @@ const Container = styled(Link)`
   width: 100%;
   padding: 1rem;
   transition: 0.2s;
+  box-sizing: border-box;
   &:hover {
     transform: scale(1.02);
     background-color: ${colors.grey200};
