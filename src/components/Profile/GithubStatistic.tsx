@@ -30,7 +30,6 @@ import {
   preProcessCommonStackName,
 } from '@/libs/utils';
 
-import { roboto } from '@/pages/_app';
 import { queryKey } from '@/libs/constant';
 import ConditionalRendering from '../ConditionalRendering';
 
@@ -355,7 +354,6 @@ export default function GithubStatistic({ status, title }: Props) {
                     font: {
                       weight: 'bold',
                       size: 20,
-                      family: roboto.style.fontFamily,
                     },
                   },
                 },

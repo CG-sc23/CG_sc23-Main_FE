@@ -9,7 +9,6 @@ import { myMileStoneStatus, myProjectStatus } from '@/libs/utils/project';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-import { roboto } from '@/pages/_app';
 import { Chart, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
@@ -17,12 +16,12 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { useState, useMemo } from 'react';
 import { formatDate } from '@/libs/utils';
 import useGetMileStone from '@/hooks/milestone/useGetMileStone';
-import LoadingSpinner from '@/components/Spinner';
 import { safeLocalStorage } from '@toss/storage';
 import { queryKey } from '@/libs/constant';
 import useSnackBar from '@/hooks/useSnackBar';
 import client from '@/api/client';
 import ConditionalRendering from '@/components/ConditionalRendering';
+import CustomSuspense from '@/components/CustomSuspense';
 
 const Container = styled.div`
   width: 896px;
@@ -117,20 +116,7 @@ export default function MilestoneDetail() {
 
   return (
     <Container>
-      {isLoading && !milestone ? (
-        <div
-          css={css`
-            width: 100%;
-            height: 100%;
-
-            display: flex;
-            justify-content: center;
-            align-items: center;
-          `}
-        >
-          <LoadingSpinner />
-        </div>
-      ) : (
+      <CustomSuspense isLoading={isLoading && !milestone}>
         <>
           {/* subject, thumbnail, status, created_at, due_date */}
           <Card>
@@ -158,7 +144,6 @@ export default function MilestoneDetail() {
                         font: {
                           weight: 'bold',
                           size: 12,
-                          family: roboto.style.fontFamily,
                         },
                       },
                     },
@@ -233,7 +218,9 @@ export default function MilestoneDetail() {
             </div>
           </Card>
           {/* task create */}
-          {taskgroupCreationPermitted(milestone?.permission) ? (
+          <ConditionalRendering
+            condition={taskgroupCreationPermitted(milestone?.permission)}
+          >
             <Card
               css={css`
                 ${bpmax[0]} {
@@ -335,9 +322,7 @@ export default function MilestoneDetail() {
                 </button>
               </div>
             </Card>
-          ) : (
-            <></>
-          )}
+          </ConditionalRendering>
           {/* task_groups */}
           <Card
             css={css`
@@ -372,7 +357,7 @@ export default function MilestoneDetail() {
             </div>
           </Card>
         </>
-      )}
+      </CustomSuspense>
     </Container>
   );
 }

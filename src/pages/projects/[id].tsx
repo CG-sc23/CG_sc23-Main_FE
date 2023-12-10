@@ -5,12 +5,10 @@ import Card from '@/components/Card';
 import MDEditor from '@uiw/react-md-editor';
 
 import { myProjectStatus } from '@/libs/utils/project';
-import { hexToRgba } from '@toss/utils';
 import { colors } from '@/components/constant/color';
 import { Milestone } from '@/components/Projects/Milestone';
 import useGetProject from '@/hooks/project/useGetProject';
 
-import { roboto } from '@/pages/_app';
 import { Chart, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
@@ -1396,7 +1394,6 @@ export default function ProjectDetail() {
                         font: {
                           weight: 'bold',
                           size: 12,
-                          family: roboto.style.fontFamily,
                         },
                       },
                     },
