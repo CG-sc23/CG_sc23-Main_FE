@@ -361,6 +361,7 @@ export default function MilestoneDetail() {
             >
               {milestone?.task_groups?.map((task_group) => (
                 <TaskGroup
+                  key={`TASK_GROUP_${milestone.id}_${task_group.id}`}
                   id={task_group.id}
                   title={task_group.title}
                   status={task_group.status!}

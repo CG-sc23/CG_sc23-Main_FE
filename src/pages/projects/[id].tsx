@@ -409,6 +409,24 @@ export default function ProjectDetail() {
     });
   };
 
+  // TODO Milestone 3. Delete
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const getOnDelete = (id: number) => async () => {
+    if (deleteLoading) return;
+    if (!token) return;
+
+    const res = await client
+      .deleteMilestoneInfo({
+        milestone_id: id + '',
+        token,
+      })
+      .finally(() => setDeleteLoading(false));
+
+    if (res?.ok) {
+      openSnackBar('요청에 성공하였습니다.');
+      refetch();
+    } else openSnackBar('요청에 실패하였습니다.');
+  };
   // TODO Chart 1. Chart
   const chartDataForProject = useMemo(() => {
     const totalMilestoneCount = project?.milestone?.length ?? 0;
@@ -437,25 +455,6 @@ export default function ProjectDetail() {
     if (!!project?.milestone?.length) return true;
     else return false;
   }, [project]);
-
-  // TODO Milestone 3. Delete
-  const [deleteLoading, setDeleteLoading] = useState(false);
-  const getOnDelete = (id: number) => async () => {
-    if (deleteLoading) return;
-    if (!token) return;
-
-    const res = await client
-      .deleteMilestoneInfo({
-        milestone_id: id + '',
-        token,
-      })
-      .finally(() => setDeleteLoading(false));
-
-    if (res?.ok) {
-      openSnackBar('요청에 성공하였습니다.');
-      refetch();
-    } else openSnackBar('요청에 실패하였습니다.');
-  };
 
   const onStatus = async (status: ProjectStatus) => {
     if (!token) return;
