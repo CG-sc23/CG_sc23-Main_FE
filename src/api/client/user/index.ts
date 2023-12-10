@@ -70,10 +70,15 @@ export const UserInfo = {
       return handleClientError<GetProjectsInfoResponse>(e);
     }
   },
-  async userTasksInfo(payload: GetTasksInfoQuery) {
+  async userTasksInfo(query: GetTasksInfoQuery) {
     try {
       const { data } = await http.get<GetTasksInfoResponse>(
-        `/api/user/tasksInfo/${payload.user_id}`,
+        `/api/user/tasksInfo/${query.user_id}`,
+        {
+          headers: {
+            Authorization: query.token ? `Token ${query.token}` : null,
+          },
+        },
       );
 
       return data;

@@ -64,6 +64,11 @@ export const UserInfo = {
     try {
       return await http.get<GetTasksInfoResposne>(
         `/user/v1/${query.user_id}/tasks`,
+        {
+          headers: {
+            Authorization: query.token ? `Token ${query.token}` : null,
+          },
+        },
       );
     } catch (e) {
       return handleApiError<GetTasksInfoResposne>(e);
