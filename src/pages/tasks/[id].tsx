@@ -469,7 +469,7 @@ export default function TaskPage() {
                 <MilestoneTitle href={`/milestones/${task?.milestone?.id}`}>
                   {task?.milestone?.subject}
                 </MilestoneTitle>
-                <TaskGroupTitle href={`/tasksgroups/${task?.task_group?.id}`}>
+                <TaskGroupTitle href={`/taskgroups/${task?.task_group?.id}`}>
                   {task?.task_group?.title}
                 </TaskGroupTitle>
               </TaskParents>
